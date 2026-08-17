@@ -87,3 +87,45 @@ h3 { font-size: 1.25rem; font-weight: 700; margin-top: 2.25rem; }
   }
   .profile-card { position: sticky; top: 1.25rem; align-self: start; height: fit-content; }
 }
+
+// ---------------------------------------------------------------------------
+// Darkly sets .navbar padding to 1rem, which makes the bar ~17px taller than
+// the light theme's. Match the light theme (0.5rem => 62px on every page).
+// ---------------------------------------------------------------------------
+
+.navbar {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+// Page titles: same treatment as light mode
+h1.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.quarto-title .subtitle {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #9aa4ae;
+  margin-top: 0.35rem;
+}
+
+.quarto-grid-item .listing-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.profile-cn {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+               "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  font-size: 1.0rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: #9aa4ae;
+  line-height: 1.3;
+  margin-top: 0.15rem;
+  margin-bottom: 0.6rem;
+}

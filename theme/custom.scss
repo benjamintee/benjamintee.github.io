@@ -282,3 +282,43 @@ main.content {
   padding-left: 1.5rem !important;
   padding-right: 1.5rem !important;
 }
+
+// ---------------------------------------------------------------------------
+// Page titles (Projects listing, post titles): same face and weight as the
+// section headings and the name on the home page.
+// ---------------------------------------------------------------------------
+
+#title-block-header .quarto-title h1.title,
+.quarto-title-block .quarto-title h1.title,
+h1.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+#title-block-header .subtitle,
+.quarto-title .subtitle {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #55606b;
+  margin-top: 0.35rem;
+}
+
+.quarto-grid-item .listing-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+// Chinese name, sits directly under the Latin name in the sidebar
+.profile-cn {
+  font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+               "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  font-size: 1.0rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: #55606b;
+  line-height: 1.2;
+  margin-top: 0.15rem;
+  margin-bottom: 0.6rem;
+}

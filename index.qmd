@@ -17,6 +17,10 @@ page-layout: full
 <span>Benjamin Tee</span><span class="dot-divider">·</span><img src="images/flag-sg.svg" class="flag" alt="Singapore">
 :::
 
+::: {.profile-cn lang="zh-Hans"}
+郑进民
+:::
+
 ::: {.profile-role}
 MSc Student at Centre for Advanced Spatial Analysis (CASA)
 :::
