@@ -1,6 +1,6 @@
 ---
 title: "Projects"
-subtitle: "Write-ups of the analysis, mapping and modelling work I have done."
+subtitle: "This repository showcases the write-ups of the analysis, mapping and modelling work that I have done."
 listing:
   # `grid` = cards with thumbnails. Other options: `default`, `table`.
   type: grid
