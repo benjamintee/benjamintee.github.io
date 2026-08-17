@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24" width="36" height="24" role="img" aria-label="Singapore">
+  <defs>
+    <mask id="crescent">
+      <rect width="36" height="24" fill="black"/>
+      <circle cx="9.6" cy="6" r="4.5" fill="white"/>
+      <circle cx="12.1" cy="6" r="4.5" fill="black"/>
+    </mask>
+  </defs>
+  <rect width="36" height="12" fill="#ED2939"/>
+  <rect y="12" width="36" height="12" fill="#ffffff"/>
+  <rect width="36" height="12" fill="#ffffff" mask="url(#crescent)"/>
+  <g fill="#ffffff">
+    <path d="M16.9 2.35l.32.99h1.04l-.84.61.32.99-.84-.61-.84.61.32-.99-.84-.61h1.04z"/>
+    <path d="M19.55 4.28l.32.99h1.04l-.84.61.32.99-.84-.61-.84.61.32-.99-.84-.61h1.04z"/>
+    <path d="M14.25 4.28l.32.99h1.04l-.84.61.32.99-.84-.61-.84.61.32-.99-.84-.61h1.04z"/>
+    <path d="M15.26 7.4l.32.99h1.04l-.84.61.32.99-.84-.61-.84.61.32-.99-.84-.61h1.04z"/>
+    <path d="M18.54 7.4l.32.99h1.04l-.84.61.32.99-.84-.61-.84.61.32-.99-.84-.61h1.04z"/>
+  </g>
+</svg>

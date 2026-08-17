@@ -1,6 +1,11 @@
 project:
   type: website
   output-dir: _site
+  render:
+    - "*.qmd"
+    - "projects/**/*.qmd"
+    - "!SETUP.md"
+    - "!README.md"
 
 # Render results are cached so that GitHub Actions does not need R/Python
 # installed. Run `quarto render` locally, then commit the `_freeze/` folder.
@@ -50,4 +55,6 @@ format:
     code-overflow: wrap
     link-external-newwindow: true
     grid:
-      body-width: 900px
+      body-width: 2400px
+      sidebar-width: 250px
+      margin-width: 250px

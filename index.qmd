@@ -1,37 +1,51 @@
 ---
-title: "Benjamin Tee"
-subtitle: "MSc Urban Spatial Science · Centre for Advanced Spatial Analysis, UCL"
-about:
-  template: trestles
-  image: images/profile.jpg
-  image-shape: rounded
-  image-width: 14em
-  links:
-    - icon: github
-      text: GitHub
-      href: https://github.com/benjamintee
-    - icon: linkedin
-      text: LinkedIn
-      href: https://www.linkedin.com/in/teebenjamin/
-    - icon: envelope
-      text: Email
-      href: mailto:benjamin.tee.cm@gmail.com
+pagetitle: "Benjamin Tee"
+description-meta: "MSc Urban Spatial Science student at CASA, UCL."
 format:
   html:
     toc: false
+page-layout: full
 ---
 
-Welcome! 
+::: {.grid .profile-page}
+
+::: {.g-col-12 .g-col-lg-3 .profile-card}
+
+![](images/profile.jpg){.profile-photo fig-alt="Benjamin Tee"}
+
+::: {.profile-name}
+<span>Benjamin Tee</span><span class="dot-divider">·</span><img src="images/flag-sg.svg" class="flag" alt="Singapore">
+:::
+
+::: {.profile-role}
+MSc Student at Centre for Advanced Spatial Analysis (CASA)
+:::
+
+::: {.profile-meta}
+<ul>
+  <li><i class="bi bi-geo-alt-fill"></i><span>London, United Kingdom</span></li>
+  <li><i class="bi bi-building"></i><span>University College London (UCL)</span></li>
+  <li><i class="bi bi-globe"></i><a href="https://benjamintee.github.io">Website</a></li>
+  <li><i class="bi bi-envelope-fill"></i><a href="mailto:benjamin.tee.cm@gmail.com">Email</a></li>
+  <li><i class="bi bi-github"></i><a href="https://github.com/benjamintee">GitHub</a></li>
+  <li><i class="bi bi-linkedin"></i><a href="https://www.linkedin.com/in/teebenjamin/">LinkedIn</a></li>
+</ul>
+:::
+
+:::
+
+::: {.g-col-12 .g-col-lg-9 .profile-body}
+## **Welcome!**
 
 I am currently an MSc Urban Spatial Science student at [The Bartlett Centre for Advanced Spatial Analysis (CASA)](https://www.ucl.ac.uk/bartlett/casa), University College London.
 
 As a leader in the Singapore Public Service, I am committed to advancing data-driven and evidence-based policymaking. I strongly believe in the role of public service–led innovation, and the use of econometric and data science methods to develop and uncover insights that inform effective and forward-looking policy decisions.
 
-My research interests is in cities and the data they generate — spatial analysis, geographic data science, and the visualisation of urban processes. This site collects the projects I have built with the methods and the code behind it.
+My research interests is in cities and the data they generate — spatial analysis, geographic data science, and the visualisation of urban processes. This site collects the projects I have built with the code behind it.
 
-Head to [Projects](projects/index.qmd) to find out more.
+Head to [Projects](projects/index.qmd) to find out more! 
 
-## Interests
+## **Interests**
 
 - Geographic data science and spatial statistics
 - Demographic trends and population dynamics
@@ -39,10 +53,14 @@ Head to [Projects](projects/index.qmd) to find out more.
 - Econometrics and causal analysis
 - Cartography and interactive web mapping
 
-## Education
+## **Education**
 
-**MSc Urban Spatial Science** — University College London, 2026
+**MSc Urban Spatial Science** — University College London, 2026  
 Centre for Advanced Spatial Analysis (CASA)
 
-**BBM in Business Management** — Singapore Management University, 2010–2014
+**BBM in Business Management** — Singapore Management University, 2010–2014  
 Double Major in Economics and Finance
+
+:::
+
+:::

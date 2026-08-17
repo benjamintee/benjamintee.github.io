@@ -25,3 +25,5 @@ __pycache__/
 *.tif
 *.shp
 *.zip
+
+**/*.quarto_ipynb
