@@ -129,3 +129,28 @@ h1.title {
   margin-top: 0.15rem;
   margin-bottom: 0.6rem;
 }
+
+// Three-column title-block metadata once the reading-time column is added
+@media (min-width: 768px) {
+  // Quarto's own rule is
+  //   #title-block-header.quarto-title-block.default .quarto-title-meta
+  // so this selector has to be at least as specific to beat it.
+  #title-block-header.quarto-title-block.default .quarto-title-meta.has-reading-time {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// Hero image in the article title block, between description and metadata
+.quarto-title-image {
+  margin: 1.1rem 0 1.4rem 0;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 340px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+}

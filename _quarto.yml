@@ -54,6 +54,8 @@ format:
     code-copy: true
     code-overflow: wrap
     link-external-newwindow: true
+    # Hero image + reading time in article title blocks (see the file)
+    include-after-body: theme/post-header.html
     grid:
       body-width: 2400px
       sidebar-width: 250px

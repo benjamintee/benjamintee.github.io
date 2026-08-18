@@ -1,0 +1,65 @@
+<!--
+  Two additions to the article title block, neither of which Quarto supports
+  natively (its title-block template only knows author / published / modified
+  / doi, and never renders the front-matter `image:`):
+
+    1. the post's `image:` - the same file used for the listing card -
+       inserted between the description and the metadata row;
+    2. a "Reading time" column next to AUTHOR and PUBLISHED.
+
+  Both read from what Quarto already emits, so no per-post front matter is
+  needed beyond the `image:` you already set for the listing.
+
+  Does nothing on pages without a title-block metadata row (home, listings).
+-->
+<script>
+  (function () {
+    // Only article pages (individual posts). The listing page also carries a
+    // .quarto-title-meta and an og:image borrowed from one of its items, so
+    // without this guard it would grow a stray hero image of the wrong post.
+    if (!document.querySelector(".quarto-container.page-layout-article")) return;
+
+    var header = document.querySelector("#title-block-header");
+    var meta = document.querySelector(".quarto-title-meta");
+    var body = document.querySelector("main.content");
+    if (!header || !meta || !body) return;
+
+    // --- 1. hero image, from the same image: the listing card uses ----------
+    // Quarto writes it into the Open Graph tag as an absolute URL; the file
+    // itself lives beside index.qmd, so the basename resolves relative to the
+    // post. (If you ever point image: outside the post folder, this needs
+    // adjusting.)
+    var og = document.querySelector('meta[property="og:image"]');
+    if (og && og.content && !header.querySelector(".quarto-title-image")) {
+      var file = og.content.split("/").pop();
+      if (file) {
+        var alt = document.querySelector('meta[property="og:image:alt"]');
+        var fig = document.createElement("figure");
+        fig.className = "quarto-title-image";
+        var img = document.createElement("img");
+        img.src = decodeURIComponent(file);
+        img.alt = alt ? alt.content : "";
+        img.loading = "eager";
+        fig.appendChild(img);
+        meta.parentNode.insertBefore(fig, meta);
+      }
+    }
+
+    // --- 2. reading time ---------------------------------------------------
+    var clone = body.cloneNode(true);
+    clone
+      .querySelectorAll("#title-block-header, pre, .cell-output, figcaption, .quarto-title-meta")
+      .forEach(function (el) { el.remove(); });
+
+    var words = (clone.innerText || "").trim().split(/\s+/).filter(Boolean).length;
+    var minutes = Math.max(1, Math.round(words / 200));
+
+    var col = document.createElement("div");
+    col.className = "quarto-title-meta-reading-time";
+    col.innerHTML =
+      '<div class="quarto-title-meta-heading">Reading time</div>' +
+      '<div class="quarto-title-meta-contents"><p>' + minutes + " min</p></div>";
+    meta.appendChild(col);
+    meta.classList.add("has-reading-time");
+  })();
+</script>

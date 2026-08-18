@@ -12,7 +12,7 @@ date-format: "D MMMM YYYY"
 format:
   html:
     code-fold: false
-    code-tools: true
+    code-tools: false   # no "</> Code" / source button on posts
     fig-cap-location: bottom
     citations-hover: true
 

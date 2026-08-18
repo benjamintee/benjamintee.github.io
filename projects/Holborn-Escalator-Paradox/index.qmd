@@ -10,17 +10,17 @@ image-alt: "Investigating the Holborn Escalator Paradox"
 draft: false
 ---
 
-## Context 
+## Background
 
 In 2016, Transport for London introduced a series of initiatives to reduce station crowding and improve safety on the Underground's escalators. One of the more contentious was a trial at Holborn station. On selected escalators, walking was prohibited and passengers were asked to stand on both sides instead.
 
 The reaction was not warm. The policy was described as "terrible", "loopy", "crap" and a "very bad idea". Surely removing the option to walk would make things slower, not faster?
 
-It didn't. During rush hour, the trial found that **16,220 people** could travel on Holborn's 23.4m escalators under a standing-only regime, compared with **12,745** on escalators split between walkers and standers. Roughly a 30% improvement, achieved by asking people to do less.
+It didn't. During rush hour, the trial found that *16,220 people* could travel on Holborn's 23.4m escalators under a standing-only regime, compared with *12,745* on escalators split between walkers and standers. Roughly a 30% improvement, achieved by asking people to do less.
 
 The explanation lies in "escalator etiquette", the deeply ingrained London convention of standing on the right and walking on the left. For the individual, this works well as those willing to walk move through the station faster than they otherwise would. But during peak periods the convention creates a structural imbalance. Queues build up at the foot of the escalator waiting to join the right-hand standing lane, while the left-hand walking lane runs well below capacity. The result is inefficient queueing, longer waits for the majority, and in some cases genuinely dangerous crowd dynamics in the concourse below.
 
-So what actually drives this phenomenon, and why does *encouraging standing* yield higher throughput?
+**So what actually drives this phenomenon, and why does *encouraging standing* yield higher throughput?**
 
 ## The Problem
 
@@ -67,6 +67,8 @@ The model is evaluated on its ability to reproduce two empirical patterns. The f
 | `arrival-tick` | Integer ≥ 0 | Tick at which the agent joined the demand pool, used to calculate total station time |
 | `agent-state` | String | "approaching" \| "queueing" \| "on-escalator" |
 
+: {tbl-colwidths="[20,15,65]"}
+
 **Patch state variables.**
 
 | Variable | Type/Range | Description |
@@ -77,13 +79,15 @@ The model is evaluated on its ability to reproduce two empirical patterns. The f
 | `dist-to-escalator` | Integer ≥ 0 | Dijkstra cost value calculated during setup; shortest path distance to the escalator entrance |
 | `path-selected?` | Boolean | Temporary flag used during Dijkstra computation to track visited patches |
 
+: {tbl-colwidths="[20,15,65]"}
+
 **Scales.** Each patch represents ~0.4 metres, the depth of a standard escalator step, and each tick corresponds to 0.533 seconds. These are not arbitrary: they are chosen so that the escalator advances exactly **1 patch per tick**, equivalent to **0.75 m/s** — the standard operating speed for London Underground escalators.
 
 Behavioural speed then emerges on top of this mechanical baseline. Walkers attempt one probabilistic extra step per tick, so an agent at 100% `walk-probability` moves 2 patches per tick (1.5 m/s), while one at 50% averages 1.5 patches per tick (1.13 m/s). This stochastic treatment allows small random variations in movement, better reflecting real variation in human movement than a fixed walking speed.
 
 ### Process Overview and Scheduling
 
-The simulation runs for 13,560 ticks — 120 minutes at 113 ticks/min — comprising a 30-minute warm-up, a 60-minute rush hour (08:30–09:30), and a 30-minute cool-down. Five submodels execute sequentially each tick:
+The simulation runs for 13,560 ticks - 120 minutes at 113 ticks/min. It comprises a 30-minute warm-up, a 60-minute rush hour (08:30–09:30), and a 30-minute cool-down. Five submodels execute sequentially each tick:
 
 1. **Arrival** (`submodel-arrival`). During rush hour, commuters arrive via train batch into a demand pool at fixed intervals, then drain into spawn patches at 30 pax/tick to model platform exit bottlenecks. Each agent is assigned a walker/stander type and preferred lane based on `pct-walkers`, and receives an arrival timestamp used to calculate end-to-end wait time. Off-peak, agents arrive at 20 per minute.
 2. **Approach** (`submodel-approach`). Agents follow a channel-based distance field toward the escalator. Directional penalty terms applied across two Euclidean cost surfaces create angled corridors, separating standers leftward and walkers rightward. Agents move on an 8-connected grid and transition to "queueing" on entering the marshalling zone.
@@ -95,7 +99,7 @@ The model then updates global counters, including per-minute throughput and mean
 
 ### Initialisation 
 
-On setup, two escalator lanes are created — x=0 for standing, x=1 for walking — spanning 60 steps vertically and flanked by boundary rails. A tapered marshalling zone of 4 rows funnels agents toward the entrance, while a 25-patch concourse and 10-row spawn zone represent the wider station. The channel-based distance field is computed once at setup rather than each tick, keeping runtime manageable across long simulations.
+On setup, two escalator lanes are created (x=0 for standing, x=1 for walking) spanning 60 steps vertically and flanked by boundary rails. A tapered marshalling zone of 4 rows funnels agents toward the entrance, while a 25-patch concourse and 10-row spawn zone represent the wider station. The channel-based distance field is computed once at setup rather than each tick, keeping runtime manageable across long simulations.
 
 Default parameters are exposed as sliders:
 
@@ -115,7 +119,7 @@ Default parameters are exposed as sliders:
 
 The model does not read external data files; instead, its parameters are calibrated directly against published specifications and TfL's own trial figures.
 
-**Escalator geometry** was derived from London Underground specifications — 0.4m step depth, 0.75 m/s speed, ~24m height — which together yield the 1 tick = 0.533s conversion. **Throughput benchmarks** draw from the Holborn pilot report, where counter data showed ~80 pax/min per escalator at peak, with standing-only carrying ~3,250 passengers against ~2,550 under mixed behaviour during 08:30–09:30. **Train headway data**, at 2–3 minute intervals across the Piccadilly and Central lines, informed the batch arrival parameterisation.
+*Escalator geometry* was derived from London Underground specifications — 0.4m step depth, 0.75 m/s speed, ~24m height — which together yield the 1 tick = 0.533s conversion. *Throughput benchmarks* draw from the Holborn pilot report, where counter data showed ~80 pax/min per escalator at peak, with standing-only carrying ~3,250 passengers against ~2,550 under mixed behaviour during 08:30–09:30. *Train headway data*, at 2–3 minute intervals across the Piccadilly and Central lines, informed the batch arrival parameterisation.
 
 ### Submodels 
 
@@ -133,12 +137,13 @@ Figure 1 sets out the five submodels and their decision logic in detail.
 | Escalator dynamics | Step-gap (standing) | 2 steps per person → ~56.5 pax/min/lane |
 | | Step-gap (walking) | 3 steps per person → ~37.7 pax/min/lane |
 | | Lane discipline | 120s, to mirror social norming and allow a denser standing lane relative to the walking lane |
+: {tbl-colwidths="[20,15,65]"}
 
 Note the demand condition in particular: demand is set to slightly exceed escalator capacity. This matters, because the paradox is a *congestion* phenomenon. Below capacity, lane allocation barely registers; it is only once queues begin to build that an under-used lane becomes an expensive one.
 
 BehaviorSpace experiments were then run across 5 iterations with different random seeds, with a simple average taken for key output variables.
 
-### Results 
+## Results 
 
 **The mixed regime performs worst, confirming the paradox.**
 
@@ -154,18 +159,60 @@ The journey time panel is arguably the more striking of the two. Under the mixed
 
 Varying how long agents tolerate waiting before abandoning their preferred lane produces the clearest result in the study. At low thresholds (30s), standers switch lanes to redistribute demand, achieving throughput near standing-only levels (~104 pax/min). At high discipline (300s), agents refuse to switch despite visible congestion, and throughput falls 14% to ~93 pax/min while travel times exceed 16 minutes.
 
-Critically, performance under standing-only and all-walking regimes remains essentially **invariant** to this parameter. Lane discipline only degrades the mixed regime — which is precisely what identifies the mechanism. The paradox arises from asymmetric lane utilisation dictated by social norms, not from walking itself.
+Critically, performance under standing-only and all-walking regimes remains essentially *invariant* to this parameter. Lane discipline only degrades the mixed regime — which is precisely what identifies the mechanism. The paradox arises from asymmetric lane utilisation dictated by social norms, not from walking itself.
 
-### Discussion 
+Click to see how the models perform below. 
 
-The policy implication follows directly from that last result. TfL's standing-only trial succeeds not because it eliminates walking, but because it eliminates the norm that prevents standers from using both lanes. 
+::: {.panel-tabset}
 
-This reframing opens up a wider set of interventions than a blanket ban. If the binding constraint is norm adherence rather than walking speed, then measures that interrupt the keep-right habit specifically during peak congestion such as signage, floor markings, platform announcements and staff direction,  might capture a substantial share of the same benefit without removing walking as an option during quieter periods. The model suggests the gains are available wherever lane-switching becomes responsive to congestion.
+## Mixed regime
+
+```{=html}
+<video controls width="100%">
+  <source src="videos/mixed.mp4" type="video/mp4">
+</video>
+```
+
+## Standing-only
+
+```{=html}
+<video controls width="100%">
+  <source src="videos/standing-only.mp4" type="video/mp4">
+</video>
+```
+
+## Walking-only
+
+```{=html}
+<video controls width="100%">
+  <source src="videos/walking-only.mp4" type="video/mp4">
+</video>
+```
+
+:::
+
+## Discussion 
+
+TfL's standing-only trial succeeds not because it eliminates walking, but because it eliminates the norm that prevents standers from using both lanes. 
+
+This reframing opens up a wider set of interventions than a blanket ban. If the binding constraint is social norming rather than walking speed, then measures that interrupt the keep-right habit specifically during peak congestion such as signage, floor markings, platform announcements and staff direction, might capture a substantial share of the same benefit without removing walking as an option during quieter periods. The model suggests the gains are available wherever lane-switching becomes responsive to congestion.
 
 Methodologically, the model situates itself at the intersection of pedestrian flow simulation and cellular automata approaches to collective behaviour. It builds on foundational CA pedestrian models by Blue & Adler (2001) and Burstedde et al. (2001), which demonstrate that simple rule-based movement on grids can reproduce realistic crowd dynamics, and adapts methods from evacuation studies by Galea et al. (2016) and Filippidis et al. (2026) to construct a two-lane escalator with unidirectional flow and mechanical movement.
 
-Where conventional queueing models assume homogeneous agents and steady-state arrivals, this ABM introduces behavioural heterogeneity — varying walking speeds, lane discipline, and switching behaviour — to examine how individual behaviours shape aggregate outcomes. Throughput **emergence** arises from decentralised decision-making, including the observed inversion under mixed behaviour. Agents pursue individual-maximising **objectives** by seeking the shortest route to the escalator given their preferences. Environmental **sensing** occurs via lane-clear checks and the channel-based distance field, while **adaptation** operates through patience-driven lane switching, allowing the walk/stand composition to evolve endogenously. **Stochasticity** enters through batch arrivals, spawn location, agent types, and probabilistic walking.
+Where conventional queueing models assume homogeneous agents and steady-state arrivals, this ABM introduces behavioural heterogeneity — varying walking speeds, lane discipline, and switching behaviour — to examine how individual behaviours shape aggregate outcomes. Throughput *emergence* arises from decentralised decision-making, including the observed inversion under mixed behaviour. Agents pursue individual-maximising *objectives* by seeking the shortest route to the escalator given their preferences. Environmental *sensing* occurs via lane-clear checks and the channel-based distance field, while *adaptation* operates through patience-driven lane switching, allowing the walk/stand composition to evolve endogenously. *Stochasticity* enters through batch arrivals, spawn location, agent types, and probabilistic walking.
 
 **Limitations.** The model assumes a homogeneous population in terms of mobility, with no luggage, no accompanying children, and no accessibility needs, which would affect both boarding gaps and lane choice in practice. Lane discipline is treated as a single global patience threshold rather than a distribution across individuals, and agents do not learn across repeated journeys, though in reality commuters adapt their behaviour over weeks of experience. Finally, the model represents a single escalator in isolation, whereas the Holborn trial operated within a wider station system where displaced demand has somewhere else to go.
 
 ## References
+
+Blue, V.J. and Adler, J.L. (2001) “Cellular automata microsimulation for modeling bi-directional pedestrian walkways,” Transportation Research Part B: Methodological, 35(3), pp. 293–312. Available at: https://doi.org/10.1016/S0191-2615(99)00052-1.
+
+Burstedde, C. et al. (2001) “Simulation of pedestrian dynamics using a 2-dimensional cellular automaton,” Physica A: Statistical Mechanics and its Applications, 295(3–4), pp. 507–525. Available at: https://doi.org/10.1016/S0378-4371(01)00141-8.
+
+Filippidis, L. et al. (2026) “Assessing the impact of rider-only escalator etiquette using agent-based modelling,” Safety Science, 196, p. 107064. Available at: https://doi.org/10.1016/j.ssci.2025.107064.
+
+Harrison, C. et al. (2016) “Report on Holborn Pilot for Standing on Both Sides of Escalators.”
+
+Galea et al. (2016) Investigating the Representation of Merging Behavior at the Floor—Stair Interface in Computer Simulations of Multi-Floor Building Evacuations (2016). Available at: https://doi.org/10.1177/1042391508095092.
+
+Schelling, T.C. (1971) “Dynamic models of segregation,” The Journal of Mathematical Sociology, 1(2), pp. 143–186. Available at: https://doi.org/10.1080/0022250X.1971.9989794.
