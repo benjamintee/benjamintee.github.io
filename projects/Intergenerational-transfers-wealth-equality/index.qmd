@@ -1,7 +1,7 @@
 ---
 title: "Modelling Intergenerational Transfers and Wealth Inequality"
 description: |
-   Inequality is shaped not only by unequal access to opportunity, but by mechanisms that allow advantage to accumulate across generations. Policies aimed at reducing inequality should reduce spatial differences in access to opportunity and reduce the channels through which unfair wealth and locational advantages are transmitted.
+   Inequality is not just shaped by unequal access to opportunity, but by mechanisms that allow advantage to accumulate across generations. Policies aimed at reducing inequality should reduce spatial differences in access to opportunity and reduce the channels through which unfair wealth and locational advantages are transmitted.
 author: "Benjamin Tee"
 date: "2026-03-01"
 bibliography: References.bib
