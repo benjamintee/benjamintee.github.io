@@ -56,7 +56,7 @@ All experiments used 400 initial agents and 10 repetitions per parameter combina
 
 [*Experiment 1 (S2)*]{.underline}*:* *num-hills* was varied from 1 to 4 ([Figure 1]{.underline}) to examine spatial concentration effects.
 
-![**Number of Hills (from 1 to 4) with total sugar held approximately constant**](Figures\Figure1.png)
+![**Number of Hills (from 1 to 4) with total sugar held approximately constant**](figures\Figure1.png)
 
 [*Experiment 2 (S3)*]{.underline}*:* *inheritance-rate* was varied at intervals of 0.25 between 0.00 and 1.00, with *inherit-location?* toggled on and off, holding geography constant with *num-hills = 2*. *inheritance-rate* was subsequently varied at intervals of 0.05 to explore tipping points. 
 
@@ -66,7 +66,7 @@ All experiments used 400 initial agents and 10 repetitions per parameter combina
 
 [Figure 2]{.underline} shows how Gini changes over time for each hill configuration. All configurations begin with Gini around **0.122** and rise sharply in the first 100 ticks as agents compete for resources and weaker agents die off. The trajectories then plateau. The 1-hill configuration reaches the highest final Gini **(0.448)**, while the 4-hill configuration reaches the lowest **(0.354)**, with 2-hill and 3-hill configurations falling in between.
 
-![](figures/Figure1.png){fig-alt="Gini Over Time by Resource Concentration"}
+![](figures/Figure2.png){fig-alt="Gini Over Time by Resource Concentration"}
 
 With total sugar held constant, survival rates were similar across configurations, suggesting that resource geography affects wealth distribution rather than carrying capacity. Mean wealth increased from **959** in the 1-hill setup to **1,117** in the 4-hill setup.
 
