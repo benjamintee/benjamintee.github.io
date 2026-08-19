@@ -11,7 +11,7 @@ listing:
   sort-ui: [date, title]
   filter-ui: true
   fields: [image, date, title, description, reading-time, categories]
-  image-height: "200px"
+  image-height: "260px"
   feed: true                   # generates projects/index.xml (RSS)
 page-layout: full
 title-block-banner: false

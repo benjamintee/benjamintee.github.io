@@ -203,6 +203,10 @@ Where conventional queueing models assume homogeneous agents and steady-state ar
 
 **Limitations.** The model assumes a homogeneous population in terms of mobility, with no luggage, no accompanying children, and no accessibility needs, which would affect both boarding gaps and lane choice in practice. Lane discipline is treated as a single global patience threshold rather than a distribution across individuals, and agents do not learn across repeated journeys, though in reality commuters adapt their behaviour over weeks of experience. Finally, the model represents a single escalator in isolation, whereas the Holborn trial operated within a wider station system where displaced demand has somewhere else to go.
 
+View the full model in netlogo [here.](https://github.com/benjamintee/CASA_ABM_Assessment/blob/main/escalator_final.nlogox)
+
+*This article was submitted as part of my Master's coursework for the CASA0011 Agent-Based Modelling for Spatial Systems module.*
+
 ## References
 
 Blue, V.J. and Adler, J.L. (2001) “Cellular automata microsimulation for modeling bi-directional pedestrian walkways,” Transportation Research Part B: Methodological, 35(3), pp. 293–312. Available at: https://doi.org/10.1016/S0191-2615(99)00052-1.
