@@ -8,7 +8,7 @@ bibliography: References.bib
 nocite: |
   @*
 csl: harvard-cite-them-right.csl
-categories: [ABMS, Intergenerational Transfers, Inequity]
+categories: [ABMS, Intergenerational Transfers, Inequality]
 image: intergenerational_transfers.jpeg
 image-alt: "Modelling Intergenerational Transfers and Wealth Inequality"
 draft: false

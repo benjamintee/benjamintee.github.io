@@ -8,7 +8,7 @@ bibliography: References.bib
 nocite: |
   @*
 csl: harvard-cite-them-right.csl
-categories: [OLS, GWR, Energy, Inequity]
+categories: [OLS, GWR, Energy, Inequality]
 image: Islington_street.jpg
 image-alt: "Examining Differences in Household Energy Costs across England"
 draft: false
