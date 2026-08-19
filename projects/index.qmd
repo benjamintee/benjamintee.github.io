@@ -1,5 +1,5 @@
 ---
-title: "Projects"
+title: "Project Repository"
 subtitle: "This repository showcases the write-ups of the analysis, mapping and modelling work that I have done."
 listing:
   # `grid` = cards with thumbnails. Other options: `default`, `table`.
@@ -11,7 +11,7 @@ listing:
   sort-ui: [date, title]
   filter-ui: true
   fields: [image, date, title, description, reading-time, categories]
-  image-height: "260px"
+  image-height: "280px"
   feed: true                   # generates projects/index.xml (RSS)
 page-layout: full
 title-block-banner: false
