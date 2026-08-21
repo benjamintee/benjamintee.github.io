@@ -1,0 +1,1410 @@
+---
+title: "Retail Location Optimisation via Spatial Interaction Modelling: A Case Study of the Borough of Havering"
+jupyter: python3
+description: |
+  This study explores the use of a production-constrained spatial interaction model to evaluate two candidate supermarket locations in the London Borough of Havering.
+author: "Benjamin Tee"
+date: "2026-04-26"
+bibliography: References.bib
+nocite: |
+  @*
+csl: harvard-cite-them-right.csl
+categories: [Retail Optimisation, Urban Simulation, SIM]
+image: supermarket_veg.jpg
+image-alt: "Retail Location Optimisation via Spatial Interaction Modelling"
+draft: false
+---
+## Objective
+
+This study applies a production-constrained spatial interaction model to evaluate two candidate supermarket locations in the London Borough of Havering. A *poisson log-linear GLM* with *exponential distance decay* was calibrated using 80,604 customer trips across 775 local areas and 56 existing stores. 
+
+By comparing two potential sites, the model reveals that footfall was more sensitive to overall location and accessibility than store size, with *Location A* drawing 11% more predicted traffic than *Location B* due to its central reach, which widens if travel costs rise. However, *Location B* outperforms *Location A* in local walkability, with over 1,700 more residents living within a 15-minute walk. These results highlight the strategic tension in retail location analysis, forcing decision makers to weigh macro-level catchment against micro-level pedestrian accessibility. 
+
+## 2. Spatial Interaction Models 
+
+Spatial interaction models are used to predict flows (e.g. trips, trade, migration) between origins $i$ and destinations $j$ as a function of the characteristics at each location and the cost of travelling between them. The simplest gravity model, as formalised by @wilson_family_1971, assumes that interaction is proportional to the "mass" at each location and inversely proportional to the separation between them.
+
+### 2.1 Introduction to Spatial Interaction Models
+
+### 2.1.1 Unconstrained (gravity) model 
+
+The basic form is the **unconstrained gravity model**, where only total flows are conserved. This is commonly used in trade or migration modelling where neither origin nor destination totals are known in advance.
+
+$$
+T_{ij} = KO_i^{\alpha} D_j^{\gamma} f(c_{ij}) \tag{1}
+$$
+
+where $T_{ij}$ is the predicted flow from origin $i$ to destination $j$. $O_i$ and $D_j$ represent origin and destination parameters (e.g. population or jobs), and $c_{ij}$ is distance or travel cost. $f(c_{ij})$ is a deterrence or cost function that captures decay with either a *power* function $c_{ij}^{-\beta}$ or an *exponential* function $e^{-\beta c_{ij}}$, where $\beta$ is the **distance decay parameter** — a larger $\beta$ means people are much less willing to travel far. $K$ is a scaling constant, while $\alpha$ and $\gamma$ are elasticity parameters calibrated from data. $\alpha$ governs how strongly origin size translates to flow generation, and $\gamma$ models how strongly destination attractiveness influences flows. For example, a larger $\gamma$ means larger stores draw disproportionately more people. When $\alpha = \gamma = 1$, the model reduces to the standard gravity form.
+
+### 2.1.2 Production-constrained model
+
+The **production-constrained (origin-constrained) model** imposes $\sum_j T_{ij} = O_i$, ensuring total outflows from each origin match observed production through balancing factor $A_i$. This specification is typically applied in retail location analysis and transport trip distribution, where the number of trips originating from each zone is known but destination choice is to be modelled.
+
+$$
+T_{ij} = A_i O_i D_j^{\gamma} d_{ij}^{-\beta}, \quad \text{where} \quad A_i = \frac{1}{\sum_j D_j^{\gamma} d_{ij}^{-\beta}} \tag{2}
+$$
+
+### 2.1.3 Attraction-constrained model
+
+The **attraction-constrained (destination-constrained) model** imposes $\sum_i T_{ij} = D_j$, ensuring total inflows into each destination match observed flows through balancing factor $B_j$. This specification is typically applied where destinations have fixed capacities, such as migration to cities with a fixed housing stock or hospital allocation with fixed bed counts.
+
+$$
+T_{ij} = B_j O_i^{\alpha} D_j d_{ij}^{-\beta}, \quad \text{where} \quad B_j = \frac{1}{\sum_i O_i^{\alpha} d_{ij}^{-\beta}} \tag{3}
+$$
+
+### 2.1.4 Doubly-constrained model
+
+Finally, the **doubly-constrained model** is used when both origin and destination totals are known. Both $\sum_j T_{ij} = O_i$ and $\sum_i T_{ij} = D_j$ must hold simultaneously, enforced by coupled balancing factors $A_i$ and $B_j$. As both totals are fixed, the elasticities $\alpha$ and $\gamma$ are no longer free parameters and $O_i$, $D_j$ enter linearly. Since $A_i$ and $B_j$ are mutually dependent, they are solved iteratively. This model is well-suited to commuting flows, where both residential population and workplace employment totals are known.
+
+$$
+T_{ij} = A_i B_j O_i D_j d_{ij}^{-\beta}, \quad \text{where} \quad A_i = \frac{1}{\sum_j B_j D_j d_{ij}^{-\beta}} \quad \text{and} \quad B_j = \frac{1}{\sum_i A_i O_i d_{ij}^{-\beta}} \tag{4}
+$$
+
+### 2.2 Fitting and Calibrating Spatial Interaction Models
+
+The **production-constrained model** is adopted for this analysis, given that we know the residential population in each of the 775 Output Areas (OAs) in Havering, and wish to predict how these populations distribute their trips across 56 existing supermarkets (i.e. we don't know destination totals). The attractiveness of each store can be measured by its floor area (m²), and the cost is the road network distance.
+
+We test both a power and an exponential cost function to model deterrence.
+
+| Cost Function | Formula | Behaviour |
+|:------------------|:------------------|:---------------------------------|
+| Power (inverse) | $f(d) = d^{-\beta}$ | Slow initial decay, heavy tail. People occasionally travel far |
+| Exponential | $f(d) = e^{-\beta d}$ | Rapid decay. Interaction drops off sharply with distance |
+
+We specify the production-constrained model as a Poisson regression by taking logs of the right-hand side of Equation $(2)$ and assuming these are logarithmically linked to the Poisson-distributed mean ($\lambda_{ij}$) of the $T_{ij}$ variable:
+
+$$
+\text{Power function:} \quad \lambda_{ij} = \exp(\alpha_i + \gamma \ln D_j - \beta \ln d_{ij}) \tag{5}
+$$
+
+$$
+\text{Exponential function:} \quad \lambda_{ij} = \exp(\alpha_i + \gamma \ln D_j - \beta d_{ij}) \tag{6}
+$$
+
+Here $\alpha_i$ are origin fixed effects estimated for each OA, which absorb the balancing factor $A_i O_i$ and directly enforce the production constraint $\sum_j \hat{T}_{ij} = O_i$ for every origin exactly.
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+# 0. LOAD LIBRARIES AND PACAKAGES
+import networkx as nx
+import osmnx as ox
+import os
+import pandas as pd
+import geopandas as gpd
+import numpy as np
+import scipy.stats
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from math import sqrt
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+# 1.  LOAD POPULATION, DISTANCE, FLOWS and STORE DATA   
+# Define base data directory 
+DATA_DIR = r"C:\Users\benja\Documents\CASA\CASA\Urban Simulation\CASA_UrbSIM_Assessment\data"
+files = {
+    "pop": "pop_Havering.csv",
+    "suparea": "supermarket_area.csv",
+    "dist": "oa_retail_distance_matrix.csv",
+    "flow": "oa_retail_flow_matrix.csv",
+}
+
+# Load all datasets into a dictionary via list comprehension
+data = {
+    name: pd.read_csv(os.path.join(DATA_DIR, fname), index_col=0)
+    for name, fname in files.items()
+}
+
+# Unpack into individual variables (optional)
+pop, suparea, dist, flow = data["pop"], data["suparea"], data["dist"], data["flow"]
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+
+# 2. IDENTIFY NEW AND EXISTING STORES IN STORE DATA
+existing_stores = [c for c in flow.columns if c.startswith('1')]
+new_locations = [c for c in flow.columns if c.startswith('E')]
+
+print(f"Origins (OAs): {len(pop)}")
+print(f"Destinations (existing stores): {len(existing_stores)}")
+print(f"Total observed flow: {flow[existing_stores].values.sum():.0f}")
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+# 3. BUILD LONG-FORMAT DATAFRAME
+records = []
+for oa_id in flow.index:
+    for store_id in existing_stores:
+        records.append({
+            'origin': str(oa_id),
+            'store': str(store_id),
+            'flow': flow.loc[oa_id, store_id],
+            'distance': dist.loc[oa_id, store_id],
+            'area': suparea.set_index('shop_id').loc[int(store_id), 'area_m2']
+        })
+
+df = pd.DataFrame(records)
+
+# Create log variables (handle zero distances with a small floor)
+df['log_area'] = np.log(df['area'])
+df['log_dist'] = np.log(df['distance'].clip(lower=1))
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+# 4. FIT PRODUCTION-CONSTRAINED POISSON GLM (POWER COST FUNCTION)
+# ln(T_ij) = alpha_i + gamma * ln(D_j) - beta * ln(d_ij)
+# where alpha_i = ln(A_i * O_i) absorbs the balancing factor and enforces
+# the production constraint sum_j(T_ij) = O_i exactly for each origin
+
+formula_pow = 'flow ~ origin + log_area + log_dist - 1'
+model_pow = smf.glm(formula=formula_pow, data=df, family=sm.families.Poisson()).fit()
+
+gamma_pow = model_pow.params['log_area']
+beta_pow  = -model_pow.params['log_dist']
+
+print(f"\n=== Power-function model parameters ===")
+print(f"gamma (attractiveness exponent): {gamma_pow:.3f}")
+print(f"beta  (distance deterrence):     {beta_pow:.3f}")
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+# 5. FLOW CONSERVATION CHECK
+df['fitted_pow'] = model_pow.mu
+
+obs_by_origin  = df.groupby('origin')['flow'].sum()
+pred_by_origin = df.groupby('origin')['fitted_pow'].sum()
+
+print(f"\n{'='*60}")
+print(f"PRODUCTION CONSTRAINT CHECK (Power model)")
+print(f"{'='*60}")
+print(f"Total observed:  {obs_by_origin.sum():.0f}")
+print(f"Total predicted: {pred_by_origin.sum():.0f}")
+print(f"Max  |O_i - P_i| across all origins: {(obs_by_origin - pred_by_origin).abs().max():.2e}")
+print(f"Mean |O_i - P_i| across all origins: {(obs_by_origin - pred_by_origin).abs().mean():.2e}")
+print(f"=> Flows are conserved at every origin")
+
+# Show a sample of origins
+comparison = pd.DataFrame({
+    'Observed_O_i':  obs_by_origin,
+    'Predicted_O_i': pred_by_origin.round(4),
+    'Difference':    (obs_by_origin - pred_by_origin).round(6)
+}).head(10)
+print(f"\nSample of first 10 origins:")
+print(comparison.to_string())
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+# 6. FIT PRODUCTION-CONSTRAINED POISSON GLM (EXPONENTIAL COST FUNCTION)
+# ln(T_ij) = alpha_i + gamma * ln(D_j) - beta * d_ij
+
+formula_exp = 'flow ~ origin + log_area + distance - 1'
+model_exp = smf.glm(formula=formula_exp, data=df, family=sm.families.Poisson()).fit()
+
+gamma_exp = model_exp.params['log_area']
+beta_exp  = -model_exp.params['distance']
+
+df['fitted_exp'] = model_exp.mu
+pred_exp_by_origin = df.groupby('origin')['fitted_exp'].sum()
+
+print(f"\n=== Exponential-function model parameters ===")
+print(f"gamma (attractiveness): {gamma_exp:.4f}")
+print(f"beta  (deterrence):     {beta_exp:.6f}")
+print(f"Total observed:  {obs_by_origin.sum():.0f}")
+print(f"Total predicted: {pred_exp_by_origin.sum():.0f}")
+print(f"=> Exponential model also conserves flows exactly")
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+# 7. GOODNESS-OF-FIT COMPARISON
+def calc_r2(observed, estimated):
+    """Squared Pearson correlation between observed and fitted flows."""
+    r, _ = scipy.stats.pearsonr(observed, estimated)
+    return r**2
+
+def calc_rmse(observed, estimated):
+    """Root mean square error between observed and fitted flows."""
+    return sqrt(((observed - estimated)**2).mean())
+
+fit_comparison = pd.DataFrame({
+    "Cost function":      ["Power", "Exponential"],
+    "γ (attractiveness)": [f"{gamma_pow:.3f}", f"{gamma_exp:.3f}"],
+    "β (deterrence)":     [f"{beta_pow:.3f}", f"{beta_exp:.6f}"],
+    "β units":            ["dimensionless (elasticity)", "per metre"],
+    "R²":                 [f"{calc_r2(df['flow'], df['fitted_pow']):.4f}",
+                           f"{calc_r2(df['flow'], df['fitted_exp']):.4f}"],
+    "RMSE":               [f"{calc_rmse(df['flow'], df['fitted_pow']):.3f}",
+                           f"{calc_rmse(df['flow'], df['fitted_exp']):.3f}"],
+})
+
+fit_comparison
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+# 8. EXPORT FITTED MATRIX (without rounding — preserves conservation)
+fitted_matrix = df.pivot_table(
+    values="fitted_pow", index="origin", columns="store", aggfunc="sum"
+)
+
+# Save directly to the defined central data directory
+output_path = os.path.join(DATA_DIR, "fitted_flow_matrix_power.csv")
+fitted_matrix.to_csv(output_path)
+```
+
+We obtain the regression outcomes in @tbl-cost-function. 
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tbl-cost-function
+#| tbl-cap: "Goodness-of-fit comparison: power vs exponential cost function."
+fit_comparison.style.hide(axis="index")
+```
+
+Both models yield similar goodness-of-fit, with the **exponential form marginally better**. The low $\gamma \approx 0.114$ indicates that store size has only a modest effect on store choice. The low $\beta$ values indicate a relatively flat distance decay, meaning that people in Havering are more willing to travel, consistent with car-dependent suburban retail patterns. The $R^2$ of $\approx 0.12$ is modest but expected given the sparsity of the observed flow matrix.
+
+Flow conservation is guaranteed structurally by the balancing factor $A_i$, defined as:
+
+$$
+A_i = \frac{1}{\sum_j D_j^{\gamma} \, d_{ij}^{-\beta}}
+$$
+
+which ensures that $\sum_j \hat{T}_{ij} = O_i$ for all $i$. This is confirmed empirically in @fig-conservation.
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-conservation
+#| fig-cap: "Flow conservation check - predicted total outflows per Output Area against observed totals. All 775 OAs lie on the 45° line, confirming the production constraint holds."
+#| fig-align: center
+
+import matplotlib.pyplot as plt
+
+# obs_by_origin / pred_by_origin computed in the conservation-check chunk above
+resid = (obs_by_origin - pred_by_origin).abs()
+
+fig, ax = plt.subplots(figsize=(5.5, 5.5))
+
+lims = [0, obs_by_origin.max() * 1.05]
+ax.plot(lims, lims, color="#c0392b", lw=1.2, ls="--", zorder=1,
+        label="45° line ($\\hat{O}_i = O_i$)")
+ax.scatter(obs_by_origin, pred_by_origin, s=16, alpha=0.55,
+           color="#2c7fb8", edgecolor="none", zorder=2,
+           label=f"Output Areas (n = {len(obs_by_origin)})")
+
+ax.set_xlim(lims); ax.set_ylim(lims)
+ax.set_aspect("equal")   # essential: a 45° line is only 45° on equal axes
+ax.set_xlabel("Observed total outflow, $O_i$ (trips)",
+             fontsize=11)
+ax.set_ylabel("Predicted total outflow, $\\hat{O}_i$ (trips)",
+             fontsize=11)
+ax.legend(frameon=False, fontsize=10, loc="upper left")
+ax.grid(alpha=0.25, lw=0.5)
+
+# Deviation magnitude carries the actual evidence; the scatter alone can't show it
+ax.annotate(f"max $|O_i - \\hat{{O}}_i|$ = {resid.max():.2e} trips",
+            xy=(0.97, 0.05), xycoords="axes fraction",
+            ha="right", fontsize=8, color="#444")
+
+for s in ("top", "right"):
+    ax.spines[s].set_visible(False)
+
+plt.tight_layout()
+plt.show()
+```
+
+## 3. Scenario Analysis 
+
+### 3.1 Assessment of Two Candidate Supermarket Locations
+
+Two candidate sites in the London Borough of Havering are evaluated. *Location A (E00011326)* is sited centrally, where population is more concentrated but competition is stricter. *Location B (E00011710)* sits at the Southern periphery with less surrounding competition (@fig-site-assessment). The site assessment is undertaken under two scenarios, each introducing a single new store into the destination set independently. 
+
+We undertake simulation for two store sizes ($\text{Small} = 280\text{ m}^2, \text{Large} = 2,800\text{ m}^2$) to evaluate the sensitivity of the results to store size.
+
+The **negative exponential cost function** is adopted. Access to supermarkets is highly localized, as individuals exhibit strong sensitivity to distance when carrying purchases home, a pattern well-captured by the exponential form's rapid spatial decay [@devries2004]. Unlike the long-tailed power function, which overestimates the relevance of distant supermarkets, the exponential model better reflects routine suburban access constraints. This conceptual fit is confirmed empirically, yielding superior goodness-of-fit ($R^2 = 0.1168$, $\text{RMSE} = 4.120$) compared to the power model ($R^2 = 0.1163$, $\text{RMSE} = 4.121$).
+
+The calibrated $\hat{\gamma}$ and $\hat{\beta}$ are held fixed from the calibration stage; only $A_i$ is recomputed to accommodate the expanded destination set, with flow conservation verified after each run. 
+
+**Summary of Results**
+
+| Metric                 | Small A | Small B | Large A | Large B |
+|------------------------|---------|---------|---------|---------|
+| Total flow (trips)     | 1,368   | 1,228   | 1,782   | 1,605   |
+| Mean weighted distance | 4,397 m | 8,819 m | 4,391 m | 8,743 m |
+| Mean market share      | 1.72%   | 1.55%   | 2.25%   | 2.02%   |
+
+**Location A (E00011326) is the stronger investment in both scenarios.** It attracts 11% more flow than Location B, as the exponential cost function penalises Location B's peripheral position (mean customer distance \~4.4 km vs \~8.8 km for B). **Location B (E00011710)** sits on the southern periphery of the borough, where the surrounding population is sparse and most residents face longer distances to reach it.
+
+We observe a modest size effect ($\gamma = 0.11$). Scaling from $280\ m^2$ to $2{,}800\ m^2$ increases predicted flow by approximately 30%, consistent across both locations, as $\gamma$ enters the model uniformly regardless of site. 
+
+One limitation is that only flows from within Havering are redistributed to the proposed supermarkets. In reality, *Location B's* position on the southern boundary means that OAs outside Havering's southern edge fall within its natural catchment but are excluded from the model, which may cause its predicted flows to be slightly underestimated relative to *Location A*.
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+
+# 1. LOAD EXISTING STORES AND FIND THE AREA FOR SMALL AND LARGE STORES
+existing_stores = [c for c in flow.columns if c.startswith('1')]
+area_lookup = suparea.set_index('shop_id')['area_m2']
+
+small_area = int(area_lookup.min())   # 280 m²
+large_area = int(area_lookup.max())   # 2800 m²
+
+# 2. MODEL CALIBRATION
+# Build long-format dataframe: one row per (origin, store) pair
+records = []
+for oa_id in flow.index:
+    for store_id in existing_stores:
+        records.append({
+            'origin':   str(oa_id),
+            'store':    str(store_id),
+            'flow':     flow.loc[oa_id, store_id],
+            'distance': dist.loc[oa_id, store_id],
+            'area':     area_lookup.loc[int(store_id)]
+        })
+df = pd.DataFrame(records)
+df['log_area'] = np.log(df['area'])
+
+# Exponential cost function — use raw distance, not log distance
+formula = 'flow ~ origin + log_area + distance - 1'
+model = smf.glm(formula=formula, data=df, family=sm.families.Poisson()).fit()
+
+# Extract calibrated parameters
+gamma = model.params['log_area']       # attractiveness exponent
+beta  = -model.params['distance']      # distance deterrence (positive)
+
+# Fitted values directly from the GLM
+df['fitted'] = model.mu
+
+# Goodness of fit
+r2   = calc_r2(df['flow'], df['fitted'])
+rmse = calc_rmse(df['flow'], df['fitted'])
+
+print(f"gamma (attractiveness exponent): {gamma:.4f}")
+print(f"beta  (distance deterrence):     {beta:.6f}")
+print(f"R²:   {r2:.4f}")
+print(f"RMSE: {rmse:.3f}")
+
+# 3. WHAT-IF SCENARIOS — NEW STORE WITH REBALANCED A_i
+#   1. Compute O_i (origin totals) from observed flows
+#   2. For each scenario, add new store rows to the long-format df
+#   3. Compute W_j^gamma and exp(-beta * d_ij) for ALL destinations
+#   4. Compute A_i = 1 / sum_j(W_j^gamma * exp(-beta * d_ij))
+#   5. T_ij = A_i * O_i * W_j^gamma * exp(-beta * d_ij)
+#   6. Round to whole persons, pivot to matrix with margins
+
+# Compute O_i (origin row totals) from observed flows
+O_i = pd.DataFrame(df.groupby("origin")["flow"].agg("sum"))
+O_i.rename(columns={"flow": "O_i"}, inplace=True)
+
+print(f"\nO_i (origin totals) — sample:")
+print(O_i.head(5).to_string())
+
+scenario_configs = [
+    ("Small_A", "E00011326", small_area),
+    ("Small_B", "E00011710", small_area),
+    ("Large_A", "E00011326", large_area),
+    ("Large_B", "E00011710", large_area),
+]
+
+results_scenarios = []
+saved_dfs     = {}
+saved_matrices = {}
+
+for scenario_label, new_loc, new_area in scenario_configs:
+    try:
+        # Build scenario dataframe: existing stores + new store
+        new_rows = []
+        for oa_id in df['origin'].unique():
+            new_rows.append({
+                'origin':   oa_id,
+                'store':    new_loc,
+                'flow':     0,
+                'distance': dist.loc[oa_id, new_loc],
+                'area':     new_area,
+            })
+        df_new = pd.DataFrame(new_rows)
+
+        df_scenario = pd.concat([
+            df[['origin', 'store', 'flow', 'distance', 'area']].copy(),
+            df_new
+        ], ignore_index=True)
+        df_scenario = df_scenario.merge(O_i, on="origin", how="left")
+
+        # Compute W_j^gamma and exp(-beta * d_ij) for ALL destinations
+        df_scenario['Wj_gamma']  = df_scenario['area'] ** gamma
+        df_scenario['dist_beta'] = np.exp(-beta * df_scenario['distance'])
+
+        # Recompute A_i with the new destination included
+        df_scenario['Ai1'] = df_scenario['Wj_gamma'] * df_scenario['dist_beta']
+        A_i_scenario = pd.DataFrame(df_scenario.groupby("origin")["Ai1"].sum())
+        A_i_scenario["Ai1"] = 1 / A_i_scenario["Ai1"]
+        A_i_scenario.rename(columns={"Ai1": "A_i_new"}, inplace=True)
+        df_scenario = df_scenario.merge(A_i_scenario, on="origin", how="left")
+
+        # Predicted flows — save exact before rounding
+        df_scenario['prodsimest_exact'] = (
+            df_scenario['A_i_new'] * df_scenario['O_i']
+            * df_scenario['Wj_gamma'] * df_scenario['dist_beta']
+        )
+        df_scenario['prodsimest_scenario'] = (
+            df_scenario['prodsimest_exact'].round(0).astype(int)
+        )
+
+        # Pivot to matrix with margins
+        scenario_matrix = df_scenario.pivot_table(
+            values="prodsimest_scenario", index="origin", columns="store",
+            aggfunc='sum', margins=True
+        )
+
+        # Summary statistics for the new store
+        new_store_data  = df_scenario[df_scenario['store'] == new_loc]
+        new_store_flow  = new_store_data['prodsimest_scenario'].sum()
+        total_flow_all  = df_scenario['prodsimest_scenario'].sum()
+        market_share    = new_store_flow / max(total_flow_all, 1) * 100
+        mean_wt_dist    = (
+            (new_store_data['prodsimest_scenario'] * new_store_data['distance']).sum()
+            / max(new_store_flow, 1)
+        )
+
+        results_scenarios.append({
+            "Scenario":         scenario_label,
+            "Location":         new_loc,
+            "Area (m²)":        new_area,
+            "Gamma":            round(gamma, 4),
+            "Beta":             round(beta, 6),
+            "R2":               round(r2, 4),
+            "RMSE":             round(rmse, 3),
+            "Total Flow (new)": int(new_store_flow),
+            "Mean Wt Dist (m)": round(mean_wt_dist, 0),
+            "Market Share (%)": round(market_share, 2),
+        })
+
+        saved_dfs[scenario_label]      = df_scenario
+        saved_matrices[scenario_label] = scenario_matrix
+
+        print(f"  Completed: {scenario_label}")
+
+    except Exception as e:
+        print(f"  FAILED: {scenario_label} — {e}")
+
+df_results = pd.DataFrame(results_scenarios)
+
+# RESULTS SUMMARY TABLE
+print(df_results[['Scenario', 'Total Flow (new)', 'Mean Wt Dist (m)', 'Market Share (%)']].to_string(index=False))
+
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+# 4. PREDICTED FLOWS — DESTINATION TOTALS FOR RECOMMENDED SCENARIO (LARGE A)
+scenario_matrix = saved_matrices['Large_A']
+
+dest_totals = scenario_matrix.loc['All'].drop('All').sort_values(ascending=False)
+print("Top 10 destinations by predicted flow (Large A — recommended scenario):")
+print(dest_totals.head(10).astype(int).to_string())
+print(f"\nNew store (E00011326): {int(dest_totals['E00011326'])} trips")
+
+# 5. SAMPLE OF PREDICTED FLOW MATRIX
+print("\nPredicted flows rounded to nearest whole person (discrete trips).\n")
+display_cols = existing_stores[:10] + ['E00011326']
+print("First 10 origins × first 10 existing stores + new store (Large A):")
+print(saved_matrices['Large_A'].loc[:, display_cols].head(10).to_string())
+
+# 6. FLOW CONSERVATION — WITH ROUNDING ERROR MARGIN
+ref_label    = 'Large_A'
+df_scenario  = saved_dfs[ref_label]
+
+# Build exact and rounded matrices from saved unrounded column
+exact_matrix = df_scenario.pivot_table(
+    values='prodsimest_exact', index='origin', columns='store', aggfunc='sum'
+)
+rounded_matrix = df_scenario.pivot_table(
+    values='prodsimest_scenario', index='origin', columns='store', aggfunc='sum'
+)
+
+obs_row_sums     = O_i['O_i']
+exact_row_sums   = exact_matrix.sum(axis=1)
+rounded_row_sums = rounded_matrix.sum(axis=1)
+
+common = obs_row_sums.index.intersection(exact_row_sums.index)
+
+conservation = pd.DataFrame({
+    'O_i (observed)':  obs_row_sums.loc[common].astype(int),
+    'Exact sum':       exact_row_sums.loc[common].round(2),
+    'Rounded sum':     rounded_row_sums.loc[common].astype(int),
+    'Rounding error':  (rounded_row_sums.loc[common] - obs_row_sums.loc[common]).astype(int),
+    'Error (%)':       ((rounded_row_sums.loc[common] - obs_row_sums.loc[common])
+                        / obs_row_sums.loc[common] * 100).round(1),
+})
+
+print(f'\nScenario: {ref_label}')
+print('First 15 origins:')
+print(conservation.head(15).to_string())
+
+total_obs     = obs_row_sums.loc[common].sum()
+total_exact   = exact_row_sums.loc[common].sum()
+total_rounded = rounded_row_sums.loc[common].sum()
+net_error     = int(total_rounded - total_obs)
+n_dest        = len(exact_matrix.columns)
+
+print(f"\n{'='*50}")
+print('ROUNDING ERROR SUMMARY')
+print('=' * 50)
+print(f'Total observed flow:        {int(total_obs)}')
+print(f'Total predicted (exact):    {total_exact:.0f}')
+print(f'Total predicted (rounded):  {int(total_rounded)}')
+print(f'Net rounding error:         {net_error} trips ({net_error/total_obs*100:.2f}%)')
+```
+
+```{python}
+#| echo: false
+#| warning: false
+# SETUP — spatial layers, retail points, candidate sites
+from pathlib import Path
+import numpy as np
+import pandas as pd
+import geopandas as gpd
+import osmnx as ox
+from shapely.geometry import Point
+
+BNG  = 27700          # British National Grid — metric, for distance & area
+WGS  = 4326           # lat/lon — for OSMnx node lookup
+DATA = Path(DATA_DIR)    # pathlib avoids Windows backslash-escaping issues
+
+ox.settings.use_cache = True      # avoid re-hitting Overpass/Nominatim on re-render
+ox.settings.log_console = False
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: setup-layers
+
+# ── 1. BOROUGH BOUNDARY & WALK NETWORK ───────────────────────────────────
+PLACE = "London Borough of Havering, England"
+area = ox.geocode_to_gdf(PLACE)
+G    = ox.graph.graph_from_place(PLACE, network_type="walk")
+
+# ── 2. OUTPUT AREAS ──────────────────────────────────────────────────────
+oa     = gpd.read_file(DATA / "loac_OA.gpkg")
+oa_bng = oa.to_crs(BNG).copy()
+oa_bng["centroid_bng"] = oa_bng.geometry.centroid   # computed in BNG, not lat/lon
+
+# OA centroids in WGS84, with nearest walk-network node attached
+oa_wgs = oa_bng.set_geometry("centroid_bng").to_crs(WGS).copy()
+oa_wgs["lon"]    = oa_wgs.geometry.x
+oa_wgs["lat"]    = oa_wgs.geometry.y
+oa_wgs["nodes"]  = ox.nearest_nodes(G, oa_wgs["lon"], oa_wgs["lat"])
+oa_wgs["OA21CD"] = oa_bng["OA21CD"].values          # set_geometry drops non-geom cols
+
+# ── 3. RETAIL POINTS ─────────────────────────────────────────────────────
+retail = pd.read_csv(DATA / "geolytix_retailpoints_v34_202412.csv")
+retail = gpd.GeoDataFrame(
+    retail,
+    geometry=gpd.points_from_xy(retail["long_wgs"], retail["lat_wgs"]),
+    crs=f"EPSG:{WGS}",
+)
+retail = retail[retail.geometry.within(area.union_all())]
+
+# ── 4. STORE LOCATIONS: EXISTING + CANDIDATES ────────────────────────────
+# Keyed by id as string, to match the flow-matrix column labels
+store_locations = {str(r["id"]): r.geometry for _, r in retail.iterrows()}
+
+CANDIDATE_IDS = ["E00011326", "E00011710"]
+for loc_id in CANDIDATE_IDS:
+    row = oa_wgs.loc[oa_wgs["OA21CD"] == loc_id]
+    if row.empty:
+        raise KeyError(f"Candidate site {loc_id} not found in OA layer")
+    store_locations[loc_id] = Point(row["lon"].iloc[0], row["lat"].iloc[0])
+
+print(f"Stores within Havering: {len(retail)}")
+print(f"Candidate sites added:  {CANDIDATE_IDS}")
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: setup-plotting
+# PLOTTING PROJECTIONS — everything reprojected to BNG once
+area_plot   = area.to_crs(BNG)
+retail_plot = retail.to_crs(BNG)
+G_proj      = ox.projection.project_graph(G, to_crs=f"EPSG:{BNG}")
+
+# OA polygons (for the choropleth) and centroids (for flow lines)
+oa_plot = oa.to_crs(BNG).copy()
+
+oa_centroids_plot = oa_plot.copy()
+oa_centroids_plot["centroid"] = oa_centroids_plot.geometry.centroid
+oa_centroids_plot = oa_centroids_plot.set_geometry("centroid")
+oa_centroids_plot = oa_centroids_plot[
+    oa_centroids_plot.geometry.within(area_plot.union_all())
+]
+
+# Reproject all store points in one call rather than per-point
+_pts = gpd.GeoSeries(list(store_locations.values()), crs=WGS).to_crs(BNG)
+store_locations_plot = dict(zip(store_locations.keys(), _pts))
+
+# Population per OA — O_i, the origin totals used to calibrate the model
+oa_pop = df.groupby("origin")["flow"].sum()
+
+# Fail loudly if OA codes don't match the flow-matrix index, rather than
+# silently rendering a blank choropleth
+_matched = oa_plot["OA21CD"].isin(oa_pop.index).sum()
+print(f"OA codes matched to flow origins: {_matched} / {len(oa_plot)}")
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: fig-candidate-sites
+#| fig-cap: "Population density by Output Area and the two candidate store locations in the London Borough of Havering. Density is classified into quintiles."
+#| fig-align: center
+
+import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
+from matplotlib.colors import ListedColormap
+
+# ── 1. BUILD DENSITY LAYER ───────────────────────────────────────────────────
+# Population per OA is O_i, the origin totals already used to calibrate the model
+oa_density = oa.to_crs(27700).copy()
+oa_density["population"]  = oa_density["OA21CD"].map(obs_by_origin)
+oa_density["area_km2"]    = oa_density.geometry.area / 1e6
+oa_density["pop_density"] = oa_density["population"] / oa_density["area_km2"]
+
+# Drop OAs with no matching origin record so they don't render as blank holes
+oa_density = oa_density[oa_density["population"].notna()]
+
+# Lowest quintile rendered white so sparse rural OAs recede into the background
+base = plt.get_cmap("YlGnBu")
+density_cmap = ListedColormap(["#FFFFFF"] + [base(v) for v in (0.35, 0.55, 0.75, 0.95)])
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+# ── 2. CHOROPLETH + FAINT OA BOUNDARIES ──────────────────────────────────────
+# Quantiles rather than equal-interval: density is heavily right-skewed, so
+# equal-interval would collapse most OAs into the lowest class
+oa_density.plot(
+    ax=ax, column="pop_density", cmap=density_cmap,
+    scheme="quantiles", k=5,
+    edgecolor="#CCCCCC", linewidth=0.2, alpha=0.8, zorder=2,
+    legend=True,
+    legend_kwds={"title": "Population density\n(persons / km²)",
+                 "loc": "upper right", "bbox_to_anchor": (1.0, 0.94),
+                 "fontsize": 12, "title_fontsize": 12,
+                 "frameon": False, "fmt": "{:.0f}"},
+)
+
+# ── 3. BOROUGH OUTLINE ───────────────────────────────────────────────────────
+area_plot = area.to_crs(27700)
+area_plot.boundary.plot(ax=ax, color="#222222", linewidth=2.0, zorder=4)
+
+# ── 4. CANDIDATE STORES ──────────────────────────────────────────────────────
+site_labels = {"E00011326": "A", "E00011710": "B"}
+for site_id, lab in site_labels.items():
+    pt = store_locations_plot[site_id]
+    ax.scatter(pt.x, pt.y, s=440, c="#FFD166", marker="*",
+               edgecolors="black", linewidths=0.8, zorder=6)
+    ax.annotate(f"Location {lab}", xy=(pt.x, pt.y),
+                xytext=(12, 6), textcoords="offset points",
+                fontsize=13, fontweight="bold", color="#222222",
+                bbox=dict(boxstyle="round,pad=0.3", fc="white",
+                          ec="#333333", lw=0.5, alpha=0.9), zorder=7)
+
+# ── 5. SCALE BAR ─────────────────────────────────────────────────────────────
+b = area_plot.total_bounds
+x0, x1 = b[2] - 2200, b[2] - 200
+y0 = b[1] + 900
+ax.plot([x0, x1], [y0, y0], color="#222222", lw=2, zorder=8, solid_capstyle="butt")
+for xe in (x0, x1):
+    ax.plot([xe, xe], [y0 - 120, y0 + 120], color="#222222", lw=2, zorder=8)
+ax.text((x0 + x1) / 2, y0 + 220, "2 km", ha="center", va="bottom",
+        fontsize=12, color="#222222", zorder=8)
+
+# ── 6. FRAME ─────────────────────────────────────────────────────────────────
+pad = 200
+ax.set_xlim(b[0] - pad, b[2] + pad)
+ax.set_ylim(b[1] - pad, b[3] + pad)
+ax.set_aspect("equal")
+ax.set_xticks([]); ax.set_yticks([])
+for spine in ax.spines.values():
+    spine.set_visible(False)
+ax.set_title("Population density and candidate store locations,\nLondon Borough of Havering",
+             fontsize=13, fontweight="bold", pad=10)
+
+# ── 7. LEGENDS ───────────────────────────────────────────────────────────────
+# geopandas attaches its legend during .plot(); ax.legend() would replace it,
+# so capture it first and re-add after the marker legend
+choro_leg = ax.get_legend()
+ax.legend(handles=[mlines.Line2D([], [], marker="*", color="#FFD166", lw=0,
+                                 markersize=15, markeredgecolor="black",
+                                 label="Proposed store")],
+          loc="upper right", bbox_to_anchor=(1.0, 1.0), frameon=False, fontsize=12)
+ax.add_artist(choro_leg)
+
+plt.tight_layout()
+plt.show()
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-site-assessment
+#| fig-cap: "Site assessment for both candidate stores. (a) Population density by Output Area with both candidate sites; (b) predicted flows from OA centroids to each proposed store; (c) trips diverted from existing stores, sized by store floor area. Panels b and c show each site introduced independently, not simultaneously."
+#| fig-align: center
+#| out-width: "100%"
+
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
+from matplotlib.colors import ListedColormap
+import osmnx as ox
+
+# ── CONFIG ───────────────────────────────────────────────────────────────────
+# site id -> (label, scenario key in saved_dfs, flow-line colour)
+SITES = {
+    "E00011326": ("Location A", "Large_A", "#FF9F1C"),
+    "E00011710": ("Location B", "Large_B", "#FF9F1C"),
+}
+# baseline (pre-entry) fitted flows in `df`
+BASE_COL = "fitted"
+# use "prodsimest_exact" to avoid rounding noise
+SCEN_COL = "prodsimest_scenario"
+
+fig, axes = plt.subplots(1, 3, figsize=(21, 9))
+
+# ── SHARED HELPERS ───────────────────────────────────────────────────────────
+
+
+def frame(ax, title):
+    """Lock extent to the borough, strip axes, add scale bar and panel title."""
+    b = area_plot.total_bounds
+    pad = 200
+    ax.set_xlim(b[0]-pad, b[2]+pad)
+    ax.set_ylim(b[1]-pad, b[3]+pad)
+    ax.set_aspect("equal")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    for s in ax.spines.values():
+        s.set_visible(False)
+    ax.set_title(title, fontsize=20, fontweight="bold", pad=20)
+    x0, x1 = b[2]-2200, b[2]-200
+    y0 = b[1]+900
+    ax.plot([x0, x1], [y0, y0], color="#222",
+            lw=2, zorder=9, solid_capstyle="butt")
+    for xe in (x0, x1):
+        ax.plot([xe, xe], [y0-120, y0+120], color="#222", lw=2, zorder=9)
+    ax.text((x0+x1)/2, y0+220, "2 km", ha="center",
+            va="bottom", fontsize=18, zorder=9)
+
+
+def basemap(ax, network=True):
+    """Street network in light teal, then the borough outline on top."""
+    if network:
+        ox.plot_graph(G_proj, ax=ax, node_size=0, edge_color="#8FCFC9",
+                      edge_linewidth=0.4, edge_alpha=0.8,
+                      show=False, close=False, bgcolor="none")
+    area_plot.boundary.plot(ax=ax, color="#222222", linewidth=2.0, zorder=5)
+
+
+def star(ax, site_id, label=None):
+    pt = store_locations_plot[site_id]
+    ax.scatter(pt.x, pt.y, s=600, c="#FFD166", marker="*",
+               edgecolors="black", linewidths=0.8, zorder=8)
+    if label:
+        ax.annotate(label, xy=(pt.x, pt.y), xytext=(14, 7),
+                    textcoords="offset points", fontsize=16, fontweight="bold",
+                    color="#222222",
+                    bbox=dict(boxstyle="round,pad=0.3", fc="white",
+                              ec="#333333", lw=0.5, alpha=0.9), zorder=9)
+    return pt
+
+
+# ══ PANEL A — POPULATION DENSITY ═════════════════════════════════════════════
+ax = axes[0]
+oa_density = oa.to_crs(27700).copy()
+oa_density["population"] = oa_density["OA21CD"].map(obs_by_origin)
+oa_density["area_km2"] = oa_density.geometry.area / 1e6
+oa_density["pop_density"] = oa_density["population"] / oa_density["area_km2"]
+oa_density = oa_density[oa_density["population"].notna()]
+
+# Lowest quintile white so sparse rural OAs recede into the background
+base = plt.get_cmap("YlGnBu")
+density_cmap = ListedColormap(["#FFFFFF"] + [base(v)
+                              for v in (0.35, 0.55, 0.75, 0.95)])
+
+oa_density.plot(
+    ax=ax, column="pop_density", cmap=density_cmap, scheme="quantiles", k=5,
+    edgecolor="#CCCCCC", linewidth=0.2, alpha=0.8, zorder=2, legend=True,
+    legend_kwds={"title": "Population density\n(persons / km²)",
+                 "loc": "upper right", "bbox_to_anchor": (1.0, 0.94),
+                 "fontsize": 14, "title_fontsize": 14,
+                 "frameon": False, "fmt": "{:.0f}"},
+)
+basemap(ax, network=False)
+for site_id, (lab, _, _) in SITES.items():
+    star(ax, site_id, lab)
+
+choro_leg = ax.get_legend()   # geopandas legend; ax.legend() below would replace it
+ax.legend(handles=[mlines.Line2D([], [], marker="*", color="#FFD166", lw=0,
+                                 markersize=19, markeredgecolor="black",
+                                 label="Proposed store")],
+          loc="upper right", bbox_to_anchor=(1.0, 1.0), frameon=False, fontsize=14)
+ax.add_artist(choro_leg)
+frame(ax, "Population density and candidate sites")
+
+# ══ PANEL B — PREDICTED INFLOWS TO EACH NEW STORE ════════════════════════════
+ax = axes[1]
+basemap(ax)
+
+# Gather inflows for both sites first, so line widths share one scale
+inflows = {}
+for site_id, (lab, scen_key, col) in SITES.items():
+    s = saved_dfs[scen_key]
+    f = (s[s["store"] == site_id][["origin", SCEN_COL]]
+         .rename(columns={SCEN_COL: "trips"}))
+    f = f.merge(
+        oa_centroids_plot[["OA21CD", "centroid"]].rename(
+            columns={"OA21CD": "origin", "centroid": "geom"}),
+        on="origin", how="left")
+    inflows[site_id] = f
+
+gmax = max(max(f["trips"].max() for f in inflows.values()), 1)
+
+for site_id, (lab, scen_key, col) in SITES.items():
+    pt = store_locations_plot[site_id]
+    for _, r in inflows[site_id].iterrows():
+        if r["trips"] <= 0 or r["geom"] is None:
+            continue
+        # width and opacity both scale with flow
+        fr = r["trips"] / gmax
+        ax.plot([r["geom"].x, pt.x], [r["geom"].y, pt.y], color=col,
+                lw=0.25 + fr*3.8, alpha=0.10 + 0.45*fr,
+                zorder=4, solid_capstyle="round")
+
+for site_id, (lab, _, _) in SITES.items():
+    star(ax, site_id, lab)
+
+ax.legend(handles=[
+    mlines.Line2D([], [], color=SITES["E00011326"][2],
+                  lw=3, label="Flow to Location A"),
+    mlines.Line2D([], [], color=SITES["E00011710"][2],
+                  lw=3, label="Flow to Location B"),
+    mlines.Line2D([], [], marker="o", color="#5DA5A0",
+                  lw=0, markersize=6, label="OA centroid"),
+    mlines.Line2D([], [], color="#8FCFC9", lw=1.5, label="Street network"),
+], loc="upper right", frameon=False, fontsize=14)
+frame(ax, "Predicted flows to proposed stores")
+
+# ══ PANEL C — TRIPS DIVERTED FROM EXISTING STORES ════════════════════════════
+ax = axes[2]
+basemap(ax)
+
+# Diversion = scenario flows minus baseline, per existing store, for each site
+baseline = df.groupby("store")[BASE_COL].sum()
+deltas = {}
+for site_id, (lab, scen_key, col) in SITES.items():
+    scen_by = saved_dfs[scen_key].groupby("store")[SCEN_COL].sum()
+    deltas[site_id] = (
+        scen_by - baseline).drop(index=[site_id], errors="ignore").dropna()
+
+st = retail_plot.copy()
+st["area_m2"] = st["id"].astype(int).map(
+    suparea.set_index("shop_id")["area_m2"])
+smin, smax = suparea["area_m2"].min(), suparea["area_m2"].max()
+
+# Largest store marker is exactly twice the area of the smallest
+S_SMALL, S_LARGE = 40, 80
+st["msize"] = S_SMALL + (S_LARGE - S_SMALL) * \
+    (st["area_m2"] - smin) / max(smax - smin, 1)
+
+# Shared scale across both sites; thinner than panel b to keep the hierarchy
+gdmax = max(max(dv.abs().max() for dv in deltas.values()), 1e-9)
+for site_id, (lab, scen_key, col) in SITES.items():
+    pt = store_locations_plot[site_id]
+    sub = st.copy()
+    sub["delta"] = sub["id"].astype(str).map(deltas[site_id])
+    sub = sub[sub["delta"].notna()]
+    for _, r in sub.iterrows():
+        fr = abs(r["delta"]) / gdmax
+        ax.plot([r.geometry.x, pt.x], [r.geometry.y, pt.y], color=col,
+                lw=0.2 + fr*2.2, alpha=0.10 + 0.40*fr,
+                zorder=4, solid_capstyle="round")
+
+ax.scatter(st.geometry.x, st.geometry.y, s=st["msize"], c="#F72585",
+           marker="D", edgecolors="white", linewidths=0.5, zorder=7)
+for site_id, (lab, _, _) in SITES.items():
+    star(ax, site_id, lab)
+
+# Line2D markersize is diameter in points; scatter s is area in points²
+ax.legend(handles=[
+    mlines.Line2D([], [], color=SITES["E00011326"][2],
+                  lw=2.8, label="Trips diverted to A"),
+    mlines.Line2D([], [], color=SITES["E00011710"][2],
+                  lw=2.8, label="Trips diverted to B"),
+    mlines.Line2D([], [], marker="D", color="#F72585", lw=0, markersize=np.sqrt(S_SMALL),
+                  label=f"Ext store ({smin:,.0f} m²)"),
+    mlines.Line2D([], [], marker="D", color="#F72585", lw=0, markersize=np.sqrt(S_LARGE),
+                  label=f"Ext store ({smax:,.0f} m²)"),
+    mlines.Line2D([], [], marker="*", color="#FFD166", lw=0, markersize=18,
+                  markeredgecolor="black", label="Proposed store"),
+], loc="upper right", frameon=False, fontsize=14)
+frame(ax, "Trips diverted from existing stores")
+
+plt.tight_layout()
+plt.show()
+```
+
+### 3.2 Assessment of Sharp Increase in Transport Costs 
+
+Assuming a sharp increase in transport cost arising from a congestion and fuel surcharge, residents would be more reluctant to travel long distances. This could translate to a sharper distance decay function. We explore what happens when $\beta$ increases by 50% and 100%. The calibrated baseline $\beta = 0.000023$ per meter implies that a journey of 5 km is discounted by a factor of $e^{-0.000023 \times 5000} \approx 0.89$ relative to a journey of zero distance. Doubling $\beta$ to $0.000046$ increases this penalty to $e^{-0.000046 \times 5000} \approx 0.79$, meaning longer trips become meaningfully less attractive under the shock scenario.
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+# TRANSPORT COST SHOCK — BETA SENSITIVITY ANALYSIS
+#   Scenario: A congestion + fuel surcharge makes residents far
+#   more reluctant to travel long distances for groceries.
+#   We model this as a sharper distance-decay parameter:
+#     - Baseline:  beta (calibrated)
+#     - Shock 1:   beta × 1.5  (50% increase)
+#     - Shock 2:   beta × 2.0  (100% increase)
+#   Gamma is held constant throughout.
+
+beta_multipliers = [1, 1.5, 2.0]
+beta_labels      = ["Baseline (β)", "1.5 × β (50% ↑)", "2× β (100% ↑)"]
+
+shock_results = []
+
+for mult, blabel in zip(beta_multipliers, beta_labels):
+    beta_shock = beta * mult
+
+    for scenario_label, new_loc, new_area in scenario_configs:
+
+        # Build scenario dataframe: existing stores + new store
+        new_rows = []
+        for oa_id in df['origin'].unique():
+            new_rows.append({
+                'origin':   oa_id,
+                'store':    new_loc,
+                'flow':     0,
+                'distance': dist.loc[oa_id, new_loc],
+                'area':     new_area,
+            })
+        df_new = pd.DataFrame(new_rows)
+
+        df_scenario = pd.concat([
+            df[['origin', 'store', 'flow', 'distance', 'area']].copy(),
+            df_new
+        ], ignore_index=True)
+        df_scenario = df_scenario.merge(O_i, on="origin", how="left")
+
+        # Attractiveness and exponential distance decay terms
+        df_scenario['Wj_gamma']  = df_scenario['area'] ** gamma
+        df_scenario['dist_beta'] = np.exp(-beta_shock * df_scenario['distance'])
+
+        # Recompute A_i for this beta (guarantees flow conservation)
+        ai_sum = (
+            (df_scenario['Wj_gamma'] * df_scenario['dist_beta'])
+            .groupby(df_scenario['origin'])
+            .transform('sum')
+        )
+        df_scenario['A_i_new'] = 1.0 / ai_sum
+
+        # Predicted flows
+        df_scenario['T_ij'] = (
+            df_scenario['A_i_new'] * df_scenario['O_i']
+            * df_scenario['Wj_gamma'] * df_scenario['dist_beta']
+        )
+
+        # Conservation check (exact, before rounding)
+        orig_pred = df_scenario.groupby('origin')['T_ij'].sum()
+        orig_obs  = df_scenario.groupby('origin')['O_i'].first()
+        max_error = (orig_pred - orig_obs).abs().max()
+
+        # New store summary statistics
+        new_mask       = df_scenario['store'] == new_loc
+        new_store_flow = df_scenario.loc[new_mask, 'T_ij'].sum()
+        total_flow     = df_scenario['T_ij'].sum()
+        market_share   = new_store_flow / max(total_flow, 1) * 100
+
+        new_data     = df_scenario.loc[new_mask]
+        mean_wt_dist = (
+            (new_data['T_ij'] * new_data['distance']).sum()
+            / max(new_store_flow, 1)
+        )
+
+        shock_results.append({
+            "Beta regime":              blabel,
+            "Beta value":               round(beta_shock, 6),
+            "Scenario":                 scenario_label,
+            "Location":                 new_loc,
+            "Area (m²)":                new_area,
+            "Total flow (trips)":       int(round(new_store_flow)),
+            "Mean wt dist (m)":         int(round(mean_wt_dist)),
+            "Market share (%)":         round(market_share, 2),
+            "Max conservation error":   round(max_error, 12),
+        })
+
+df_shock = pd.DataFrame(shock_results)
+
+# ── Display: pivot so beta regimes are columns ───────────────────
+print("=" * 70)
+print("TRANSPORT COST SHOCK — BETA SENSITIVITY ANALYSIS")
+print("=" * 70)
+print(f"Calibrated gamma: {gamma:.4f}  (held constant)")
+print(f"Calibrated beta:  {beta:.6f}  (exponential cost function)\n")
+
+for metric in ["Total flow (trips)", "Mean wt dist (m)", "Market share (%)"]:
+    pivot = df_shock.pivot_table(
+        values=metric, index="Scenario", columns="Beta regime",
+        aggfunc="first"
+    )[beta_labels]
+    print(f"\n{metric}:")
+    print(pivot.to_string())
+
+# Pivot retained for the summary table and figure below
+flow_by_beta = df_shock.pivot_table(
+    values="Total flow (trips)", index="Scenario",
+    columns="Beta regime", aggfunc="first"
+)[beta_labels]
+
+# ── Conservation confirmation ────────────────────────────────────
+print(f"\n{'='*70}")
+print("FLOW CONSERVATION CONFIRMATION")
+print("=" * 70)
+print(df_shock[['Beta regime', 'Scenario', 'Max conservation error']].to_string(index=False))
+```
+
+The sensitivity analysis reveals an asymmetric response to transport cost increases. As $\beta$ increases by 50% and 100%, **Location B's predicted flows decline consistently** across both size scenarios, while **Location A's flows increase marginally** (@fig-cost-shock). This reflects the mechanics of the production-constrained model: as $\beta$ rises, the exponential decay penalises Location B's peripheral position more severely, and the balancing factor $A_i$ redistributes those lost trips to closer alternatives. The mean weighted distance to Location A also falls slightly under higher $\beta$ (4,416 m → 4,379 m), confirming that its catchment becomes more localised and efficient under cost pressure.
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: tbl-cost-shock
+#| tbl-cap: "Predicted flows to the new store under increasing distance decay. Δ columns compare the 100% shock against baseline."
+#| output: asis
+
+from IPython.display import Markdown
+
+tbl = flow_by_beta.copy().astype(float)
+tbl.columns = ["β (baseline)", "1.5β", "2β"]
+tbl.columns.name = None 
+tbl["Δ vs baseline"] = tbl["2β"] - tbl["β (baseline)"]
+tbl["Δ %"]           = (tbl["2β"] / tbl["β (baseline)"] - 1) * 100
+
+# Order small-before-large so the size effect reads down the table
+tbl = tbl.reindex(["Small_A", "Small_B", "Large_A", "Large_B"])
+tbl.index = ["Small A", "Small B", "Large A", "Large B"]
+tbl.index.name = "Scenario"
+
+out = tbl.copy()
+for c in ["β (baseline)", "1.5β", "2β"]:
+    out[c] = out[c].map("{:,.0f}".format)
+out["Δ vs baseline"] = tbl["Δ vs baseline"].map("{:+,.0f}".format)   # explicit +/-
+out["Δ %"]           = tbl["Δ %"].map("{:+.1f}%".format)
+
+Markdown(out.to_markdown())
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-cost-shock
+#| fig-cap: "Sensitivity of predicted flows to the new store under increasing distance decay. Colour and marker distinguish candidate site; opacity distinguishes store size. Gamma is held constant throughout."
+#| fig-align: center
+
+import matplotlib.pyplot as plt
+
+flow = df_shock.pivot_table(values="Total flow (trips)", index="Scenario",
+                            columns="Beta regime", aggfunc="first")[beta_labels]
+
+# Site carried by colour + marker; store size by opacity alone (all lines solid)
+SITE_COLOR = {"A": "#C1666B", "B": "#4281A4"}
+SITE_MARKER = {"A": "o",       "B": "s"}
+SIZE_ALPHA = {"Large": 1.0,   "Small": 0.60}
+SIZE_LABEL = {"Large": f"{large_area:,} m²", "Small": f"{small_area:,} m²"}
+x = [1.0, 1.5, 2.0]
+
+fig, ax = plt.subplots(figsize=(8, 5))
+
+for scen in ["Large_A", "Small_A", "Large_B", "Small_B"]:
+    size, site = scen.split("_")
+    y = flow.loc[scen].values
+    ax.plot(x, y, color=SITE_COLOR[site], marker=SITE_MARKER[site], ls="-",
+            lw=2.2, ms=7, alpha=SIZE_ALPHA[size],
+            label=f"Location {site} — {SIZE_LABEL[size]}")
+    # Label every point below its marker; label inherits the series colour
+    # and opacity so it reads as part of that line, not a floating number
+    for xi, yi in zip(x, y):
+        ax.annotate(f"{yi:,}", xy=(xi, yi), xytext=(0, -13),
+                    textcoords="offset points", ha="center", va="top",
+                    fontsize=9, color=SITE_COLOR[site],
+                    alpha=SIZE_ALPHA[size], fontweight="bold")
+
+# Extra headroom below so the lowest series' labels aren't clipped
+ymin, ymax = flow.values.min(), flow.values.max()
+span = ymax - ymin
+ax.set_ylim(ymin - span * 0.12, ymax + span * 0.06)
+
+ax.set_xticks(x)
+ax.set_xticklabels(["β\n(baseline)", "1.5β\n(+50%)", "2β\n(+100%)"])
+ax.set_xlabel("Distance-decay parameter")
+ax.set_ylabel("Predicted flow to new store (trips)")
+ax.set_xlim(0.9, 2.1)
+ax.grid(alpha=0.25, lw=0.5)
+for s in ("top", "right"):
+    ax.spines[s].set_visible(False)
+
+# Reorder so the two-column legend reads: large A | small A / large B | small B
+handles, labels = ax.get_legend_handles_labels()
+order = [0, 2, 1, 3]
+ax.legend([handles[i] for i in order], [labels[i] for i in order],
+          ncol=2, frameon=False, fontsize=9.5,
+          loc="lower center", bbox_to_anchor=(0.5, 1.02),
+          columnspacing=2.2, handletextpad=0.6)
+
+plt.tight_layout()
+plt.show()
+```
+
+**Location A remains the recommended investment under the transport cost increase scenarios**. Its relative advantage over *Location B* widens as costs increase. This finding is robust to the cost shock assumption.
+
+### 3.3 Walkability Access within 15-min catchment
+
+To determine walkability access to the proposed supermarket, we compute the number of residents whose Output Area centroid lies within a 15-minute walking catchment of each candidate location. We adopt TfL's assumed walking speed of 1.3 m/s [@tfl_foi_2025], giving a maximum walking distance of:
+
+$$d_{walk} = 1.3 \times 60 \times 15 = 1{,}170 \text{ m}$$
+
+We can use the road network distance from each OA centroid to the candidate store node, computed via OSMnx shortest path lengths, to determine which OAs fall within this threshold. @fig-walk-catchment illustrates the 15-minute walking catchment for each candidate site. The top row shows the accessible road network within 15 min for both locations and Output Areas that fall within. The bottom row shows the resident population as dot density within those same areas.
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-walk-catchment
+#| fig-cap: "15-minute walking catchment for each candidate site. An Output Area counts as reachable when its centroid lies within 1,170 m of the store along the pedestrian network. Top row: reachable streets and the qualifying Output Areas. Bottom row: resident population as dot density within those same areas."
+#| fig-align: center
+
+import numpy as np
+import geopandas as gpd
+import networkx as nx
+import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
+from shapely.geometry import Point
+from shapely.ops import unary_union
+
+# ── PARAMETERS ───────────────────────────────────────────────────────────────
+STUDY_RADIUS = 1800        # m, straight-line, defines the study area extent
+PER_DOT = 4           # residents per dot
+PAD = 150         # m of breathing room around the study boundary
+FIG_W = 15
+BNG = 27700
+# TfL assumed speed (FOI-0318-2526)
+WALK_SPEED_MS = 1.3
+MAX_WALK_DIST = WALK_SPEED_MS * 60 * 15              # 1,170 m
+CANDIDATES = [("E00011326", "Location A"), ("E00011710", "Location B")]
+
+# ── PREREQUISITES ────────────────────────────────────────────────────────────
+_cent_wgs = oa_bng.set_geometry("centroid_bng").to_crs(4326)
+oa_node_lookup = dict(zip(oa_bng["OA21CD"],
+                          ox.nearest_nodes(G, _cent_wgs.geometry.x, _cent_wgs.geometry.y)))
+store_nodes = {sid: ox.nearest_nodes(G, store_locations[sid].x, store_locations[sid].y)
+               for sid, _ in CANDIDATES}
+pop_lookup = pop.set_index("OA_id")["pop"].to_dict()
+edges_proj = ox.graph_to_gdfs(G_proj, nodes=False, edges=True)
+
+
+def sample_dots(poly, n, rng):
+    """Rejection-sample n points inside a polygon for dot-density display."""
+    if n <= 0:
+        return []
+    minx, miny, maxx, maxy = poly.bounds
+    out = []
+    while len(out) < n:
+        xs = rng.uniform(minx, maxx, n * 3)
+        ys = rng.uniform(miny, maxy, n * 3)
+        for a, b in zip(xs, ys):
+            p = Point(a, b)
+            if poly.contains(p):
+                out.append(p)
+                if len(out) == n:
+                    break
+    return out
+
+
+# ── PRECOMPUTE PER SITE ──────────────────────────────────────────────────────
+# Done up front because each site appears in two panels (one per row)
+data = {}
+for site_id, lab in CANDIDATES:
+    store_pt = gpd.GeoSeries([store_locations[site_id]],
+                             crs=4326).to_crs(BNG).iloc[0]
+    study = oa_bng[oa_bng["centroid_bng"].distance(
+        store_pt) <= STUDY_RADIUS].copy()
+    study_poly = unary_union(study.geometry.values)
+
+    lengths = nx.single_source_dijkstra_path_length(
+        G, store_nodes[site_id], cutoff=MAX_WALK_DIST, weight="length")
+    reach_nodes = set(lengths)
+    reach_edges = edges_proj[
+        edges_proj.index.get_level_values("u").isin(reach_nodes) &
+        edges_proj.index.get_level_values("v").isin(reach_nodes)]
+
+    # Both rows use the same rule: is this OA's centroid reachable on the network?
+    study["net_d"] = study["OA21CD"].map(
+        lambda o: lengths.get(oa_node_lookup.get(o), np.inf))
+    study["within"] = study["net_d"] <= MAX_WALK_DIST
+    study["pop"] = study["OA21CD"].map(pop_lookup).fillna(0)
+
+    data[site_id] = dict(
+        store_pt=store_pt, study=study, study_poly=study_poly, lab=lab,
+        net_clip=gpd.clip(edges_proj, study_poly),
+        reach_clip=gpd.clip(reach_edges, study_poly),
+    )
+
+# ── COMMON WINDOW SIZED TO THE ACTUAL STUDY AREAS ────────────────────────────
+# A fixed square window wastes roughly half of each panel, since the dissolved
+# OA shapes are irregular and wider than tall. Fit to the largest extent across
+# both sites so panels stay directly comparable without the dead space.
+_bounds = {sid: data[sid]["study_poly"].bounds for sid, _ in CANDIDATES}
+half_w = max(b[2] - b[0] for b in _bounds.values()) / 2 + PAD
+half_h = max(b[3] - b[1] for b in _bounds.values()) / 2 + PAD
+
+for sid, _ in CANDIDATES:
+    b = _bounds[sid]
+    ccx, ccy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+    data[sid]["win"] = (ccx - half_w, ccy - half_h, ccx + half_w, ccy + half_h)
+
+# ── FIGURE: rows = panel type, columns = location ────────────────────────────
+# fixed seed: dot positions stable across renders
+rng = np.random.default_rng(42)
+
+# Figure aspect must match the window aspect or padding returns. Margins and
+# inter-axes spacing shrink the drawable area, so both are folded in here —
+# a naive FIG_W * half_h / half_w leaves a visible gap between rows.
+L, R, T, B = 0.04, 0.99, 1.00, 0.11  # figure margins (fractions)
+# inter-axes spacing (fractions of axes width)
+WS, HS = 0.01, 0.01
+
+fig_h = FIG_W * (R - L) * (2 + HS) * half_h / ((2 + WS) * (T - B) * half_w)
+
+fig, axes = plt.subplots(2, 2, figsize=(FIG_W, fig_h))
+plt.subplots_adjust(left=L, right=R, top=T, bottom=B, wspace=WS, hspace=HS)
+
+for col, (site_id, lab) in enumerate(CANDIDATES):
+    d = data[site_id]
+    study, store_pt = d["study"], d["store_pt"]
+
+    # ══ ROW 0 — STREET ACCESS ════════════════════════════════════════════════
+    ax = axes[0, col]
+    study[study["within"]].plot(ax=ax, color="#C9184A", alpha=0.2,
+                                edgecolor="#C9184A", linewidth=0.4, zorder=3)
+    study.boundary.plot(ax=ax, color="#BBBBBB", linewidth=0.4, zorder=4)
+    d["net_clip"].plot(ax=ax, color="#CFCFCF", linewidth=0.4, zorder=2)
+    d["reach_clip"].plot(ax=ax, color="#C9184A", linewidth=1.6, zorder=5)
+    gpd.GeoSeries([d["study_poly"]], crs=BNG).boundary.plot(
+        ax=ax, color="#222222", linewidth=2.4, zorder=6)
+
+    # ══ ROW 1 — POPULATION ACCESS ════════════════════════════════════════════
+    ax2 = axes[1, col]
+    study.boundary.plot(ax=ax2, color="#CCCCCC", linewidth=0.5, zorder=3)
+    for _, r in study.iterrows():
+        pts = sample_dots(r.geometry, int(round(r["pop"] / PER_DOT)), rng)
+        if not pts:
+            continue
+        ax2.scatter([p.x for p in pts], [p.y for p in pts], s=5,
+                    c="#C9184A" if r["within"] else "#9A9A9A",
+                    alpha=0.75 if r["within"] else 0.45, zorder=5, edgecolors="none")
+    gpd.GeoSeries([d["study_poly"]], crs=BNG).boundary.plot(
+        ax=ax2, color="#222222", linewidth=2.4, zorder=6)
+
+    net_pop = int(study.loc[study["within"], "pop"].sum())
+    ax2.text(0.5, -0.05, f"{net_pop:,} residents within a 15-min walk",
+             transform=ax2.transAxes, ha="center", va="bottom",
+             fontsize=19, fontweight="bold")
+
+    # ── SHARED PER-PANEL FURNITURE ───────────────────────────────────────────
+    for a in (ax, ax2):
+        a.scatter(store_pt.x, store_pt.y, s=880, c="#FFD166", marker="*",
+                  edgecolors="black", linewidths=1.2, zorder=10)
+        a.annotate(lab, xy=(store_pt.x, store_pt.y), xytext=(20, -16),
+                   textcoords="offset points", fontsize=20, fontweight="bold",
+                   color="#222222",
+                   bbox=dict(boxstyle="round,pad=0.35", fc="white", ec="#333333",
+                             lw=0.6, alpha=0.92), zorder=11)
+        a.set_xlim(d["win"][0], d["win"][2])
+        a.set_ylim(d["win"][1], d["win"][3])
+        a.set_aspect("equal")
+        a.set_xticks([])
+        a.set_yticks([])
+        for s in a.spines.values():
+            s.set_visible(False)
+
+# Row labels on the far left, rotated
+for r, t in enumerate(["Street access", "Population access"]):
+    axes[r, 0].annotate(t, xy=(-0.04, 0.5), xycoords="axes fraction", rotation=90,
+                        ha="center", va="center", fontsize=28, fontweight="bold",
+                        color="#222222")
+
+plt.show()
+```
+
+Within a 15-minute walk, *Location B* serves a visibly larger accessible population (6,247 residents across 18 OAs) compared to *Location A* (4,517 residents across 13 OAs), as seen by the thicker dot density in @fig-walk-catchment.
+
+This reversal reflects an important distinction between local walking access and borough-wide trip attraction. *Location B's* southern catchment, while peripheral in the context of Havering as a whole, sits within a relatively densely populated residential area at close road network distances. *Location A*, despite attracting significantly more predicted trips overall under the production-constrained model (1,368 vs 1,228 for the small scenario; 1,782 vs 1,605 for the large scenario), draws these trips from a wider, more dispersed catchment, reflected in its lower mean weighted distance of \~4,400 m, rather than a concentrated walkable neighbourhood.
+
+The two metrics capture different accessibility dimensions. **If the investment objective is to maximise immediate access for local residents**, *Location B* has a marginal advantage. **If the objective is to maximise total predicted footfall across Havering**, *Location A* remains the stronger choice. Given that supermarket viability typically depends on total trip volume, **Location A remains the recommended investment**. Notwithstanding, *Location B* may better address a localised gap in pedestrian-accessible grocery provision in the southern part of the borough.
+
+## 4. Reflections 
+
+**Enabling data-driven decisions and judgment**. Deciding where to locate a store often relies on experience and instinct. A spatial interaction model grounds that decision in evidence by evaluating population distribution, travel distance, and store attractiveness to project trip distribution. Rather than offering a qualitative preference, it produces a quantifiable benchmark—showing that *Location A* attracts roughly 11% more visits than *Location B*, and identifies the primary driver - customers traveling to *Location B* face double the average distance (8.8 km versus 4.4 km).
+
+Three key findings emerged from the analysis:
+
+1. **Floor space yields diminishing returns**: A tenfold increase in store size yielded only a 30% increase in visits, demonstrating that prime location outweighs store size gains.
+
+2. **Travel cost sensitivity**: Higher travel costs widen Location A’s advantage, as rising transport friction forces shoppers to prioritize proximity over choice, disproportionately impacting the peripheral site.
+
+3. **Walkability divergence**: *Location B* reverses the overall ranking on foot, placing 6,247 residents within a 15-minute walk compared to Location A’s 4,517. Overall customer draw and pedestrian accessibility represent distinct policy goals.
+
+**Model limitations**. The framework assumes a closed, fixed demand pool and cannot account for latent demand or trip frequency changes. Crucially, the borough boundary cutoff disadvantages Location B, which sits near the southern border and likely draws from neighboring catchments. Furthermore, using floor space as the sole proxy for store attractiveness overlooks brand equity, pricing, range, and parking, while assuming uniform distance decay across distinct transit modes.
+
+**Future directions**. Refining the model could entail disaggregating travel modes, for example specifically separating motorists from pedestrians, to capture distinct spatial behaviors. Expanding the boundary beyond Havering would also eliminate edge-effect bias against *Location B*, while incorporating competitor density would contextualize *Location A’s* market environment. Finally, additional sensitivity incorporating a deterrance function using actual transport expenditure could also be studied.
+
+*This article was partially drawn from my coursework for the CASA0002 Urban Simulation assignment.*   
+*Source code and data can be found [here](https://github.com/benjamintee/CASA_UrbSIM_Assessment).* 
+
+## References
+

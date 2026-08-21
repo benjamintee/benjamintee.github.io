@@ -154,3 +154,21 @@ h1.title {
     border: 1px solid rgba(255, 255, 255, 0.12);
   }
 }
+
+.embed-scaled {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1200px;
+    height: 800px;
+    border: 0;
+    transform-origin: top left;
+  }
+}

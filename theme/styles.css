@@ -6,10 +6,36 @@
   letter-spacing: -0.01em;
 }
 
-/* Tighter figure captions */
-figcaption {
+/* Figure captions: centred under the image, which is itself centred */
+figure > figcaption,
+.quarto-figure figcaption,
+figcaption.figure-caption {
   font-size: 0.85rem;
   color: #6b7681;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* Figures produced by code cells carry explicit width/height attributes and,
+   unlike plain markdown images, no .img-fluid class - so without this they
+   render at full pixel size and overflow the column. The source file is left
+   untouched; only its display size is constrained, so it stays crisp on
+   high-DPI screens. */
+.figure-img,
+.quarto-figure img,
+.cell-output-display img,
+figure img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Opt-in: let one very wide figure scroll inside its own box rather than
+   shrinking. Add .figure-scroll to the figure to use it. */
+.quarto-figure.figure-scroll {
+  overflow-x: auto;
+}
+.quarto-figure.figure-scroll img {
+  max-width: none;
 }
 
 /* Make tables breathe */

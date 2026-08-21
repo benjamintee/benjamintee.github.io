@@ -1,7 +1,7 @@
 ---
 title: "Visualising Household Energy Costs in England"
 description: |
-   Effective policymaking involves good communication. Telling a story with data means going beyond listing facts to engaging the reader. Explore how this can be done using simple tools in Mapbox and HTML. 
+   Domestic energy consumption across England & Wales, 2015 – 2024 
 author: "Benjamin Tee"
 date: "2026-02-05"
 categories: [Energy, Geospatial, Visualisation]
@@ -10,13 +10,33 @@ image-alt: "Visualising Household Energy Costs in England"
 draft: false
 ---
 
-## Domestic energy consumption across England & Wales, 2015 – 2024 
-
 ## Overview
 
 This visualization provides an interactive map on the spatial distribution of domestic energy consumption across England and Wales (2015–2024). By integrating average gas and electricity consumption data from the [Department for Energy Security and Net Zero (DESNZ)](https://www.gov.uk/government/collections/sub-national-electricity-consumption-data) with [Energy Performance Certificate (EPC) distributions](https://get-energy-performance-data.communities.gov.uk/), this visualisation provides insight into possible consumption hotspots and energy efficiency standards in urban settlements. This adds to the discourse in urban science on local progress toward national net-zero targets and highlights areas where poor housing quality may correlate with a higher energy burden (e.g. peri-urban areas).
 
-![Figure 1: Interactive Map of Gas Consumption at Local Authority Scale](figures/Figure1.png){fig-alt="Interactive Map of Gas Consumption at Local Authority Scale"}
+```{=html}
+<div class="embed-scaled">
+  <iframe src="https://benjamintee.github.io/CASA_UDV_Assessment/Energy_Consumption.html"
+          title="Domestic energy consumption across England and Wales, 2015–2024"
+          loading="lazy" allowfullscreen></iframe>
+</div>
+<script>
+(function () {
+  var W = 1200, H = 800;
+  function fit() {
+    document.querySelectorAll(".embed-scaled").forEach(function (w) {
+      var s = w.clientWidth / W;
+      w.querySelector("iframe").style.transform = "scale(" + s + ")";
+      w.style.height = H * s + "px";
+    });
+  }
+  fit();
+  addEventListener("resize", fit);
+})();
+</script>
+```
+
+[Open full screen ↗](https://benjamintee.github.io/CASA_UDV_Assessment/Energy_Consumption.html){target="_blank"}
 
 The map has been clipped to urban areas to show how energy consumption relates to urban geography and settlement size and calibrated to provide a national overview and distribution and at a more local scale to understand specific trends. Interactive features such as a (a) toggle between electricity and gas consumption, (b) slider to show temporal changes, and (c) point-and-click function to illustrate trends and localised energy performance, provide the user opportunities to further investigate specific data aspects. 
 
@@ -54,8 +74,8 @@ Interactivity was used to improve user experience and provide insights:
 Given limitations in functionality with the customisation of place-label colour in Mapbox Studio Standard basemap to improve contrast, an alternative basemap (Mapbox Dark v11) was chosen which allowed place labels to be brightened to improve legibility in higher-density areas. Future iterations could incorporate Ofgem price data and household income estimates to map "energy burden", the percentage of household income spent on total energy cost, providing a more direct metric for urban social justice and policy intervention.
 
 *This article was submitted as part of my coursework for the CASA0029 Urban Data Visualisation module.*  
-*Source code can be found [here]{.underline} (<https://github.com/benjamintee/CASA_UDV_Assessment>)*  
-*The full visualisation can be found [here]{.underline} (<https://benjamintee.github.io/CASA_UDV_Assessment/Energy_Consumption.html>)*
+*Source code: [github.com/benjamintee/CASA_UDV_Assessment](https://github.com/benjamintee/CASA_UDV_Assessment)*  
+*The full visualisation can be found [here](<https://benjamintee.github.io/CASA_UDV_Assessment/Energy_Consumption.html>)*
 
 ## References 
 

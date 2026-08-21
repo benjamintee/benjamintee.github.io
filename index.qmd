@@ -47,7 +47,7 @@ As a leader in the Singapore Public Service, I am committed to advancing data-dr
 
 My research interests lie in cities and the data they generate — sprecifically spatial analysis, geographic data science, and the visualisation of urban processes. This site showcases the projects I have built, along with the code behind them.
 
-Head to [Projects](projects/index.qmd) to find out more! 
+Head to [my project repository](projects/index.qmd) to find out more! 
 
 ## **Interests**
 
