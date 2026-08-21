@@ -285,7 +285,7 @@ for i, (name, dfr) in enumerate(removal_results.items(), start=1):
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-fig, axes = plt.subplots(1, 3, figsize=(13, 4.8))
+fig, axes = plt.subplots(1, 3, figsize=(13, 5))
 
 # ── Colours and labels ────────────────────────────────────────────
 colours = {
@@ -309,7 +309,8 @@ for label, df in measures.items():
         color=colours[label], label=label
     )
 
-ax1.set_title('Largest Connected Component Size', fontsize=14, fontweight='bold', pad=10)
+ax1.set_title('Largest Connected Component Size',
+              fontsize=14, fontweight='bold', pad=10)
 ax1.set_xlabel('Nodes Removed', fontsize=12)
 ax1.set_ylabel('Number of Stations in LCC', fontsize=12)
 ax1.set_xticks(range(0, 11))
@@ -323,7 +324,8 @@ for label, df in measures.items():
         color=colours[label], label=label
     )
 
-ax2.set_title('Number of Connected Components', fontsize=14, fontweight='bold', pad=10)
+ax2.set_title('Number of Connected Components',
+              fontsize=14, fontweight='bold', pad=10)
 ax2.set_xlabel('Nodes Removed', fontsize=12)
 ax2.set_ylabel('Number of Components', fontsize=12)
 ax2.set_xticks(range(0, 11))
@@ -335,7 +337,8 @@ for label, df in measures.items():
     ax3.plot(df['Iteration'], df['Diameter of LCC'],
              marker='o', markersize=5, linewidth=2,
              color=colours[label], label=label)
-ax3.set_title('Diameter of Largest Component', fontsize=14, fontweight='bold', pad=10)
+ax3.set_title('Diameter of Largest Component',
+              fontsize=14, fontweight='bold', pad=10)
 ax3.set_xlabel('Nodes Removed', fontsize=12)
 ax3.set_ylabel('Longest Shortest Path (stops)', fontsize=12)
 ax3.set_xticks(range(0, 11))
@@ -347,9 +350,9 @@ fig.legend(
     handles, labels,
     loc='upper center',
     ncol=3,
-    fontsize=14,
+    fontsize=15,
     frameon=False,
-    bbox_to_anchor=(0.5, 1.07)
+    bbox_to_anchor=(0.5, 1.1)
 )
 
 plt.tight_layout()
