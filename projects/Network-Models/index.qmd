@@ -464,7 +464,7 @@ Under **weighted closeness**, [**Green Park**]{.underline} ranks first (95.98), 
 
 ## 5.2 Scenario Analysis - Closure of Origin Station
 
-**Station-pair with largest Origin-Destination (OD) Flow* 
+*Station-pair with largest Origin-Destination (OD) Flow* 
 
 ```{python}
 #| echo: false
@@ -521,9 +521,9 @@ The largest single origin–destination flow runs from **`{python} top_origin`**
 the AM peak.  This reflects the intense commuter demand between the South Bank and the City of London during morning rush hour.
 
 Closing `{python} top_origin` would affect  
-- `{python} f"{total_affected:,.0f}"` passengers in total  
-- `{python} f"{origin_outflows:,.0f}"` departing and  
-- `{python} f"{origin_inflows:,.0f}"` arriving.  
+- **`{python} f"{total_affected:,.0f}"`** passengers in total  
+- **`{python} f"{origin_outflows:,.0f}"`** departing and  
+- **`{python} f"{origin_inflows:,.0f}"`** arriving.  
 
 These figures reflect AM Peak demand only (NUMBAT timeband 3), and are most applicable to peak commuter conditions. Waterloo's role as a major South Bank terminus means its AM Peak outflows are particularly high relative to other periods. It should be noted that the OD flows represent direct station-to-station demand from the NUMBAT dataset [@tfl_2025], distinct from the edge-level flow weights used in the weighted centrality analysis in Section 2.1, which were derived by assigning all OD demand onto shortest paths through the network.
 
@@ -544,7 +544,7 @@ top_od.insert(0, "Rank", range(1, 11))
 Markdown(top_od.to_markdown(index=False))
 ```
 
-**Routing options for closure of origin station*
+*Routing options for closure of origin station*
 
 If the origin station were closed, which station should passengers go to instead, and how long would it take them to walk there? These are questions network analysis can answer directly.
 
@@ -700,42 +700,53 @@ For each candidate, walking distance from Waterloo was computed as the shortest 
 ```{python}
 #| echo: false
 #| warning: false
-#| label: tbl-best-walk
-#| tbl-cap: "Alternative stations ranked by shortest walking time"
+#| label: tbl-best-total
+#| tbl-cap: "Alternative stations ranked by shortest total travel time"
 #| output: asis
 
+from IPython.display import Markdown
+
 # ── Best alternatives by each criterion ──────────────────────────
-best_walk = df_final.sort_values('Walking Time (mins)').iloc[0]
+best_walk  = df_final.sort_values('Walking Time (mins)').iloc[0]
 best_total = df_final.sort_values('Total Time (mins)').iloc[0]
 
 # Station names, derived rather than hardcoded, so the map and tables agree
-BEST_WALK = best_walk['Alternative Station']
+BEST_WALK  = best_walk['Alternative Station']
 BEST_TOTAL = best_total['Alternative Station']
 
 COLS = ["Alternative Station", "Walking Time (mins)", "Walking Distance (m)",
         "Tube Time (mins)", "Total Time (mins)"]
 HEADERS = ["Alternative station", "Walking time (min)", "Walking dist (m)",
            "Tube time (min)", "Total travel time (min)"]
+# Rank, station, then four numeric columns
+COLALIGN = ("right", "left", "right", "right", "right", "right")
 
 
 def render(df, sort_col):
     out = df.sort_values(sort_col)[COLS].copy()
     out.columns = HEADERS
     out["Walking dist (m)"] = out["Walking dist (m)"].map("{:,.0f}".format)
+    # Fixed 1dp so 17.0 doesn't render as 17 alongside 17.1
+    for c in ["Walking time (min)", "Tube time (min)", "Total travel time (min)"]:
+        out[c] = out[c].map("{:.1f}".format)
     out.insert(0, "Rank", range(1, len(out) + 1))
-    return Markdown(out.to_markdown(index=False))
+    # disable_numparse stops tabulate re-parsing these strings back to numbers
+    # (which would strip the 1dp); colalign then sets alignment explicitly,
+    # since text columns would otherwise default to left
+    return Markdown(out.to_markdown(index=False,
+                                    disable_numparse=True,
+                                    colalign=COLALIGN))
 
 
 render(df_final, "Total Time (mins)")
 ```
 
 The fastest alternative journey runs through **`{python} best_total['Alternative Station']`** at
-`{python} best_total['Total Time (mins)']` minutes.  
+`{python} f"{best_total['Total Time (mins)']:.1f}"` minutes.
 
 Walking times across all candidates range from
-`{python} df_final['Walking Time (mins)'].min()` to
-`{python} df_final['Walking Time (mins)'].max()` minutes, so the burden of disruption falls
-unevenly depending on where within the station's catchment a passenger begins.
+`{python} f"{df_final['Walking Time (mins)'].min():.1f}"` to
+`{python} f"{df_final['Walking Time (mins)'].max():.1f}"` minutes, so the burden of disruption falls unevenly depending on where within the station's catchment a passenger begins.
 
 ```{python}
 #| echo: false
@@ -851,18 +862,18 @@ except (nx.NetworkXNoPath, nx.NodeNotFound):
 LABEL_DX, LABEL_DY = -10, 10     # points; default is above-left
 
 LABEL_OFFSETS = {
-    'Southwark':         (12,  8),
+    'Southwark':         (14,  10),
     'Elephant & Castle': (10,  10),
     'Borough':           (10,  10),
     'Blackfriars':       (10,  10),
     'Westminster':       (0, -10),
     "St. James's Park":  (0, -10),
     'Charing Cross':     (-10, -5),
-    'Lambeth North':     (0, -13),
+    'Lambeth North':     (0, -15),
     'Leicester Square':  (0,  10),
     'Covent Garden':     (0,  10),
     'Temple':            (0,  10),
-    'Embankment':        (8,  10),
+    'Embankment':        (10,  12),
 }
 
 
@@ -992,9 +1003,9 @@ plt.show()
 
 ## 6. Reflections and Limitations
 
-Representing stations as nodes and track as edges is a simple but powerful concept. It turns questions that would otherwise rest on operational intuition into ones that can be computed via centrality measures which show which stations carry structural weight. Sequential removal reveals how much the network can lose before it fractures, and shortest-path algorithms find viable alternatives when a station closes. A handful of algorithms answered questions about criticality, vulnerability and routing across a network of 400 stations.
+Representing stations as nodes and the links between adjacent stations as edges is a simple but powerful concept. This enables the computation of network centrality measures that assess whuch stations carry most structural weight. The sequential removal of nodes reveals how much the network can lose before it fractures. Shortest-path algorithms show which viable alternatives are most efficient when a station closes. 
 
-The most useful finding was that the measures disagree. Stratford leads the topological rankings but falls to sixth once passenger flows are attached, while Green Park rises to first. Neither is wrong, they just describe different kinds of importance. A station can be structurally pivotal while carrying modest demand, or the reverse. For planning, that means taking into account both views when deploying resilience enhancement measures. 
+Findings depend on whether a topological or weighted network view is adoppted. Stratford leads the topological rankings but falls to sixth once passenger flows are attached, while Green Park rises to first. Neither is wrong, they just describe different kinds of importance. A station can be structurally pivotal while carrying modest demand, or the reverse. For planning, that means taking into account both views when deploying resilience enhancement measures. 
 
 Some simplifications are worth noting. This model treats travel time as proportional to distance, setting aside dwell time at stations, service frequency and the cost of changing lines — which matters most where alternatives are separated by a minute or two. The removal experiment also assumes displaced passengers disappear, when in practice they redistribute onto neighbouring stations. Coupling the network structure to a demand-assignment model would capture that cascade, and would be a natural next step for further analysis.
 
