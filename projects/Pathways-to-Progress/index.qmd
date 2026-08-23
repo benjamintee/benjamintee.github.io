@@ -22,8 +22,8 @@ draft: false
 
 This project examines how transport accessibility shapes access to high-performing secondary schools across London, and whether spatial disadvantage in school access reinforces broader patterns of socio-economic inequality. The analysis is presented as an interactive scrollytelling webpage — *Pathways to Progress* — combining travel time modelling, deprivation analysis and spatial clustering, visualised through Mapbox GL JS and Chart.js.
 
-**Live site can be found [here](https://benjamintee.github.io/CASA_UDV_Final/pathways_to_progress.html)**  
-Explore it below. [Open full screen ↗](https://benjamintee.github.io/CASA_UDV_Final/pathways_to_progress.html){target="_blank"}
+**Live site can be found [here!↗](https://benjamintee.github.io/CASA_UDV_Final/pathways_to_progress.html){target="_blank"}**  
+Explore it below. 
 
 ```{=html}
 <div class="embed-scaled">
@@ -33,7 +33,7 @@ Explore it below. [Open full screen ↗](https://benjamintee.github.io/CASA_UDV_
 </div>
 <script>
 (function () {
-  var W = 1200, H = 800;
+  var W = 1300, H = 800;
   function fit() {
     document.querySelectorAll(".embed-scaled").forEach(function (w) {
       var s = w.clientWidth / W;
