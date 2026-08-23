@@ -13,7 +13,7 @@ nocite: |
   @*
 csl: harvard-cite-them-right.csl
 categories: [R5py, Accessibility, Inequality]
-image: Pathwaystoprogress.png
+image: Pathways.jpeg
 image-alt: "Pathways to Progress"
 draft: false
 ---
