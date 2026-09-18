@@ -25,7 +25,7 @@ This technical annex builds that model layer by layer for Singapore's rail syste
 
 ## 2. Data Ingredients
 
-Here's a quick overview of the data that's required to build this graph and why it is needed. 
+Here's a quick overview of the data required to build this graph and why it is needed. 
 
 | Source | Dataset | Role in the Graph |
 |:-----------------|:----------------------|:-------------------------------|
@@ -127,11 +127,6 @@ area["ISO3166-1"="SG"][admin_level=2]->.sg;
 out geom;
 """
 
-# Relations to drop before building anything -- confirmed in the old file's §1.5:
-# Jurong Region Line isn't operational yet (delayed to mid-2028; OSM mapped the
-# alignment ahead of the real service), and Sentosa Express / Skytrain are real
-# but aren't part of the MRT/LRT network (a separate island shuttle and Changi's
-# inter-terminal people-mover).
 EXCLUDE_REFS = {'Sentosa Express', 'Skytrain'}
 EXCLUDE_NAME_MATCH = 'Jurong Regional'
 
@@ -765,11 +760,11 @@ m
 
 *Travel times between stations* 
 
-To accurately assign passenger flows within the network, an objective measure of how passengers might likely travel, given an origin, and destination station is needed
+To accurately assign passenger flows, an objective measure of how passengers might likely travel, given an origin, and destination station is needed.
 
 A suitable measure is the **total travel duration** of the trip. Passengers desire to minimise travel times to their destination, and naturally select the *fastest* route between origin and destination stations. Passengers intuitively refer to Google Maps or Citymapper to find the shortest time taken to get between A and B, and so this is a representative way to model passenger behaviour and choice. Other options include optimising for *physical track distance* or *travel cost*, but both feature less prominently in the decision-making process. Moreover, Singapore adopts a [*distance-based charging approach*](https://www.ptc.gov.sg/fares/distance-fares-and-transfer-rules/){target="_blank"} to ensure that passengers are charged based on their actual usage of the transport network, so the difference in prices between different routes to the same destination is minimal.
 
-To obtain the travel times between adjacent stations in the network, we can tap on the very useful unified GTFS schedule provided by LTA via DataMall. While this can simply be obtained through the station boards encountered at station platforms, the GTFS schedule provides travel durations specific to train schedules at different periods of the day, which enables more accurate modelling. 
+To obtain the travel times between adjacent stations in the network, we can tap on the unified GTFS schedule provided by LTA via DataMall. While this can simply be obtained through the station boards encountered at station platforms, the GTFS schedule provides travel durations specific to train schedules at different periods of the day, which enables more accurate modelling. 
 
 ![Travel time information commonly found on station boards. Source: [SBS Transit](https://www.sbstransit.com.sg/travel-time)](travel_timings.jpeg)
 
@@ -1012,13 +1007,12 @@ caption = (f"Shortest journey from {G.nodes[origin]['station']} "
 
 display(Markdown(route_df.to_markdown(index=False,
                                       floatfmt='.1f',
-                                      colalign=('left', 'left', 'left', 'right'))
-                 + f"\n\n: {caption}"))
+                                      colalign=('left', 'left', 'left', 'right')) + f"\n\n: {caption}"))
 ```
 
 #### Step 5: Allocate Origin-Destination Passenger Flows 
 
-We can now move to allocate the origin-destination (OD) passenger volume data. The compilation from LTA gives the number of trips between MRT stop pairs, where passengers tap in and out of the fare gantry. Trips are reported by hour and by day type — weekdays, and weekends/public holidays. Each OD pair's trips are then assigned to the fastest path between its endpoints, and every edge along that path is credited with them.
+Next, we allocate the origin-destination (OD) passenger volume data. Data from LTA covers the number of trips between MRT stop pairs, where passengers tap in and out of the fare gantry. Trips are reported by hour and by day type — weekdays, and weekends/public holidays. Each OD pair's trips are then assigned to the fastest path between its endpoints, and every edge along that path is credited with them.
 
 For the purposes of this annex, **Weekday AM peak (7–9am)** flows were used from **Aug 2026**. 
 
@@ -1092,11 +1086,6 @@ od = od_df[(od_df['DAY_TYPE'] == 'WEEKDAY') & ~mask_unmapped].copy()
 od['o'] = od['ORIGIN_PT_CODE'].map(resolve_pt_code)
 od['d'] = od['DESTINATION_PT_CODE'].map(resolve_pt_code)
 
-# Singapore gazetted public holidays. Only the ones falling Mon-Fri matter here:
-# busday_count already drops weekends, so listing a Saturday or Sunday holiday would
-# have no effect -- the Monday off-in-lieu is what removes a working day. Omitted for
-# that reason: Hari Raya Puasa (Sat 21 Mar), and the Sunday dates for Vesak Day,
-# National Day and Deepavali, each represented by its Monday observance instead.
 SG_HOLIDAYS = np.array([
     '2026-01-01',   # New Year's Day (Thu)
     '2026-02-17',   # Chinese New Year (Tue)
@@ -1256,8 +1245,7 @@ def render(df, cols, caption, label):
             out[c] = out[c].map(f.format)
     align = ['left' if out[c].dtype ==
              object else 'right' for c in out.columns]
-    display(Markdown(out.to_markdown(index=False, colalign=align)
-                     + f"\n\n: {caption} {{#{label}}}\n"))
+    display(Markdown(out.to_markdown(index=False, colalign=align)+ f"\n\n: {caption}"))
 ```
 
 To visualise the flows, a graph of Singapore's MRT and LRT system was plotted, with edge thickness corresponding to passenger flows during the weekday AM peak. Because the graph is undirected, each edge carries the combined load in both directions. On this measure, the heaviest loading sits on the East-West Line's western approach, *Jurong East to Clementi*, *Clementi to Dover* and *Dover to Buona Vista*, followed closely by the North East Line through *Hougang to Kovan* and *Kovan to Serangoon*.
@@ -1353,7 +1341,7 @@ def plot_flows(Gf, title, max_flow, ax, legend_ticks, node_size=80,
 #| echo: false
 #| warning: false
 #| label: fig-flow-ampeak
-#| fig-cap: "Passenger link loads on an average weekday during the 7–9am peak. Line thickness is proportional to the number of trips whose fastest route traverses that segment; dotted lines are interchange transfers."
+#| fig-cap: "Passenger link loads on an average weekday during the 7–9 AM peak. Line thickness is proportional to the number of trips whose fastest route traverses that segment; dotted lines are interchange transfers."
 
 AM_MAX = max(d['flow'] for *_, d in G_am_peak.edges(data=True))
 
@@ -1384,6 +1372,7 @@ render(flows.nlargest(10, 'Both ways'),
 #| echo: false
 #| warning: false
 #| label: tbl-peak-direction
+
 render(flows.nlargest(10, 'Peak direction'),
        ['From', 'To', 'Line', 'Peak direction', 'Reverse', 'Peak share'],
        'Busiest track segments by peak-direction load, average weekday AM peak '
