@@ -45,7 +45,7 @@ I am currently an MSc Urban Spatial Science student at [The Bartlett Centre for 
 
 As a leader in the Singapore Public Service, I am committed to advancing data-driven and evidence-based policymaking. I strongly believe in the role of public service–led innovation, and the use of econometric and data science methods to develop and uncover insights that inform effective and forward-looking policy decisions.
 
-My research interests lie in cities and the data they generate — sprecifically spatial analysis, geographic data science, and the visualisation of urban processes. This site showcases the projects I have built, along with the code behind them.
+My research interests lie in cities and the data they generate — specifically spatial analysis, geographic data science, and the visualisation of urban processes. This site showcases the projects I have built, along with the code behind them.
 
 Head to my [project repository](projects/index.qmd) to find out more! 
 
