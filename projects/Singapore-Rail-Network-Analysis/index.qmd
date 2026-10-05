@@ -400,15 +400,15 @@ print(f22)
 
 Unsurprisingly, the busiest AM Peak journeys begin from residential towns such as Yishun, Admiralty, Woodlands and Sembawang along the North-South Line, with Sengkang, Tampines, Bukit Panjang and Lakeside following closely. Most AM Peak journeys end in the central business district and surrounding areas.
 
-Passengers originate relatively evenly from residential areas, but flow is concentrated toward a handful of destinations in the city centre. `{python} md(f22['o1_name'])`, the top origin station, sends `{python} md(f22['o1'])` passengers, only `{python} md(f22['o_gap'])` more than tenth-placed `{python} md(f22['o10_name'])` (`{python} md(f22['o10'])`). In contrast, `{python} md(f22['d1_name'])` receives `{python} md(f22['d1'])` passengers, `{python} md(f22['d_ratio'])` times the next highest destination station (`{python} md(f22['d2_name'])`, `{python} md(f22['d2'])`). Two destinations (Jurong East and Kent Ridge) are outside the centre but draw heavy AM Peak arrivals as a second commercial hub and a university-and-science-park cluster, consistent with decentralisation counter-flows, even as the dominant movement remains city-bound.
+Passengers originate relatively evenly from residential areas, but flow is concentrated toward a handful of city centre destinations. `{python} md(f22['o1_name'])`, the top origin station, sends `{python} md(f22['o1'])` passengers, only `{python} md(f22['o_gap'])` more than tenth-placed `{python} md(f22['o10_name'])` (`{python} md(f22['o10'])`). In contrast, `{python} md(f22['d1_name'])` receives `{python} md(f22['d1'])` passengers, `{python} md(f22['d_ratio'])` times the next highest destination station (`{python} md(f22['d2_name'])`, `{python} md(f22['d2'])`). Two destinations (Jurong East and Kent Ridge) are outside the centre but draw heavy AM Peak arrivals as a second commercial hub and a university-and-science-park cluster, consistent with decentralisation counter-flows.
 
 By evening the pattern reverses. `{python} md(f22['flip'])` of the ten busiest AM Peak destinations become the busiest PM Peak origins, with residential towns the top destinations. `{python} md(f22['two_way'])` are among the top 10 PM Peak origins and destinations, presenting themselves as two-way hubs rather than pure workplaces or residential areas.
 
 ### 2.3 How might we characterise stations? 
 
-Plotting tap-ins / tap-outs provide a sense of (a) how busy a station is (total flows) and (b) whether the station sends or receives more people during AM and PM peak hours. 
+Plotting tap-ins / tap-outs illustrates (a) how busy a station is (total flows) and (b) whether the station sends or receives more people during AM and PM peak hours. 
 
-The spatial distribution of origin (sending) and destination (receiving) stations becomes more visible in Figure 2. During AM Peak, the direction of travel is mainly toward the central areas, with some stations like Newton and Clementi having large but balanced bidirectional flows. During PM Peak, the pattern flips, as evidenced by the color swaps with passengers mainly moving out of the central areas toward residential towns. Newton, Paya Lebar and Clementi have large but balanced bidirectional flows.  
+The spatial distribution of origin (sending) and destination (receiving) stations is visible in Figure 2. During AM Peak, the direction of travel is mainly toward the central areas, with some stations like Newton and Clementi having large but balanced bidirectional flows. During PM Peak, the pattern flips, as evidenced by the color swaps with passengers mainly moving out of the central areas toward residential towns. Newton, Paya Lebar and Clementi have large but balanced bidirectional flows.  
 
 ```{python}
 #| echo: false
@@ -757,7 +757,7 @@ plt.show()
 
 ### 3.1 Assigning flows and calculating throughput
 
-Origin–destination records tell us where each journey starts and ends, but not the route taken in between. To fill this gap, we assume every passenger takes the fastest way — working it out using [Dijkstra's algorithm](https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-7/). Each journey is credited to every segment along its route, and to the station where it changes lines. This allows us to add these journeys up to get the number of people along each segment.
+Origin–destination records tell us where each journey starts and ends, but not the route taken in between. To fill this gap, we assume every passenger takes the fastest way — working it out using [Dijkstra's algorithm](https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-7/). Each journey is credited to every segment along its route, and to the station where it changes lines. Add these journeys up gives us the number of people along each segment.
 
 To assess the 'busyness' of a station, we measure overall throughput — tap-ins, tap-outs and transfers, which reflects the number of people passing through. This has implications on platform crowding, safety and station design.
 
@@ -765,7 +765,7 @@ To assess the 'busyness' of a station, we measure overall throughput — tap-ins
 
 Looking at the data, interchange stations are the busiest, with transfers accounting for a large share of total passenger flows. The busiest interchanges have intersecting major lines (i.e. North-South (NS) and East-West (EW) lines). 
 
-Jurong East stands out with the largest total station throughput comprising the most tap-ins/tap-outs and transfers, reflecting its critical role in distributing passengers in Western Singapore. 
+Jurong East stands out with the largest total station throughput, reflecting its critical role in distributing passengers in Western Singapore. 
 
 Circle line (CCL) interchange stations also features prominently, reflecting the line's orbital role in connecting passengers between lines. 
 
@@ -1176,7 +1176,7 @@ print(segment_table(pm_seg,
 
 ## 4. Which parts of the network are most important? 
 
-While Sections 2 and 3 show which stations and segments have the highest volume, passenger traffic alone does not define system criticality. A low-volume station may serve as a single point of failure between two major hubs, while a high-traffic station might have close substitutes. Network science provides several measures designed to evaluate topological importance and identify the components that maintain system connectivity.
+While Sections 2 and 3 show which stations and segments have the highest volume, passenger traffic alone does not define system criticality. A low-volume station may serve as a single point of failure between two major hubs, while a high-traffic station might have close substitutes. Network science provides several measures to evaluate topological importance and identify components that maintain system connectivity.
 
 ### 4.1 An overview of centrality measures 
 
@@ -1196,7 +1196,7 @@ Both measures are built on shortest paths, so the results depend on how "shortes
 
 **Travel time weighted.** Once paths are measured in minutes, stations near the city centre rise in ranking. Several Circle Line interchanges fall away from the top of the betweenness ranking. Serangoon and Bishan fall in rank, as routes that save a stop but cost a transfer lose their advantage. Chinatown climbs thirteen places. The closeness ranking shifts more significantly, the geographic centre gives way to the southern CBD, and three Thomson–East Coast Line stations with no interchange (Havelock, Maxwell and Great World) climb twenty or more places. On the newest line, running directly through the heart of the city, a station can reach much of the network quickly without changing trains. Dhoby Ghaut, despite serving three lines, slips five places. An interchange gives options, but come with a cost in transfer time. As such, a station near several interchanges, on a direct line, can outperform one that is itself an interchange.
 
-**Adding passenger demand.** Counting the journeys people actually make, Outram Park remains first, and Serangoon, Bishan and Buona Vista stay near the top. However, the rest of the list now follows the corridors identified in Section 3. Dhoby Ghaut rises eleven places, City Hall twelve, and two ordinary stops with no interchange at all, Dover and Clementi, climb ten places each. They have no structural reason to rank highly, but they sit on the single East-West Line corridor carrying the west's AM Peak commute into the city, so a large share of all journeys pass through them. Closeness is not computed for this layer.
+**Passenger demand weighted.** Counting the journeys people actually make, Outram Park remains first, and Serangoon, Bishan and Buona Vista stay near the top. However, the rest of the list now features stations along corridors identified in Section 3. Dhoby Ghaut rises eleven places, City Hall twelve, and two ordinary stops with no interchange at all, Dover and Clementi, climb ten places each. They have no structural reason to rank highly, but sit on the single East-West Line corridor carrying the west's AM Peak commute into the city, so a large share of all journeys pass through them. Closeness is not computed for this layer.
 
 ```{python}
 #| echo: false
@@ -1435,13 +1435,13 @@ print(centrality_table('flow', 'time',
 
 ### 4.3 Three kinds of importance
 
-Read together, the three layers broadly separate stations into three groups.
+The three layers broadly separate stations into three groups.
 
 - **Important on every measure.** Outram Park, Buona Vista, Bishan and Serangoon rank highly whether the network is judged by its shape, its speed or its usage. These are the stations where structural position and actual demand coincide, and where any disruption would be felt most widely.
 - **Important by position, lightly used.** Botanic Gardens, Caldecott, MacPherson, Paya Lebar and Marina Bay, which are all Circle Line interchanges, matter in the structure of the network but drop out once demand is counted. They represent orbital connections the network has but does not yet fully rely on during the AM peak, routes that could absorb passengers diverted from a disrupted radial line.
 - **Important by use, not position.** Dover and Clementi rank lower on structure but high on demand. Their importance comes from the volume funnelled through them rather than from any unique place in the network. A corridor that carries heavy demand with few nearby alternatives is where a disruption would cause the most difficulty.
 
-The contrast between the first and last groups is notable. While looking at topology alone places emphasis on interchanges, actual demand shows that some of the stations the network relies on most are ordinary stops on busy single-line corridors.
+The contrast between the first and last groups is notable. While topology alone places emphasis on interchanges, actual demand shows that some of the stations the network relies on most are ordinary stops on busy single-line corridors.
 
 ```{python}
 #| echo: false
@@ -1524,9 +1524,9 @@ print(summary_table(
 
 My overall take is that the numbers mostly confirm what anyone who rides the MRT already feels. Each morning, passengers pour out of residential towns and converge on a handful of stations in the city centre, and each evening the whole pattern runs in reverse. The North East Line carries the heaviest of that tide, with trains far fuller in one direction than the other.
 
-What surprised me most was how differently each station looks depending on how you measure its network importance. Measured by topology alone, the Circle Line interchanges stand out as the stations that knit everything together. Measured by how people actually travel, the spotlight moves to the busy radial corridors, including stations like Dover and Clementi that matter simply because so many journeys pass through them. Only Outram Park ranks near the top on almost every measure, with Buona Vista, Bishan and Serangoon close behind as the network's most consistent brokers. These stations merit close attention from a resilience and reliability perspective. 
+What surprised me most was how differently each station looks depending on how you measure its network importance. Measured by topology alone, the Circle Line interchanges stand out as the stations that knit everything together. Measured by how people actually travel, the spotlight moves to the busy radial corridors, including stations like Dover and Clementi that matter simply because so many journeys pass through them. Outram Park ranks near the top on almost every measure, with Buona Vista, Bishan and Serangoon close behind as the network's most consistent brokers. These stations merit close attention from a resilience and reliability perspective. 
 
-There are limits to all this. The model assumes everyone takes the fastest route, and it looks at a single month. But it does raise a question worth exploring next - what happens to everyone's journey when one of these key stations is disrupted? With the Circle Line loop now complete, it would be interesting to see whether those orbital connections start carrying more of the load in the months ahead.
+There are limits to all this. The model assumes everyone takes the fastest route and is based on monthly aggregated data. But it does raise a question worth exploring next - what happens to these journeys when one of these key stations is disrupted? With the Circle Line loop now complete, it would also be interesting to see whether those orbital connections start carrying more of the load in the months ahead.
 
 *This article was written in tandem with coursework for the CASA0002 Urban Simulation module.*
 
