@@ -1467,6 +1467,28 @@ This pattern illustrates the persistent challenge for infrastructure planners al
 
 Now, we are ready to move on to deeper investigation and analysis. 
 
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: export-artefacts
+## 6. Export for the analysis article
+
+# GraphML is text-based and portable, but it only carries scalar attributes -- fine
+# here, since every node and edge attribute is a string or a number.
+nx.write_graphml(G, OUTPUT_DIR / 'sg_rail_graph.graphml')
+
+# The cleaned OD table, already normalised to an average weekday and joined to graph
+# node codes. Parquet preserves dtypes and is a fraction of the CSV's size.
+od.to_parquet(OUTPUT_DIR / 'od_weekday.parquet', index=False)
+
+# Station code reference, for line names and station labels.
+codes.to_parquet(OUTPUT_DIR / 'station_codes.parquet', index=False)
+
+print(f"exported: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges; "
+      f"{len(od):,} OD rows")
+```
+
 *This article was written in tandem with coursework for the CASA0002 Urban Simulation module.*\
 
 ## References

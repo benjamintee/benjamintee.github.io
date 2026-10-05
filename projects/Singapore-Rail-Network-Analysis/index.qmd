@@ -1,0 +1,1533 @@
+---
+title: "Analysis of Singapore’s MRT/LRT passenger flows"
+jupyter: python3
+description: |
+  This article uses network science to explore passenger flow patterns in Singapore’s MRT/LRT system and evaluates which stations, and segments matter most. 
+author: "Benjamin Tee"
+date: "2026-09-27"
+bibliography: References.bib
+nocite: |
+  @*
+csl: harvard-cite-them-right.csl
+categories: [Networks, Urban Simulation, Resilience, Complexity]
+image: Singapore-MRT.png
+image-alt: "Analysis of Singapore’s MRT/LRT network passenger flows"
+draft: false
+---
+
+## 1. Introduction
+
+With the completion of the Circle Line (CCL) loop on 12 July 2026, Singapore’s MRT/LRT network currently spans just under 280km and will be progressively expanded to about 360km by the early 2030s. When completed, Singapore’s total rail length will exceed that of major cities such as Tokyo or Hong Kong today and will be comparable to that of London and New York[^1]. 
+
+[^1]: [Growing Singapore’s land transport network (LTA, 2026)](https://www.lta.gov.sg/content/ltagov/en/upcoming_projects.html)
+
+On an average weekday, this network successfully carries more than 3.6 million passenger journeys[^2]. Demand is largely bimodal with the morning peak from 7am to 9am, and a broader evening peak between 5pm to 8pm. 
+
+[^2]: [More train rides taken in first half-year, but overall public transport use stays below 2019 levels, (ST, 2025)](https://www.straitstimes.com/singapore/transport/more-train-rides-taken-in-1h-2025-but-overall-public-transport-use-stays-below-2019-levels)
+
+[Network science](https://networksciencebook.com/){target="_blank"} provides us with a useful set of tools to study this complex system and understand the patterns behind these flows. The graph model was [built earlier](https://benjamintee.github.io/projects/Singapore-Rail-Network/) conceptualising stations as nodes, tracks as edges, weighted by distance, journey time, and observed passenger flows from LTA's tap-in/tap-out records in Aug 2026. 
+
+This article seeks to address three main questions: **(a) where do passengers come from and where are they going**, **(b) which parts of the network carry this movement**, and **(c) which segments are most important in the network?**
+
+## 2. Where do passengers come from, and where are they going?
+
+### 2.1 The daily rhythm
+
+Daily passenger journeys have bimodal peaks. The morning peak (7-9 AM) is more compressed, likely a consequence of fixed school and office start times. The evening peak (5-8 PM) is heavier, and lasts longer over three hours instead of two. Between them sits a midday trough at roughly a third of peak volume. This pattern is broadly consistent across all MRT lines. 
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: libraries
+import re
+import warnings
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import geopandas as gpd
+import networkx as nx
+import pyproj
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+from IPython.display import Markdown, display
+
+warnings.filterwarnings('ignore')
+print('Libraries loaded ✓')
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: config
+BASE_DIR = Path(r"C:\Users\benja\Documents\CASA\CASA\Projects\projects\Singapore-Rail-Network")
+DATA_DIR = BASE_DIR / "data"
+OUTPUT_DIR = BASE_DIR / "output"
+
+# Written next to this .qmd, not to OUTPUT_DIR: rendered HTML needs relative paths.
+FIG_DIR = Path('figures')
+FIG_DIR.mkdir(exist_ok=True)
+
+OSM_CRS    = 'EPSG:4326'   # OSM's native lat/lon
+TARGET_CRS = 'EPSG:3414'   # SVY21, used throughout
+transformer = pyproj.Transformer.from_crs(OSM_CRS, TARGET_CRS, always_xy=True)
+
+# Peak windows. AM is two hours, PM three -- evening departures spread out where
+# morning arrivals are compressed by fixed start times. The asymmetry is deliberate
+# but means the two are not directly comparable.
+AM_HOURS, PM_HOURS = range(7, 9), range(17, 20)
+PEAK = set(AM_HOURS) | set(PM_HOURS)
+
+COLOR_MAP = {
+    "Bukit Panjang LRT": "#708372", "Circle Line": "#fa9e0d",
+    "Downtown Line": "#005ec4", "Thomson-East Coast Line": "#9D5B25",
+    "East-West Line": "#009645", "North East Line": "#9900aa",
+    "North-South Line": "#d42e12", "Punggol LRT": "#708372",
+    "Sengkang LRT": "#708372",
+}
+ALL_LINES_COLOR = '#1a1a1a'   # black, so the network view doesn't read as the NSL
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: load-graph-demand
+## Load the graph and demand data built in the technical annex
+
+G = nx.read_graphml(OUTPUT_DIR / 'sg_rail_graph.graphml')
+
+# GraphML round-trips every attribute as a string unless it was written with a
+# declared type, so coerce the numerics back explicitly rather than trusting it.
+for _, d in G.nodes(data=True):
+    d['x'], d['y'] = float(d['x']), float(d['y'])
+for _, _, d in G.edges(data=True):
+    for k in ('length_m', 'travel_time_s', 'n_samples', 'spread_m'):
+        if k in d:
+            d[k] = float(d[k])
+
+od = pd.read_parquet(OUTPUT_DIR / 'od_weekday.parquet')
+codes = pd.read_parquet(OUTPUT_DIR / 'station_codes.parquet')
+
+am_peak = od[od['TIME_PER_HOUR'].isin(AM_HOURS)]
+pm_peak = od[od['TIME_PER_HOUR'].isin(PM_HOURS)]
+
+# Fastest paths, reused by every flow and centrality calculation downstream.
+path_cache = dict(nx.all_pairs_dijkstra_path(G, weight='travel_time_s'))
+
+POS = {n: (G.nodes[n]['x'], G.nodes[n]['y']) for n in G.nodes}
+LINES = sorted(set(nx.get_node_attributes(G, 'line').values()))
+
+assert all('travel_time_s' in d for *_, d in G.edges(data=True)), \
+    'some edges lack travel_time_s -- Dijkstra would treat them as weight 1'
+
+print(f'{G.number_of_nodes()} nodes, {G.number_of_edges()} edges; '
+      f'{od["TOTAL_TRIPS"].sum():,.0f} journeys on an average weekday')
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| label: fig-hourly-by-line
+#| fig-cap: "Average weekday journeys by hour of day. Use the dropdown to toggle journeys for each line."
+
+import plotly.graph_objects as go
+
+# Which lines does each OD pair's fastest route use? Computed once from path_cache,
+# then joined onto the hourly rows -- far cheaper than walking paths per row.
+pair_lines = {}
+for o, dests in path_cache.items():
+    for d, path in dests.items():
+        if o == d:
+            continue
+        pair_lines[(o, d)] = tuple(sorted({
+            G.nodes[u]['line'] for u, v in zip(path, path[1:])
+            if G[u][v]['dist_source'] != 'interchange'}))
+
+tmp = od[['TIME_PER_HOUR', 'o', 'd', 'TOTAL_TRIPS']].copy()
+tmp['lines'] = [pair_lines.get((o, d), ()) for o, d in zip(tmp['o'], tmp['d'])]
+by_line = (tmp.explode('lines').dropna(subset=['lines'])
+              .groupby(['lines', 'TIME_PER_HOUR'])['TOTAL_TRIPS'].sum()
+              .unstack(fill_value=0).reindex(columns=range(24), fill_value=0) / 1000)
+
+network = (od.groupby('TIME_PER_HOUR')['TOTAL_TRIPS'].sum()
+             .reindex(range(24), fill_value=0) / 1000)
+
+PEAK = set(range(7, 9)) | set(range(17, 20))
+ALL_LINES_COLOR = '#1a1a1a'     # black, so the network view doesn't read as the NSL
+
+
+def bar_colors(base):
+    """Peak hours in the series colour, off-peak muted -- the peak windows are the
+    point of the chart, so they should read without a legend."""
+    return [base if h in PEAK else '#d3d8e0' for h in range(24)]
+
+
+def hour_tick(h):
+    """0 -> '12AM', 13 -> '1PM'."""
+    return f"{(h % 12) or 12}{'AM' if h < 12 else 'PM'}"
+
+
+def summary(label, series):
+    """Four-line panel: line name, then the daily total with each peak window's
+    share of it. series is in thousands; report the underlying journey count."""
+    total = series.sum() * 1000
+    am = series.reindex(AM_HOURS).sum() * 1000
+    pm = series.reindex(PM_HOURS).sum() * 1000
+    return (f"<b style='font-size:15px'>{label}</b>"
+            f"<br>Average Weekday Journeys: <b>{total:,.0f}</b>"
+            f"<br><span style='color:#666'>AM Peak: {am:,.0f} ({am/total:.0%})"
+            f" &nbsp;·&nbsp; PM Peak: {pm:,.0f} ({pm/total:.0%})</span>")
+
+
+series_all = [('All lines', network, ALL_LINES_COLOR)]
+series_all += [(ln, by_line.loc[ln], COLOR_MAP.get(ln, '#888888'))
+               for ln in by_line.index]
+
+traces = [go.Bar(x=list(range(24)), y=s.values, name=lab,
+                 marker_color=bar_colors(col), visible=(i == 0),
+                 hovertemplate='%{customdata} — %{y:,.0f}k journeys<extra></extra>',
+                 customdata=[hour_tick(h) for h in range(24)])
+          for i, (lab, s, col) in enumerate(series_all)]
+
+
+def annotation(label, series):
+    return [dict(x=0, y=1.20, xref='paper', yref='paper', xanchor='left',
+                 text=summary(label, series), showarrow=False,
+                 align='left', font=dict(size=13.5))]
+
+
+buttons = [dict(label=lab, method='update',
+                args=[{'visible': [j == i for j in range(len(traces))]},
+                      {'annotations': annotation(lab, s),
+                       'yaxis.range': [0, s.max() * 1.12]}])
+           for i, (lab, s, _) in enumerate(series_all)]
+
+fig = go.Figure(traces)
+fig.update_layout(
+    updatemenus=[dict(buttons=buttons, x=0.96, xanchor='right', y=1.30,
+                      showactive=True)],
+    annotations=annotation('All lines', network),
+    xaxis=dict(title='Hour journey started', tickmode='array',
+               tickvals=list(range(0, 24, 2)),
+               ticktext=[hour_tick(h) for h in range(0, 24, 2)]),
+    yaxis=dict(title='Journeys (thousands)', range=[0, network.max() * 1.12]),
+    bargap=0.12, height=450, showlegend=False,
+    margin=dict(l=20, r=20, t=20, b=30),
+    plot_bgcolor='white',
+)
+fig.update_yaxes(gridcolor='#eee')
+fig.show(config={'displayModeBar': False})
+```
+
+### 2.2 Where do journeys begin and end?
+
+Parsing the origin-destination data from LTA allows us to count the total entries and exits at each station during the AM and PM peak windows.
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: station-totals-setup
+
+def station_totals(od_slice):
+    """Tap-ins and tap-outs straight from the OD table -- no routing assumptions.
+    A transferring passenger taps once at their true origin and once at their true
+    destination, so neither column is inflated by interchange movements."""
+    board = od_slice.groupby('o')['TOTAL_TRIPS'].sum()
+    alight = od_slice.groupby('d')['TOTAL_TRIPS'].sum()
+    df = pd.DataFrame({'Tap-ins': board, 'Tap-outs': alight}).fillna(0)
+    df['Station'] = [G.nodes[c]['station'] for c in df.index]
+    # collapse multi-code interchanges
+    return df.groupby('Station').sum()
+
+
+# Which lines serve each station. An interchange has one node per line, so the
+# station's line set is the set of its nodes' line attributes.
+station_lines = {}
+for n in G.nodes:
+    station_lines.setdefault(
+        G.nodes[n]['station'], set()).add(G.nodes[n]['line'])
+
+# Short codes keep the column narrow; the full name goes in a tooltip.
+LINE_ABBR = {
+    'Bukit Panjang LRT': 'BP', 'Circle Line': 'CC', 'Downtown Line': 'DT',
+    'Thomson-East Coast Line': 'TE', 'East-West Line': 'EW',
+    'North East Line': 'NE', 'North-South Line': 'NS',
+    'Punggol LRT': 'PG', 'Sengkang LRT': 'SK',
+    'Changi Airport Branch Line': 'CG',
+}
+
+
+def line_badges(station):
+    """Line codes coloured by the network's own palette, ordered for stability."""
+    lns = sorted(station_lines.get(station, []))
+    return ' '.join(
+        f'<span style="color:{COLOR_MAP.get(ln, "#888")};font-weight:600" '
+        f'title="{ln}">{LINE_ABBR.get(ln, ln[:2].upper())}</span>'
+        for ln in lns)
+
+
+def busiest_table(od_slice, caption, label):
+    """Origins and destinations side by side -- the point is how little they overlap,
+    which a single ranked table would hide. One rank column serves both halves,
+    since the two rankings run in parallel.
+
+    The caption is a <caption> element rather than Pandoc's ': text {#tbl-...}'
+    syntax, which only binds to tables Pandoc parsed itself. Raw HTML passes through
+    untouched, so that line would render as literal text. The trade-off is no
+    automatic numbering or @tbl- cross-referencing.
+    """
+    stn = station_totals(od_slice)
+    top_in = stn.nlargest(10, 'Tap-ins')
+    top_out = stn.nlargest(10, 'Tap-outs')
+
+    rows = ''.join(
+        f'<tr>'
+        f'<td class="rank">{i}</td>'
+        f'<td>{oi}</td><td class="lines">{line_badges(oi)}</td>'
+        f'<td class="num divider">{stn.loc[oi, "Tap-ins"]:,.0f}</td>'
+        f'<td>{od_}</td><td class="lines">{line_badges(od_)}</td>'
+        f'<td class="num">{stn.loc[od_, "Tap-outs"]:,.0f}</td>'
+        f'</tr>'
+        for i, (oi, od_) in enumerate(zip(top_in.index, top_out.index), start=1))
+
+    return f'''
+<table class="busiest" id="{label}">
+  <caption>{caption}</caption>
+  <thead>
+    <tr>
+      <th class="rank"></th>
+      <th colspan="3" class="divider">Busiest origins</th>
+      <th colspan="3">Busiest destinations</th>
+    </tr>
+    <tr class="sub">
+      <th></th>
+      <th>Station</th><th>Lines</th><th class="num divider">Tap-ins</th>
+      <th>Station</th><th>Lines</th><th class="num">Tap-outs</th>
+    </tr>
+  </thead>
+  <tbody>{rows}</tbody>
+</table>
+'''
+```
+
+```{=html}
+<style>
+table.busiest { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+table.busiest th, table.busiest td { padding: 0.35rem 0.6rem; }
+table.busiest thead th { border-bottom: 1px solid #ccc; text-align: left; }
+table.busiest thead tr.sub th { font-weight: 500; color: #666; font-size: 0.85rem; }
+table.busiest td.rank, table.busiest th.rank { width: 2rem; color: #999; text-align: right; font-variant-numeric: tabular-nums; }
+table.busiest td.total, table.busiest th.total { font-weight: 600; }
+/* Visual break between the two halves. Class-based rather than nth-child, so
+   inserting a column doesn't move the divider. */
+table.busiest td.divider, table.busiest th.divider { border-right: 1px solid #e5e5e5; }
+table.busiest td.num, table.busiest th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.busiest td.lines { letter-spacing: 0.04em; white-space: nowrap; }
+table.busiest tbody tr:nth-child(even) { background: #fafafa; }
+</style>
+```
+
+::: {.panel-tabset}
+
+## AM Peak (7–9am)
+
+```{python}
+#| echo: false
+#| output: asis
+print(busiest_table(am_peak,
+      'Stations with the most tap-ins and tap-outs, average weekday AM peak '
+      '(07:00–08:59)', 'tbl-busiest-am'))
+```
+
+## PM Peak (5–8pm)
+
+```{python}
+#| echo: false
+#| output: asis
+print(busiest_table(pm_peak,
+      'Stations with the most tap-ins and tap-outs, average weekday PM peak '
+      '(17:00–19:59)', 'tbl-busiest-pm'))
+```
+
+:::
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: facts-2-2
+## Figures quoted in Section 2.2, computed so the prose can't drift from the tables.
+
+am_st, pm_st = station_totals(am_peak), station_totals(pm_peak)
+am_orig = am_st['Tap-ins'].nlargest(10)
+am_dest = am_st['Tap-outs'].nlargest(10)
+pm_orig = pm_st['Tap-ins'].nlargest(10)
+pm_dest = pm_st['Tap-outs'].nlargest(10)
+
+NUM_WORDS = dict(enumerate(['none', 'one', 'two', 'three', 'four', 'five',
+                            'six', 'seven', 'eight', 'nine', 'ten']))
+
+def k(x):
+    """15226.4 -> '15.2k'"""
+    return f'{x / 1000:.1f}k'
+
+def md(s):
+    """Inline Python strings can render with quotes in Quarto; Markdown() avoids it."""
+    return Markdown(str(s))
+
+def join_names(names):
+    names = list(names)
+    return names[0] if len(names) == 1 else ', '.join(names[:-1]) + ' and ' + names[-1]
+
+f22 = {
+    'o1_name': am_orig.index[0],  'o1': k(am_orig.iloc[0]),
+    'o10_name': am_orig.index[9], 'o10': k(am_orig.iloc[9]),
+    'o_gap': f'{am_orig.iloc[0] / am_orig.iloc[9] - 1:.0%}',
+    'd1_name': am_dest.index[0],  'd1': k(am_dest.iloc[0]),
+    'd2_name': am_dest.index[1],  'd2': k(am_dest.iloc[1]),
+    'd_ratio': f'{am_dest.iloc[0] / am_dest.iloc[1]:.1f}',
+    # How completely the morning reverses: AM destinations that are PM origins.
+    'flip': NUM_WORDS[len(set(am_dest.index) & set(pm_orig.index))].capitalize(),
+    # Stations in both evening top tens: the two-way hubs.
+    'two_way': join_names(sorted(set(pm_orig.index) & set(pm_dest.index))),
+}
+print(f22)
+```
+
+Unsurprisingly, the busiest AM Peak journeys begin from residential towns such as Yishun, Admiralty, Woodlands and Sembawang along the North-South Line, with Sengkang, Tampines, Bukit Panjang and Lakeside following closely. Most AM Peak journeys end in the central business district and surrounding areas.
+
+Passengers originate relatively evenly from residential areas, but flow is concentrated toward a handful of destinations in the city centre. `{python} md(f22['o1_name'])`, the top origin station, sends `{python} md(f22['o1'])` passengers, only `{python} md(f22['o_gap'])` more than tenth-placed `{python} md(f22['o10_name'])` (`{python} md(f22['o10'])`). In contrast, `{python} md(f22['d1_name'])` receives `{python} md(f22['d1'])` passengers, `{python} md(f22['d_ratio'])` times the next highest destination station (`{python} md(f22['d2_name'])`, `{python} md(f22['d2'])`). Two destinations (Jurong East and Kent Ridge) are outside the centre but draw heavy AM Peak arrivals as a second commercial hub and a university-and-science-park cluster, consistent with decentralisation counter-flows, even as the dominant movement remains city-bound.
+
+By evening the pattern reverses. `{python} md(f22['flip'])` of the ten busiest AM Peak destinations become the busiest PM Peak origins, with residential towns the top destinations. `{python} md(f22['two_way'])` are among the top 10 PM Peak origins and destinations, presenting themselves as two-way hubs rather than pure workplaces or residential areas.
+
+### 2.3 How might we characterise stations? 
+
+Plotting tap-ins / tap-outs provide a sense of (a) how busy a station is (total flows) and (b) whether the station sends or receives more people during AM and PM peak hours. 
+
+The spatial distribution of origin (sending) and destination (receiving) stations becomes more visible in Figure 2. During AM Peak, the direction of travel is mainly toward the central areas, with some stations like Newton and Clementi having large but balanced bidirectional flows. During PM Peak, the pattern flips, as evidenced by the color swaps with passengers mainly moving out of the central areas toward residential towns. Newton, Paya Lebar and Clementi have large but balanced bidirectional flows.  
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: flow-bubble-setup
+# Bubble map: size = total flows, colour = net origin / balanced / net destination
+
+from matplotlib.patches import Circle, Rectangle
+from matplotlib.collections import LineCollection
+import matplotlib.patheffects as pe
+
+# Singapore outline: dissolve every planning area into a single land polygon.
+boundary = gpd.read_file(
+    DATA_DIR / 'MasterPlan2025PlanningAreaBoundaryNoSea.geojson')
+if boundary.crs is None:
+    # GeoJSON is WGS84 by specification; declare it before reprojecting, since
+    # to_crs cannot transform geometry with no stated coordinate system.
+    boundary = boundary.set_crs('EPSG:4326')
+if boundary.crs.to_epsg() != 3414:
+    boundary = boundary.to_crs(TARGET_CRS)
+coast = boundary.dissolve()
+coast['geometry'] = coast.geometry.buffer(0)
+
+# Rail network drawn from the graph's own track edges rather than a Master Plan
+# layer: the graph contains only lines with operational stations, so committed future
+# lines are excluded by construction. Each edge is a straight segment between
+# adjacent stations -- a schematic simplification of the true track alignment.
+# Interchange edges are transfers, not track, so they are skipped. LRT edges are
+# skipped by default because the bubbles exclude LRT stations; drawn anyway, their
+# loops would read as track with no stations on it.
+DRAW_LRT = False
+RAIL_COLOUR = '#6b6b6b'
+
+lrt_nodes = {n for n in G.nodes if 'LRT' in G.nodes[n]['line']}
+TRACK_SEGMENTS = [
+    [(G.nodes[u]['x'], G.nodes[u]['y']), (G.nodes[v]['x'], G.nodes[v]['y'])]
+    for u, v, d in G.edges(data=True)
+    if d.get('dist_source') != 'interchange'
+    and (DRAW_LRT or not (u in lrt_nodes or v in lrt_nodes))
+]
+
+stn_xy = {}
+for n in G.nodes:
+    stn_xy.setdefault(G.nodes[n]['station'],
+                      (G.nodes[n]['x'], G.nodes[n]['y']))
+
+C_ORIGIN, C_BALANCED, C_DEST = '#f2b705', '#2f9e44', '#1c6fd6'
+CATEGORIES = ['Net origin', 'Balanced', 'Net destination']
+COLOURS = dict(zip(CATEGORIES, [C_ORIGIN, C_BALANCED, C_DEST]))
+
+# A station is a net origin if it sends at least 30% more passengers than it
+# receives (tap-ins > 1.3 x tap-outs), a net destination if it receives at least 30%
+# more than it sends, and balanced otherwise. Expressed as a ratio test so the
+# threshold reads exactly as stated.
+RATIO = 1.3
+
+
+def classify(tap_in, tap_out):
+    if tap_in > RATIO * tap_out:
+        return 'Net origin'
+    if tap_out > RATIO * tap_in:
+        return 'Net destination'
+    return 'Balanced'
+
+
+R_MAX = 1100            # metres: radius of the largest bubble across both peaks
+K_CBD = 0.35            # bubble scale in the city-centre inset
+CBD_HW = 2200           # half-width of the city-centre inset, metres
+# inset centre from Raffles Place, metres (east, north)
+CBD_OFFSET = (-400, 500)
+N_PER_TYPE = 3          # main map: busiest N of each category get a label
+N_CBD_LABELS = 3        # inset: busiest N of the peak's dominant category
+
+# Map frame around the stations, metres. The extra room at top and right is sea in
+# the northeast -- above Pasir Ris, east of Punggol -- which is where the city-centre
+# inset sits, so it covers no stations.
+PAD = dict(left=2500, right=7200, bottom=1800, top=5000)
+
+# Both overlays in axes fractions: x, y, width, height. The city-centre inset keeps
+# an equal aspect, so it shrinks to a square pinned to the top-right corner.
+KEY_BOX = [0.0, 0.66, 0.22, 0.34]
+INSET_BOX = [0.72, 0.56, 0.28, 0.44]
+
+# Manual label offsets in points, for names that collide at the default position.
+# A negative x offset right-aligns the label so it sits to the left of the station.
+LABEL_NUDGE = {'Woodlands': (-8, 8)}
+CBD_NUDGE = {'Chinatown': (-6, 6), 'City Hall': (-6, 6),
+             'Shenton Way': (6, -12)}
+
+# Labels get a white halo so they stay legible where they cross bubbles.
+HALO = [pe.withStroke(linewidth=2.8, foreground='white')]
+
+# Per-station tap-in/tap-out totals for each peak, MRT only. station_totals and
+# station_lines come from the station-totals-setup chunk in section 1.2. LRT stops
+# are dropped: they feed a single MRT hub, so their imbalance reflects that role
+# rather than surrounding land use, and their volumes are an order of magnitude smaller.
+lrt_only = {s for s, lns in station_lines.items() if all(
+    'LRT' in ln for ln in lns)}
+
+
+def peak_totals(od_slice):
+    df = station_totals(od_slice)
+    return df.drop(index=lrt_only & set(df.index))
+
+
+am_t, pm_t = peak_totals(am_peak), peak_totals(pm_peak)
+
+# One size scale for both peaks, so the evening map looks busier where it really is.
+TMAX = max((am_t['Tap-ins'] + am_t['Tap-outs']).max(),
+           (pm_t['Tap-ins'] + pm_t['Tap-outs']).max())
+
+
+def radius(v):
+    """Area proportional to total flows: radius grows with the square root."""
+    return R_MAX * np.sqrt(v / TMAX)
+
+
+def typed(t):
+    """Add total flows and the station's category, using the same ratio test the
+    map colours by, so labels and colours can never disagree."""
+    return t.assign(total=t['Tap-ins'] + t['Tap-outs'],
+                    type=[classify(i, o)
+                          for i, o in zip(t['Tap-ins'], t['Tap-outs'])])
+
+
+def top_by_type(t, category, n, within=None):
+    """Busiest n stations of one category, optionally restricted to a subset."""
+    df = typed(t)
+    if within is not None:
+        df = df.loc[df.index.intersection(within)]
+    return df[df['type'] == category].nlargest(n, 'total')
+
+
+def draw_land(ax):
+    coast.plot(ax=ax, facecolor='#f1efe9',
+               edgecolor='#8f8b7e', lw=0.9, zorder=0)
+
+
+def draw_rail(ax, lw=0.8):
+    """Track edges at zorder 1: above the land (0), beneath the bubbles (3). A
+    LineCollection draws all segments in one call rather than one per edge."""
+    ax.add_collection(LineCollection(TRACK_SEGMENTS, colors=RAIL_COLOUR,
+                      linewidths=lw, alpha=0.7, capstyle='round', zorder=1))
+
+
+def draw_bubbles(ax, t, k=1.0):
+    """One bubble per station. Largest drawn first so small stations sit on top."""
+    tot = t['Tap-ins'] + t['Tap-outs']
+    for name in tot.sort_values(ascending=False).index:
+        r = t.loc[name]
+        ax.add_patch(Circle(stn_xy[name], k * radius(tot[name]),
+                            fc=COLOURS[classify(r['Tap-ins'], r['Tap-outs'])],
+                            ec='white', lw=0.4, alpha=0.9, zorder=3))
+
+
+def put_label(ax, name, fontsize, nudges, default=(8, 8)):
+    dx, dy = nudges.get(name, default)
+    ax.annotate(name, stn_xy[name], fontsize=fontsize, fontweight='bold',
+                xytext=(dx, dy), textcoords='offset points',
+                ha='right' if dx < 0 else 'left',
+                color='#222', zorder=6, path_effects=HALO)
+
+
+def frame_limits(t):
+    xs = [stn_xy[s][0] for s in t.index]
+    ys = [stn_xy[s][1] for s in t.index]
+    return ((min(xs) - PAD['left'], max(xs) + PAD['right']),
+            (min(ys) - PAD['bottom'], max(ys) + PAD['top']))
+
+
+def stations_under(t, box):
+    """Stations falling inside an overlay's allotted area -- run once to check that
+    neither the key nor the inset hides a bubble. Conservative: the inset shrinks to
+    a square within its box, so it may cover slightly less than this reports."""
+    (x0, x1), (y0, y1) = frame_limits(t)
+    bx0, by0 = x0 + box[0] * (x1 - x0), y0 + box[1] * (y1 - y0)
+    bx1, by1 = bx0 + box[2] * (x1 - x0), by0 + box[3] * (y1 - y0)
+    return [s for s in t.index
+            if bx0 <= stn_xy[s][0] <= bx1 and by0 <= stn_xy[s][1] <= by1]
+
+
+def draw_key(ax, counts):
+    """Colour and size key in one boxed panel at the top left.
+
+    The panel is an inset axes whose limits are set to the same metres-per-unit as
+    the map, so the reference circles are drawn at true scale. With an equal-aspect
+    map, a fraction f of the axes spans f of the data range on each axis, which lets
+    the inset inherit the scale without measuring pixels.
+    """
+    xspan = np.diff(ax.get_xlim())[0]
+    yspan = np.diff(ax.get_ylim())[0]
+    W, H = KEY_BOX[2] * xspan, KEY_BOX[3] * yspan
+
+    key = ax.inset_axes(KEY_BOX)
+    key.set_xlim(0, W)
+    key.set_ylim(0, H)
+    key.set_xticks([])
+    key.set_yticks([])
+    key.set_facecolor('white')
+    key.set_zorder(10)
+    for s in key.spines.values():
+        s.set_edgecolor('#999')
+        s.set_linewidth(0.8)
+
+    pad, row_h = 0.07 * W, 0.115 * H
+    y = H - pad
+    key.text(pad, y, 'Station type', fontsize=11,
+             fontweight='bold', va='top')
+    y -= 0.08 * H
+    for c in CATEGORIES:
+        y -= row_h
+        key.add_patch(Circle((pad + 0.3 * row_h, y + row_h / 2), 0.3 * row_h,
+                             fc=COLOURS[c], ec='white', lw=0.4))
+        key.text(pad + 0.9 * row_h, y + row_h / 2, f'{c} ({counts.get(c, 0)})',
+                 fontsize=11, va='center')
+
+    y -= 0.07 * H
+    key.text(pad, y, 'Total flows', fontsize=11, fontweight='bold', va='top')
+
+    # Reference circles on a shared baseline, true to the map's scale.
+    base, x = pad + 0.06 * H, pad
+    for v in (10_000, 25_000, 40_000):
+        rr = radius(v)
+        key.add_patch(Circle((x + rr, base + rr), rr,
+                      fc='none', ec='#777', lw=0.8))
+        key.text(x + rr, base - 0.02 * H, f'{v // 1000}k', ha='center', va='top',
+                 fontsize=11, color='#555')
+        x += 2 * rr + 0.06 * W
+
+
+def draw_cbd_inset(ax, t, label_type):
+    """City-centre inset in the top-right corner of the map.
+
+    Stations there sit 500-800 m apart, so no single bubble size serves both views;
+    a larger map scale with shrunken bubbles separates them. The inset centre is
+    offset north and west of Raffles Place, which sits at the southern edge of the
+    business district, to take in Outram Park, Dhoby Ghaut and City Hall.
+
+    Only the busiest few stations of `label_type` are named -- the city centre is
+    almost uniformly one category in each peak, so labelling that category alone
+    identifies the largest bubbles without crowding the panel.
+    """
+    rx, ry = stn_xy['Raffles Place']
+    cx, cy = rx + CBD_OFFSET[0], ry + CBD_OFFSET[1]
+
+    # Outline of the inset's coverage on the main map.
+    ax.add_patch(Rectangle((cx - CBD_HW, cy - CBD_HW), 2 * CBD_HW, 2 * CBD_HW,
+                           fc='none', ec='#777', lw=0.9, ls='--', zorder=5))
+
+    cbd = ax.inset_axes(INSET_BOX)
+    cbd.set_zorder(10)
+    cbd.set_facecolor('white')
+    draw_land(cbd)
+    # thicker: the inset is at a larger scale
+    draw_rail(cbd, lw=1.3)
+    draw_bubbles(cbd, t, k=K_CBD)
+
+    in_window = [s for s in t.index
+                 if abs(stn_xy[s][0] - cx) < CBD_HW * 0.92
+                 and abs(stn_xy[s][1] - cy) < CBD_HW * 0.92]
+    for name in top_by_type(t, label_type, N_CBD_LABELS, within=in_window).index:
+        put_label(cbd, name, 11.5, CBD_NUDGE, default=(6, 6))
+
+    cbd.set_xlim(cx - CBD_HW, cx + CBD_HW)
+    cbd.set_ylim(cy - CBD_HW, cy + CBD_HW)
+    cbd.set_aspect('equal')
+    cbd.set_anchor('NE')    # square, pinned to the corner
+    cbd.set_xticks([])
+    cbd.set_yticks([])
+    for s in cbd.spines.values():
+        s.set_edgecolor('#777')
+        s.set_linestyle('--')
+        s.set_linewidth(1.0)
+    # Title inside the inset: above it, it would run off the top of the figure.
+    cbd.text(0.03, 0.97, 'City centre (inset)',
+             transform=cbd.transAxes, fontsize=12, color='#444', va='top', zorder=7,
+             bbox=dict(fc='white', ec='none', alpha=0.85, pad=2))
+
+
+def plot_flow_bubbles(t, cbd_label_type):
+    fig, ax = plt.subplots(figsize=(13, 9))
+
+    # Framed on the stations rather than the coastline, which would pull in the
+    # southern islands and leave the network small.
+    draw_land(ax)
+    draw_rail(ax, lw=0.8)
+    draw_bubbles(ax, t)
+
+    # Label the busiest few of each category rather than the busiest overall, so
+    # every category is represented -- balanced stations are never the largest
+    # bubbles and would otherwise never be named.
+    for c in CATEGORIES:
+        for name in top_by_type(t, c, N_PER_TYPE).index:
+            put_label(ax, name, 10.5, LABEL_NUDGE)
+
+    (x0, x1), (y0, y1) = frame_limits(t)
+    ax.set_xlim(x0, x1)
+    ax.set_ylim(y0, y1)
+    ax.set_aspect('equal')
+    ax.axis('off')
+
+    counts = typed(t)['type'].value_counts()
+    # after limits are set: both overlays read them
+    draw_key(ax, counts)
+    draw_cbd_inset(ax, t, cbd_label_type)
+    return fig
+
+
+# Named stations, for checking the map against the prose.
+for peak, t in [('AM', am_t), ('PM', pm_t)]:
+    print(f'--- {peak} peak')
+    for c in CATEGORIES:
+        print(f'{c}: {list(top_by_type(t, c, N_PER_TYPE).index)}')
+```
+
+::: {.panel-tabset}
+
+## AM peak (7–9am)
+
+```{python}
+#| echo: false
+#| label: fig-bubbles-am
+#| fig-cap: "MRT stations by total flows (bubble area: tap-ins plus tap-outs) and direction (colour), average weekday AM peak. Net origins send at least 30% more passengers than they receive; net destinations receive at least 30% more than they send; balanced stations fall in between. The three busiest stations of each category are labelled."
+#| out-width: 100%
+
+plot_flow_bubbles(am_t, 'Net destination')
+plt.show()
+```
+
+## PM peak (5–8pm)
+
+```{python}
+#| echo: false
+#| label: fig-bubbles-pm
+#| fig-cap: "The same stations in the evening peak, on the same scale and with the same thresholds."
+#| out-width: 100%
+
+plot_flow_bubbles(pm_t, 'Net origin')
+plt.show()
+```
+
+:::
+
+## 3. Which stations and segments are the busiest? 
+
+### 3.1 Assigning flows and calculating throughput
+
+Origin–destination records tell us where each journey starts and ends, but not the route taken in between. To fill this gap, we assume every passenger takes the fastest way — working it out using [Dijkstra's algorithm](https://www.geeksforgeeks.org/dsa/dijkstras-shortest-path-algorithm-greedy-algo-7/). Each journey is credited to every segment along its route, and to the station where it changes lines. This allows us to add these journeys up to get the number of people along each segment.
+
+To assess the 'busyness' of a station, we measure overall throughput — tap-ins, tap-outs and transfers, which reflects the number of people passing through. This has implications on platform crowding, safety and station design.
+
+### 3.2 Busiest stations during AM / PM Peak 
+
+Looking at the data, interchange stations are the busiest, with transfers accounting for a large share of total passenger flows. The busiest interchanges have intersecting major lines (i.e. North-South (NS) and East-West (EW) lines). 
+
+Jurong East stands out with the largest total station throughput comprising the most tap-ins/tap-outs and transfers, reflecting its critical role in distributing passengers in Western Singapore. 
+
+Circle line (CCL) interchange stations also features prominently, reflecting the line's orbital role in connecting passengers between lines. 
+
+- AM Peak: Bishan, Serangoon, Paya Lebar and Buona Vista
+- PM Peak: Serangoon, Dhoby Ghaut and Paya Lebar
+
+Thomson-East Coast (TEL) line interchange stations (e.g. Orchard, Woodlands) see relatively less transfers, but could grow in importance with emerging residential areas or as passengers become more familiar with transferring via these stations. 
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: throughput-setup
+# 2.2 Station throughput: tap-ins + tap-outs + transfers
+
+def station_throughput(od_slice):
+    """Total passenger movements through each station.
+
+    Tap-ins and tap-outs come from the fare records. Transfers do not: the gantry
+    system records only entry and exit, so a change of line leaves no tap and must
+    be inferred from the assigned paths. A journey is credited a transfer at every
+    interchange edge its fastest route crosses.
+    """
+    base = peak_totals(od_slice)
+    transfers = {s: 0.0 for s in base.index}
+
+    pairs = od_slice.groupby(['o', 'd'], sort=False)[
+        'TOTAL_TRIPS'].sum().reset_index()
+    for o, d, trips in pairs.itertuples(index=False):
+        path = path_cache.get(o, {}).get(d)
+        if path is None:
+            continue
+        for u, v in zip(path, path[1:]):
+            if G[u][v]['dist_source'] == 'interchange':
+                s = G.nodes[u]['station']
+                if s in transfers:              # LRT stations are out of scope
+                    transfers[s] += trips
+
+    out = base.assign(Transfers=pd.Series(transfers)).fillna(0)
+    out['Throughput'] = out['Tap-ins'] + out['Tap-outs'] + out['Transfers']
+    out['Transfer share'] = out['Transfers'] / out['Throughput']
+    return out
+
+
+am_thru, pm_thru = station_throughput(am_peak), station_throughput(pm_peak)
+
+
+def throughput_table(t, caption, label, n=10):
+    """Busiest stations by throughput, with the transfer share alongside.
+
+    The share is the column that distinguishes a station people pass through from
+    one they start or end at -- two stations with the same throughput can be doing
+    entirely different jobs.
+    """
+    top = t.nlargest(n, 'Throughput')
+    rows = ''.join(
+        f'<tr>'
+        f'<td class="rank">{i}</td>'
+        f'<td>{name}</td>'
+        f'<td class="lines divider">{line_badges(name)}</td>'
+        f'<td class="num">{r["Tap-ins"]:,.0f}</td>'
+        f'<td class="num">{r["Tap-outs"]:,.0f}</td>'
+        f'<td class="num divider">{r["Transfers"]:,.0f}</td>'
+        f'<td class="num total">{r["Throughput"]:,.0f}</td>'
+        f'<td class="num">{r["Transfer share"]:.0%}</td>'
+        f'</tr>'
+        for i, (name, r) in enumerate(top.iterrows(), start=1))
+
+    return f'''
+<table class="busiest throughput" id="{label}">
+  <caption>{caption}</caption>
+  <thead>
+    <tr>
+      <th class="rank"></th><th>Station</th><th class="divider">Lines</th>
+      <th class="num">Tap-ins</th><th class="num">Tap-outs</th>
+      <th class="num divider">Transfers</th><th class="num total">Total</th>
+      <th class="num">% Trf</th>
+    </tr>
+  </thead>
+  <tbody>{rows}</tbody>
+</table>
+'''
+```
+
+```{=html}
+<style>
+table.throughput td.rank, table.throughput th.rank { width: 2rem; color: #999; text-align: right; font-variant-numeric: tabular-nums; }
+/* Divider after Lines: separates what the station is from how busy it is. */
+table.throughput td.divider, table.throughput th.divider { border-right: 1px solid #e5e5e5; }
+table.throughput td.total, table.throughput th.total { font-weight: 600; }
+table.throughput caption { caption-side: bottom; text-align: left; font-size: 0.85rem; color: #666; padding-top: 0.6rem; line-height: 1.45; }
+</style>
+```
+
+::: {.panel-tabset}
+
+## AM Peak (7–9am)
+
+```{python}
+#| echo: false
+#| output: asis
+print(throughput_table(am_thru,
+      'Busiest MRT stations by throughput, average weekday AM peak (07:00–08:59). '
+      'Tap-ins and tap-outs come from the fare records; transfers are inferred from '
+      'fastest-path routing and are an upper bound.', 'tbl-throughput-am'))
+```
+
+## PM Peak (5–8pm)
+
+```{python}
+#| echo: false
+#| output: asis
+print(throughput_table(pm_thru,
+      'The same measure in the evening peak (17:00–19:59).', 'tbl-throughput-pm'))
+```
+
+:::
+
+### 3.3 Busiest line segments 
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: flow-allocate
+## Assigning journeys to routes
+
+def allocate_flows(od_slice):
+    """Load each edge with the journeys whose fastest path traverses it.
+
+    Returns a copy of G with a 'flow' attribute on every edge. G is undirected, so
+    the two travel directions sum onto the same edge -- this is a link load, not a
+    directional flow. Interchange edges accumulate transfer volume rather than track
+    volume.
+    """
+    Gf = G.copy()
+    nx.set_edge_attributes(Gf, 0.0, 'flow')
+
+    pairs = (od_slice.groupby(['o', 'd'], sort=False)['TOTAL_TRIPS']
+                     .sum().reset_index())
+    n_unreachable = 0
+    for o, d, trips in pairs.itertuples(index=False):
+        path = path_cache.get(o, {}).get(d)
+        if path is None:
+            n_unreachable += 1
+            continue
+        for u, v in zip(path, path[1:]):
+            Gf[u][v]['flow'] += trips
+    if n_unreachable:
+        print(f'  {n_unreachable} OD pairs had no path')
+    return Gf
+
+
+def allocate_flows_directed(od_slice):
+    """As allocate_flows, but keeps the two travel directions apart.
+
+    Paths from path_cache run origin -> destination, so walking each consecutive pair
+    in order gives the arc actually traversed. Returns a DiGraph carrying both arcs
+    per physical track segment.
+    """
+    Gd = G.to_directed()                      # both arcs, attributes copied
+    nx.set_edge_attributes(Gd, 0.0, 'flow')
+
+    pairs = (od_slice.groupby(['o', 'd'], sort=False)['TOTAL_TRIPS']
+                     .sum().reset_index())
+    for o, d, trips in pairs.itertuples(index=False):
+        path = path_cache.get(o, {}).get(d)
+        if path is None:
+            continue
+        for u, v in zip(path, path[1:]):
+            Gd[u][v]['flow'] += trips         # one arc only, not both
+    return Gd
+
+
+# Directed assignments, computed once and shared by the map and the table below.
+D_am, D_pm = allocate_flows_directed(am_peak), allocate_flows_directed(pm_peak)
+
+
+def peak_arcs(Dg):
+    """For each track segment, the busier direction and both loads.
+
+    Yields (tail, head, peak_flow, reverse_flow), oriented so tail -> head is the
+    direction most passengers travel. Interchange edges are transfers, not track,
+    and LRT segments are excluded to match the station analysis.
+    """
+    seen = set()
+    for u, v, d in Dg.edges(data=True):
+        if d['dist_source'] == 'interchange' or frozenset({u, v}) in seen:
+            continue
+        seen.add(frozenset({u, v}))
+        if DRAW_LRT or not (u in lrt_nodes or v in lrt_nodes):
+            f_uv, f_vu = Dg[u][v]['flow'], Dg[v][u]['flow']
+            yield ((u, v, f_uv, f_vu) if f_uv >= f_vu else (v, u, f_vu, f_uv))
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: segment-map-setup
+## 3.3 Interactive segment flow map
+
+import plotly.graph_objects as go
+
+LW_MIN, LW_MAX = 0.8, 12        # line widths in points
+STATION_DOT = 7                 # station marker size
+
+# One width scale across both peaks, so the tabs are directly comparable.
+SEG_FMAX = max(a[2] for Dg in (D_am, D_pm) for a in peak_arcs(Dg))
+
+def seg_lw(f):
+    """Power below 1 compresses the long tail so busy corridors don't swamp the rest;
+    LW_MIN keeps every segment visible at low flow."""
+    return LW_MIN + (LW_MAX - LW_MIN) * (f / SEG_FMAX) ** 0.75
+
+def land_path():
+    """Coastline as one SVG path string, for a plotly layout shape. Interiors are
+    ignored: the outline only needs to read as a backdrop."""
+    geom = coast.geometry.iloc[0]
+    polys = geom.geoms if geom.geom_type == 'MultiPolygon' else [geom]
+    return ' '.join(
+        'M ' + ' L '.join(f'{x},{y}' for x, y in p.exterior.coords) + ' Z'
+        for p in polys)
+
+LAND_PATH = land_path()         # geometry is fixed; build the string once
+
+def plot_segment_flows(Dg):
+    """Track segments at a width proportional to their busier direction's load.
+    Station names and segment volumes appear on hover."""
+    arcs = sorted(peak_arcs(Dg), key=lambda a: a[2])   # busiest last, drawn on top
+    fig = go.Figure()
+
+    # One line trace per segment. Hover is disabled here because plotly only
+    # registers it near a line's vertices; midpoint markers below carry the tooltips.
+    for u, v, peak, rev in arcs:
+        (x1, y1) = stn_xy[G.nodes[u]['station']]
+        (x2, y2) = stn_xy[G.nodes[v]['station']]
+        fig.add_trace(go.Scatter(
+            x=[x1, x2], y=[y1, y2], mode='lines',
+            line=dict(width=seg_lw(peak),
+                      color=COLOR_MAP.get(G.nodes[u]['line'], '#888')),
+            opacity=0.85, hoverinfo='skip', showlegend=False))
+
+    # Transparent hover targets at each segment's midpoint.
+    mx, my, text = [], [], []
+    for u, v, peak, rev in arcs:
+        (x1, y1) = stn_xy[G.nodes[u]['station']]
+        (x2, y2) = stn_xy[G.nodes[v]['station']]
+        mx.append((x1 + x2) / 2); my.append((y1 + y2) / 2)
+        share = peak / (peak + rev) if peak + rev else float('nan')
+        text.append(
+            f"<b>{G.nodes[u]['station']} → {G.nodes[v]['station']}</b><br>"
+            f"{G.nodes[u]['line']}<br>"
+            f"Peak direction: {peak:,.0f}<br>Reverse: {rev:,.0f}<br>"
+            f"Peak share: {share:.0%}")
+    fig.add_trace(go.Scatter(
+        x=mx, y=my, mode='markers',
+        marker=dict(size=14, color='rgba(0,0,0,0)'),
+        hovertext=text, hoverinfo='text', showlegend=False))
+
+    # Station markers, named on hover.
+    names = sorted({G.nodes[n]['station'] for n in G.nodes
+                    if DRAW_LRT or n not in lrt_nodes})
+    fig.add_trace(go.Scatter(
+        x=[stn_xy[s][0] for s in names], y=[stn_xy[s][1] for s in names],
+        mode='markers', marker=dict(size=STATION_DOT, color='#333',
+                                    line=dict(width=1, color='white')),
+        hovertext=names, hoverinfo='text', showlegend=False))
+
+    # Framed on the stations, with only a little headroom: no title or key sits
+    xs = [stn_xy[s][0] for s in names]; ys = [stn_xy[s][1] for s in names]
+    fig.update_layout(
+        shapes=[dict(type='path', path=LAND_PATH, layer='below',
+                     fillcolor='#f1efe9', line=dict(color='#8f8b7e', width=1))],
+        xaxis=dict(range=[min(xs) - 2000, max(xs) + 2000], visible=False),
+        # scaleanchor keeps the map's aspect true while the figure resizes.
+        yaxis=dict(range=[min(ys) - 1500, max(ys) + 1500], visible=False,
+                   scaleanchor='x', scaleratio=1),
+        autosize=True, width=None, height=470,
+        margin=dict(l=10, r=10, t=20, b=10),
+        plot_bgcolor='white', hovermode='closest',
+    )
+    return fig
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: segment-table-setup
+
+def segment_loads(Dg):
+    """Segment loads as a table, oriented by the busier direction so From and To
+    read as the real direction of travel rather than an arbitrary node ordering."""
+    return pd.DataFrame([
+        {'From': G.nodes[u]['station'],
+         'To': G.nodes[v]['station'],
+         'Line': G.nodes[u]['line'],
+         'Peak': peak,
+         'Reverse': rev,
+         'Share': peak / (peak + rev) if peak + rev else np.nan}
+        for u, v, peak, rev in peak_arcs(Dg)])
+
+am_seg, pm_seg = segment_loads(D_am), segment_loads(D_pm)
+
+def line_badge(line):
+    """Single coloured line code, matching the badges used in the station tables."""
+    return (f'<span style="color:{COLOR_MAP.get(line, "#888")};font-weight:600" '
+            f'title="{line}">{LINE_ABBR.get(line, line[:2].upper())}</span>')
+
+def segment_table(seg, caption, label, n=10):
+    top = seg.nlargest(n, 'Peak')
+    rows = ''.join(
+        f'<tr>'
+        f'<td class="rank">{i}</td>'
+        f'<td>{r.From}</td><td>{r.To}</td>'
+        f'<td class="lines divider">{line_badge(r.Line)}</td>'
+        f'<td class="num total">{r.Peak:,.0f}</td>'
+        f'<td class="num">{r.Reverse:,.0f}</td>'
+        f'<td class="num">{r.Share:.0%}</td>'
+        f'</tr>'
+        for i, r in enumerate(top.itertuples(index=False), start=1))
+
+    return f'''
+<table class="busiest segments" id="{label}">
+  <caption>{caption}</caption>
+  <thead>
+    <tr>
+      <th class="rank"></th><th>From</th><th>To</th><th class="divider">Line</th>
+      <th class="num total">Peak direction</th><th class="num">Reverse</th>
+      <th class="num">Peak share</th>
+    </tr>
+  </thead>
+  <tbody>{rows}</tbody>
+</table>
+'''
+
+print(f"median peak share, AM: {am_seg['Share'].median():.1%}  "
+      f"PM: {pm_seg['Share'].median():.1%}")
+```
+
+```{=html}
+<style>
+table.segments caption { caption-side: bottom; text-align: left; font-size: 0.85rem; color: #666; padding-top: 0.6rem; line-height: 1.45; }
+</style>
+```
+
+<script>
+// Plotly figures in hidden tab panes lay out at zero width. The figures are set to
+// respond to window resizes, so firing one when a tab becomes visible re-measures
+// them -- without relying on a global Plotly object, which Quarto may not expose.
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.panel-tabset [data-bs-toggle="tab"]').forEach(function (tab) {
+    tab.addEventListener('shown.bs.tab', function () {
+      window.dispatchEvent(new Event('resize'));
+    });
+  });
+});
+</script>
+
+Segments along the North-East line consistently feature the most passengers. 
+
+During AM Peak, flows between Hougang to Kovan and Kovan to Serangoon are the highest before some passengers exit at Serangoon to switch to other lines. Nonetheless, overall load remains heavy through toward the city (i.e Woodleigh --> Potong Pasir --> Boon Keng --> Farrer Park --> Little India) before dissipating. More than 60,000 passengers travel through the busiest segment (Kovan to Serangoon), roughly equivalent to the capacity of 440 double decker buses! 
+
+The picture is consistent during PM peak, with heavy passenger flows away from the city on the North-East line. The Buona Vista–Dover–Clementi stretch also carries heavy evening flows westward, swelling at Buona Vista as passengers transfer from the Circle Line. 
+
+::: {.panel-tabset}
+
+## AM Peak (7–9am)
+
+```{python}
+#| echo: false
+#| label: fig-segments-am
+#| fig-cap: "Track segments by peak-direction load, average weekday AM peak. Line width shows busier direction's volume."
+#| out-width: 100%
+
+plot_segment_flows(D_am).show(
+    config={'responsive': True, 'displayModeBar': False})
+```
+
+```{python}
+#| echo: false
+#| output: asis
+print(segment_table(am_seg,
+      'Busiest track segments by peak-direction load, average weekday AM peak '
+      '(07:00–08:59). Direction shown is the busier of the two; peak share is that '
+      "direction's load as a fraction of the two-way total.", 'tbl-segments-am'))
+```
+
+## PM Peak (5–8pm)
+
+```{python}
+#| echo: false
+#| label: fig-segments-pm
+#| fig-cap: "The same measure in the evening peak (17:00–19:59), on the same scale."
+#| out-width: 100%
+
+plot_segment_flows(D_pm).show(config={'responsive': True, 'displayModeBar': False})
+```
+
+```{python}
+#| echo: false
+#| output: asis
+print(segment_table(pm_seg,
+      'The same measure in the evening peak (17:00–19:59).', 'tbl-segments-pm'))
+```
+
+:::
+
+## 4. Which parts of the network are most important? 
+
+While Sections 2 and 3 show which stations and segments have the highest volume, passenger traffic alone does not define system criticality. A low-volume station may serve as a single point of failure between two major hubs, while a high-traffic station might have close substitutes. Network science provides several measures designed to evaluate topological importance and identify the components that maintain system connectivity.
+
+### 4.1 An overview of centrality measures 
+
+*Betweenness centrality* counts how often a station lies on the path between two others. A station with high betweenness is a broker: passengers pass through it on their way somewhere else, and if it closed, their journeys would have to be rerouted. Interchanges tend to score highly, but so do stations at structural pinch points, where a single stretch of track is the only connection between two parts of the network.
+
+*Closeness centrality* measures how near a station is to everywhere else, on average. A station with high closeness is well placed — journeys from it reach the rest of the network quickly. 
+
+Both measures are built on shortest paths, so the results depend on how "shortest" is defined and which journeys are counted. We compute each three ways: 
+
+1. *Topological structure*. Every stretch of track is equal, and the measures reflect the shape of the network.
+2. *Weighted by travel time*. The shortest path is the quickest one. Transfer penalties at interchanges are taken into account.
+3. *Weighted by passenger demand.* For betweenness, each pair of stations is counted by the number of journeys actually made between them, so a station scores highly when it lies on routes many people travel. Closeness has no meaningful demand-weighted form and hence we do not report the computations. 
+
+### 4.2 What the rankings show
+
+**Topological network.** On the unweighted network, eight of the ten stations with the highest betweenness centrality are Circle Line interchanges (Buona Vista, Botanic Gardens, Bishan, Serangoon, MacPherson, Caldecott, Paya Lebar and Marina Bay). The Circle Line is orbital, crossing every radial line. In a network where every stop counts equally it offers the shortest way between any two lines without passing through the city centre. Outram Park tops the list as the meeting point of three lines on the edge of the central business district. Closeness tells a different story where the best-placed stations (Little India, Newton, Dhoby Ghaut, Rochor and Bugis) sit around the geographic centre of the network, a similar number of stops from everywhere.
+
+**Travel time weighted.** Once paths are measured in minutes, stations near the city centre rise in ranking. Several Circle Line interchanges fall away from the top of the betweenness ranking. Serangoon and Bishan fall in rank, as routes that save a stop but cost a transfer lose their advantage. Chinatown climbs thirteen places. The closeness ranking shifts more significantly, the geographic centre gives way to the southern CBD, and three Thomson–East Coast Line stations with no interchange (Havelock, Maxwell and Great World) climb twenty or more places. On the newest line, running directly through the heart of the city, a station can reach much of the network quickly without changing trains. Dhoby Ghaut, despite serving three lines, slips five places. An interchange gives options, but come with a cost in transfer time. As such, a station near several interchanges, on a direct line, can outperform one that is itself an interchange.
+
+**Adding passenger demand.** Counting the journeys people actually make, Outram Park remains first, and Serangoon, Bishan and Buona Vista stay near the top. However, the rest of the list now follows the corridors identified in Section 3. Dhoby Ghaut rises eleven places, City Hall twelve, and two ordinary stops with no interchange at all, Dover and Clementi, climb ten places each. They have no structural reason to rank highly, but they sit on the single East-West Line corridor carrying the west's AM Peak commute into the city, so a large share of all journeys pass through them. Closeness is not computed for this layer.
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: centrality-setup
+# 4.1 Centrality in three layers, on the MRT network
+
+from collections import defaultdict
+
+# LRT loops are cul-de-sacs: every path from an LRT stop leaves through one hub, so
+# keeping them inflates betweenness at Sengkang, Punggol and the NE trunk beyond.
+# Centrality is computed on MRT nodes only. Removing nodes by line (not station)
+# keeps each hub's MRT code -- Sengkang survives as NE16, only STC goes.
+lrt_nodes = {n for n in G.nodes if 'LRT' in G.nodes[n]['line']}
+G_mrt = G.subgraph(n for n in G.nodes if n not in lrt_nodes).copy()
+assert nx.is_connected(G_mrt), 'MRT network should stay connected without LRT'
+
+STN = {n: G.nodes[n]['station'] for n in G.nodes}
+
+# Each LRT stop's connecting MRT station: the nearest MRT node by travel time on the
+# full graph. LRT journeys are reassigned there, so their demand still counts but
+# enters the MRT network where those passengers actually board it.
+
+
+def nearest_mrt(n):
+    dist = nx.single_source_dijkstra_path_length(G, n, weight='travel_time_s')
+    return min((d, m) for m, d in dist.items() if m in G_mrt)[1]
+
+
+LRT_TO_HUB = {n: nearest_mrt(n) for n in lrt_nodes}
+print({STN[n]: STN[h] for n, h in list(LRT_TO_HUB.items())[:6]}, '...')
+
+
+def to_mrt(od_slice):
+    """Reassign LRT endpoints to their hub; drop journeys that start and end at the
+    same MRT station after reassignment (e.g. Rumbia to Sengkang)."""
+    df = od_slice.assign(o=od_slice['o'].replace(LRT_TO_HUB),
+                         d=od_slice['d'].replace(LRT_TO_HUB))
+    return df[df['o'].map(STN) != df['d'].map(STN)]
+
+
+am_mrt = to_mrt(am_peak)
+path_cache_mrt = dict(nx.all_pairs_dijkstra_path(
+    G_mrt, weight='travel_time_s'))
+
+
+def station_level(scores, how):
+    """Collapse per-code scores to stations: betweenness summed across a station's
+    codes, closeness taken from its best-placed code."""
+    s = pd.Series(scores)
+    grouped = s.groupby(s.index.map(STN))
+    return grouped.sum() if how == 'sum' else grouped.max()
+
+
+# Layer 1: structure.
+topo_btw = station_level(nx.betweenness_centrality(G_mrt), 'sum')
+topo_cls = station_level(nx.closeness_centrality(G_mrt), 'max')
+
+# Layer 2: travel time.
+time_btw = station_level(nx.betweenness_centrality(
+    G_mrt, weight='travel_time_s'), 'sum')
+time_cls = station_level(nx.closeness_centrality(
+    G_mrt, distance='travel_time_s'), 'max')
+
+# Layer 3a: demand-weighted betweenness, counted per station so a transfer between
+# two codes of the same interchange doesn't credit it twice.
+
+
+def demand_betweenness(od_slice):
+    through = defaultdict(float)
+    pairs = od_slice.groupby(['o', 'd'], sort=False)[
+        'TOTAL_TRIPS'].sum().reset_index()
+    for o, d, trips in pairs.itertuples(index=False):
+        path = path_cache_mrt.get(o, {}).get(d)
+        if path is None:
+            continue
+        for s in {STN[n] for n in path[1:-1]} - {STN[o], STN[d]}:
+            through[s] += trips
+    return pd.Series(through)
+
+
+# Closeness has no demand-weighted form here. The effective-distance approach
+# (Brockmann & Helbing, 2013) was tested and tracked departure entropy almost exactly
+# (Spearman +0.94) while bearing no relation to network position (+0.05 against
+# travel-time closeness), so it is not reported.
+flow_btw = demand_betweenness(am_mrt)
+
+cent = pd.DataFrame({'topo_btw': topo_btw, 'topo_cls': topo_cls,
+                     'time_btw': time_btw, 'time_cls': time_cls,
+                     'flow_btw': flow_btw}).fillna(0.0)
+for c in list(cent.columns):
+    cent[f'r_{c}'] = cent[c].rank(ascending=False, method='min').astype(int)
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: centrality-checks
+## Diagnostics: run once interactively before writing the prose.
+
+# Can each closeness measure discriminate? A max/min ratio near 1 means the scores
+# are compressed and the ranking says little.
+for c in ['topo_cls', 'time_cls']:
+    s = cent[c]
+    print(f'{c}: max {s.max():.4f}, median {s.median():.4f}, '
+          f'min {s.min():.4f}, max/min {s.max() / s.min():.2f}')
+
+# Top ten per layer, for drafting the commentary.
+for layer in ['topo', 'time', 'flow']:
+    print(f'\n{layer} betweenness:', list(cent.nsmallest(10, f'r_{layer}_btw').index))
+    if f'r_{layer}_cls' in cent:
+        print(f'{layer} closeness:  ', list(cent.nsmallest(10, f'r_{layer}_cls').index))
+```
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: centrality-table-setup
+
+def rank_change(name, col, layer, prev, divider=False):
+    """Movement in rank from the previous layer; blank for the first layer."""
+    cls = 'num divider' if divider else 'num'
+    if prev is None:
+        return f'<td class="{cls} flat"></td>'
+    delta = int(cent.loc[name, f'r_{prev}_{col}']) - int(cent.loc[name, f'r_{layer}_{col}'])
+    if delta > 0:
+        return f'<td class="{cls} up">▲ {delta}</td>'
+    if delta < 0:
+        return f'<td class="{cls} down">▼ {-delta}</td>'
+    return f'<td class="{cls} flat">–</td>'
+
+
+def centrality_table(layer, prev, caption, label, n=10, show_cls=True):
+    """Top n by betweenness and, where defined, top n by closeness, side by side.
+
+    The change column shows movement in rank from the previous layer: a station that
+    climbs once travel time or demand is added is one the previous view understated.
+    Ranks only -- scores aren't comparable across layers, since demand-weighted
+    betweenness is in passengers.
+
+    show_cls=False drops the closeness half entirely, for the demand layer, where
+    closeness has no meaningful form.
+    """
+    top_b = cent.nsmallest(n, f'r_{layer}_btw').index
+    top_c = cent.nsmallest(n, f'r_{layer}_cls').index if show_cls else [None] * n
+
+    def cls_cells(c):
+        if not show_cls:
+            return ''
+        return (f'<td>{c}</td><td class="lines">{line_badges(c)}</td>'
+                f'{rank_change(c, "cls", layer, prev)}')
+
+    rows = ''.join(
+        f'<tr>'
+        f'<td class="rank">{i}</td>'
+        f'<td>{b}</td><td class="lines">{line_badges(b)}</td>'
+        f'{rank_change(b, "btw", layer, prev, divider=show_cls)}'
+        f'{cls_cells(c)}'
+        f'</tr>'
+        for i, (b, c) in enumerate(zip(top_b, top_c), start=1))
+
+    change_head = '' if prev is None else 'Change'
+    btw_div = ' class="divider"' if show_cls else ''
+    btw_change_cls = 'num divider' if show_cls else 'num'
+    cls_head = '<th colspan="3">Closeness</th>' if show_cls else ''
+    cls_sub = (f'<th>Station</th><th>Lines</th><th class="num">{change_head}</th>'
+               if show_cls else '')
+
+    return f'''
+<table class="busiest centrality{'' if show_cls else ' single'}" id="{label}">
+  <caption>{caption}</caption>
+  <thead>
+    <tr>
+      <th class="rank"></th>
+      <th colspan="3"{btw_div}>Betweenness</th>{cls_head}
+    </tr>
+    <tr class="sub">
+      <th></th>
+      <th>Station</th><th>Lines</th><th class="{btw_change_cls}">{change_head}</th>{cls_sub}
+    </tr>
+  </thead>
+  <tbody>{rows}</tbody>
+</table>
+'''
+```
+
+```{=html}
+<style>
+table.centrality td.up { color: #2f9e44; font-variant-numeric: tabular-nums; }
+table.centrality td.down { color: #c92a2a; font-variant-numeric: tabular-nums; }
+table.centrality td.flat { color: #bbb; }
+table.centrality caption { caption-side: bottom; text-align: left; font-size: 0.85rem; color: #666; padding-top: 0.6rem; line-height: 1.45; }
+table.centrality.single { width: 55%; }
+</style>
+```
+
+::: {.panel-tabset}
+
+## Topological
+
+```{python}
+#| echo: false
+#| output: asis
+print(centrality_table('topo', None,
+      'Top MRT stations by betweenness and closeness on the unweighted network, where '
+      'every stretch of track counts as one step.', 'tbl-cent-topo'))
+```
+
+## Travel time
+
+```{python}
+#| echo: false
+#| output: asis
+print(centrality_table('time', 'topo',
+      'The same measures with paths weighted by journey time, including interchange '
+      'walking time and wait penalty. Change is the movement in rank from the '
+      'structural layer.', 'tbl-cent-time'))
+```
+
+## Passenger demand
+
+```{python}
+#| echo: false
+#| output: asis
+print(centrality_table('flow', 'time',
+      'Betweenness with each station pair weighted by its journeys, average weekday '
+      'AM peak. Closeness is not shown as it has no meaningful demand-weighted form. '
+      'Change is the movement in rank from the travel-time layer.',
+      'tbl-cent-flow', show_cls=False))
+```
+
+:::
+
+### 4.3 Three kinds of importance
+
+Read together, the three layers broadly separate stations into three groups.
+
+- **Important on every measure.** Outram Park, Buona Vista, Bishan and Serangoon rank highly whether the network is judged by its shape, its speed or its usage. These are the stations where structural position and actual demand coincide, and where any disruption would be felt most widely.
+- **Important by position, lightly used.** Botanic Gardens, Caldecott, MacPherson, Paya Lebar and Marina Bay, which are all Circle Line interchanges, matter in the structure of the network but drop out once demand is counted. They represent orbital connections the network has but does not yet fully rely on during the AM peak, routes that could absorb passengers diverted from a disrupted radial line.
+- **Important by use, not position.** Dover and Clementi rank lower on structure but high on demand. Their importance comes from the volume funnelled through them rather than from any unique place in the network. A corridor that carries heavy demand with few nearby alternatives is where a disruption would cause the most difficulty.
+
+The contrast between the first and last groups is notable. While looking at topology alone places emphasis on interchanges, actual demand shows that some of the stations the network relies on most are ordinary stops on busy single-line corridors.
+
+```{python}
+#| echo: false
+#| warning: false
+#| output: false
+#| label: centrality-summary-setup
+## 4.3 Stations that stand out across several measures
+
+TOP_N = 10          # a "check" means a top-ten ranking on that measure
+MIN_HITS = 3        # show stations checked on at least this many measures
+
+# Column order follows the three layers; closeness has no demand form.
+MEASURES = [('r_topo_btw', 'Structure', 'Betweenness'),
+            ('r_topo_cls', 'Structure', 'Closeness'),
+            ('r_time_btw', 'Travel time', 'Betweenness'),
+            ('r_time_cls', 'Travel time', 'Closeness'),
+            ('r_flow_btw', 'Demand', 'Betweenness')]
+cols = [m[0] for m in MEASURES]
+
+hits = cent[cols] <= TOP_N
+summary = (cent.assign(total=hits.sum(axis=1))
+               .query('total >= @MIN_HITS')
+               # Ties broken by demand rank: actual use is the tiebreaker that matters.
+               .sort_values(['total', 'r_flow_btw'], ascending=[False, True]))
+
+def summary_table(caption, label):
+    rows = ''
+    for name, r in summary.iterrows():
+        cells = ''.join(
+            f'<td class="chk{" divider" if c in ("r_topo_cls", "r_time_cls") else ""}">'
+            f'{"✓" if r[c] <= TOP_N else ""}</td>'
+            for c in cols)
+        rows += (f'<tr><td>{name}</td>'
+                 f'<td class="lines divider">{line_badges(name)}</td>'
+                 f'{cells}<td class="num total">{int(r["total"])}</td></tr>')
+
+    return f'''
+<table class="busiest centrality-summary" id="{label}">
+  <caption>{caption}</caption>
+  <thead>
+    <tr>
+      <th></th><th class="divider"></th>
+      <th colspan="2" class="divider">Structure</th>
+      <th colspan="2" class="divider">Travel time</th>
+      <th>Demand</th><th></th>
+    </tr>
+    <tr class="sub">
+      <th>Station</th><th class="divider">Lines</th>
+      <th class="chk">Btw</th><th class="chk divider">Cls</th>
+      <th class="chk">Btw</th><th class="chk divider">Cls</th>
+      <th class="chk">Btw</th><th class="num total">Total</th>
+    </tr>
+  </thead>
+  <tbody>{rows}</tbody>
+</table>
+'''
+```
+
+```{=html}
+<style>
+table.centrality-summary th.chk, table.centrality-summary td.chk { text-align: center; width: 4.5rem; }
+table.centrality-summary td.chk { color: #2f9e44; font-weight: 700; }
+table.centrality-summary td.total, table.centrality-summary th.total { font-weight: 600; text-align: right; }
+table.centrality-summary thead tr:first-child th { text-align: center; }
+table.centrality-summary caption { caption-side: bottom; text-align: left; font-size: 0.85rem; color: #666; padding-top: 0.6rem; line-height: 1.45; }
+</style>
+```
+
+```{python}
+#| echo: false
+#| output: asis
+print(summary_table(
+    f'MRT stations ranking in the top {TOP_N} on at least {MIN_HITS} of the five '
+    'centrality measures. Btw = betweenness, Cls = closeness. Closeness has no '
+    'demand-weighted form, so the maximum possible total is five.',
+    'tbl-cent-summary'))
+```
+
+## 5. Conclusion
+
+My overall take is that the numbers mostly confirm what anyone who rides the MRT already feels. Each morning, passengers pour out of residential towns and converge on a handful of stations in the city centre, and each evening the whole pattern runs in reverse. The North East Line carries the heaviest of that tide, with trains far fuller in one direction than the other.
+
+What surprised me most was how differently each station looks depending on how you measure its network importance. Measured by topology alone, the Circle Line interchanges stand out as the stations that knit everything together. Measured by how people actually travel, the spotlight moves to the busy radial corridors, including stations like Dover and Clementi that matter simply because so many journeys pass through them. Only Outram Park ranks near the top on almost every measure, with Buona Vista, Bishan and Serangoon close behind as the network's most consistent brokers. These stations merit close attention from a resilience and reliability perspective. 
+
+There are limits to all this. The model assumes everyone takes the fastest route, and it looks at a single month. But it does raise a question worth exploring next - what happens to everyone's journey when one of these key stations is disrupted? With the Circle Line loop now complete, it would be interesting to see whether those orbital connections start carrying more of the load in the months ahead.
+
+*This article was written in tandem with coursework for the CASA0002 Urban Simulation module.*
+
+## References

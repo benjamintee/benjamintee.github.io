@@ -1,0 +1,3340 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d11" for="edge" attr.name="travel_time_s" attr.type="long"/>
+<key id="d10" for="edge" attr.name="transfer_walk_s" attr.type="long"/>
+<key id="d9" for="edge" attr.name="time_source" attr.type="string"/>
+<key id="d8" for="edge" attr.name="travel_time_s" attr.type="double"/>
+<key id="d7" for="edge" attr.name="dist_source" attr.type="string"/>
+<key id="d6" for="edge" attr.name="spread_m" attr.type="double"/>
+<key id="d5" for="edge" attr.name="n_samples" attr.type="long"/>
+<key id="d4" for="edge" attr.name="length_m" attr.type="double"/>
+<key id="d3" for="node" attr.name="y" attr.type="double"/>
+<key id="d2" for="node" attr.name="x" attr.type="double"/>
+<key id="d1" for="node" attr.name="line" attr.type="string"/>
+<key id="d0" for="node" attr.name="station" attr.type="string"/>
+<graph edgedefault="undirected"><node id="EW33">
+  <data key="d0">Tuas Link</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">6133.938691492422</data>
+  <data key="d3">35829.05095671308</data>
+</node>
+<node id="EW32">
+  <data key="d0">Tuas West Road</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">6443.124584157009</data>
+  <data key="d3">34703.080091665</data>
+</node>
+<node id="EW31">
+  <data key="d0">Tuas Crescent</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">7483.326377175286</data>
+  <data key="d3">33719.586633992</data>
+</node>
+<node id="EW30">
+  <data key="d0">Gul Circle</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">8773.551426038102</data>
+  <data key="d3">33549.3294759486</data>
+</node>
+<node id="EW29">
+  <data key="d0">Joo Koon</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">10742.238581469956</data>
+  <data key="d3">34448.630106531215</data>
+</node>
+<node id="EW28">
+  <data key="d0">Pioneer</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">12874.595834598356</data>
+  <data key="d3">35536.50920119367</data>
+</node>
+<node id="EW27">
+  <data key="d0">Boon Lay</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">13806.173696277252</data>
+  <data key="d3">35643.3853753338</data>
+</node>
+<node id="EW26">
+  <data key="d0">Lakeside</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">15464.183395192204</data>
+  <data key="d3">36272.44332556803</data>
+</node>
+<node id="EW25">
+  <data key="d0">Chinese Garden</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">16789.741228494062</data>
+  <data key="d3">36067.69992159242</data>
+</node>
+<node id="EW24">
+  <data key="d0">Jurong East</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">17876.821413147973</data>
+  <data key="d3">35037.518296416354</data>
+</node>
+<node id="EW23">
+  <data key="d0">Clementi</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">20430.19693130174</data>
+  <data key="d3">33045.89260340973</data>
+</node>
+<node id="EW22">
+  <data key="d0">Dover</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">21912.698913538065</data>
+  <data key="d3">32637.370325051157</data>
+</node>
+<node id="EW21">
+  <data key="d0">Buona Vista</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">23164.46515719134</data>
+  <data key="d3">32186.764170263446</data>
+</node>
+<node id="EW20">
+  <data key="d0">Commonwealth</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">24109.12680865102</data>
+  <data key="d3">31648.813719837275</data>
+</node>
+<node id="EW19">
+  <data key="d0">Queenstown</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">24971.978364736235</data>
+  <data key="d3">30781.57551505964</data>
+</node>
+<node id="EW18">
+  <data key="d0">Redhill</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">26161.077531125753</data>
+  <data key="d3">30235.00485313524</data>
+</node>
+<node id="EW17">
+  <data key="d0">Tiong Bahru</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">27315.736841739345</data>
+  <data key="d3">29848.40795790842</data>
+</node>
+<node id="EW16">
+  <data key="d0">Outram Park</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">28672.59454228871</data>
+  <data key="d3">29309.91953918532</data>
+</node>
+<node id="EW15">
+  <data key="d0">Tanjong Pagar</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">29388.326057557777</data>
+  <data key="d3">28785.156085564395</data>
+</node>
+<node id="EW14">
+  <data key="d0">Raffles Place</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">30017.286983974613</data>
+  <data key="d3">29647.400279114838</data>
+</node>
+<node id="EW13">
+  <data key="d0">City Hall</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">30152.41019489906</data>
+  <data key="d3">30595.171426930014</data>
+</node>
+<node id="EW12">
+  <data key="d0">Bugis</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">30521.366571159877</data>
+  <data key="d3">31469.34609378222</data>
+</node>
+<node id="EW11">
+  <data key="d0">Lavender</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">31277.446939173573</data>
+  <data key="d3">32192.10438876438</data>
+</node>
+<node id="EW10">
+  <data key="d0">Kallang</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">32225.62587502523</data>
+  <data key="d3">32648.20531945208</data>
+</node>
+<node id="EW9">
+  <data key="d0">Aljunied</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">33516.529718793085</data>
+  <data key="d3">33200.59374545446</data>
+</node>
+<node id="EW8">
+  <data key="d0">Paya Lebar</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">34641.58172177952</data>
+  <data key="d3">33385.65445830114</data>
+</node>
+<node id="EW7">
+  <data key="d0">Eunos</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">35741.18045587513</data>
+  <data key="d3">33566.86003018636</data>
+</node>
+<node id="EW6">
+  <data key="d0">Kembangan</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">36857.96253779154</data>
+  <data key="d3">33705.70932598693</data>
+</node>
+<node id="EW5">
+  <data key="d0">Bedok</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">38781.49009775427</data>
+  <data key="d3">34034.008518511226</data>
+</node>
+<node id="EW4">
+  <data key="d0">Tanah Merah</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">40587.244681515105</data>
+  <data key="d3">34410.935921746815</data>
+</node>
+<node id="EW3">
+  <data key="d0">Simei</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">41353.993059513836</data>
+  <data key="d3">36143.71739761507</data>
+</node>
+<node id="EW2">
+  <data key="d0">Tampines</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">40406.144523220515</data>
+  <data key="d3">37299.02752781475</data>
+</node>
+<node id="EW1">
+  <data key="d0">Pasir Ris</data>
+  <data key="d1">East-West Line</data>
+  <data key="d2">40896.91391832885</data>
+  <data key="d3">39449.83636226016</data>
+</node>
+<node id="NS28">
+  <data key="d0">Marina South Pier</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">31297.748233445684</data>
+  <data key="d3">28204.355246001895</data>
+</node>
+<node id="NS27">
+  <data key="d0">Marina Bay</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">30367.12935855706</data>
+  <data key="d3">28682.58222776038</data>
+</node>
+<node id="NS26">
+  <data key="d0">Raffles Place</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">30036.01739624912</data>
+  <data key="d3">29645.067283334745</data>
+</node>
+<node id="NS25">
+  <data key="d0">City Hall</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">30137.67531246797</data>
+  <data key="d3">30583.074426866515</data>
+</node>
+<node id="NS24">
+  <data key="d0">Dhoby Ghaut</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">29413.877684009163</data>
+  <data key="d3">31227.831812241137</data>
+</node>
+<node id="NS23">
+  <data key="d0">Somerset</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">28632.647243242074</data>
+  <data key="d3">31399.076241604253</data>
+</node>
+<node id="NS22">
+  <data key="d0">Orchard</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">27865.640858705665</data>
+  <data key="d3">31799.975739173155</data>
+</node>
+<node id="NS21">
+  <data key="d0">Newton</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">28579.43611713493</data>
+  <data key="d3">32797.5273578122</data>
+</node>
+<node id="NS20">
+  <data key="d0">Novena</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">29168.159119022068</data>
+  <data key="d3">33642.79663548715</data>
+</node>
+<node id="NS19">
+  <data key="d0">Toa Payoh</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">29586.54684610971</data>
+  <data key="d3">34947.01829991972</data>
+</node>
+<node id="NS18">
+  <data key="d0">Braddell</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">29490.98860927502</data>
+  <data key="d3">35862.25712734211</data>
+</node>
+<node id="NS17">
+  <data key="d0">Bishan</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">29656.08998590906</data>
+  <data key="d3">37063.565824112506</data>
+</node>
+<node id="NS16">
+  <data key="d0">Ang Mo Kio</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">29790.346191143766</data>
+  <data key="d3">39113.360063155495</data>
+</node>
+<node id="NS15">
+  <data key="d0">Yio Chu Kang</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">29286.873516481053</data>
+  <data key="d3">40410.85430973058</data>
+</node>
+<node id="NS14">
+  <data key="d0">Khatib</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">27959.138297507805</data>
+  <data key="d3">44352.184288430675</data>
+</node>
+<node id="NS13">
+  <data key="d0">Yishun</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">28183.811971599855</data>
+  <data key="d3">45679.53723852202</data>
+</node>
+<node id="NS12">
+  <data key="d0">Canberra</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">27582.39652156372</data>
+  <data key="d3">47211.52060537557</data>
+</node>
+<node id="NS11">
+  <data key="d0">Sembawang</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">26526.088600934007</data>
+  <data key="d3">47851.80901487042</data>
+</node>
+<node id="NS10">
+  <data key="d0">Admiralty</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">24402.662590816664</data>
+  <data key="d3">46915.18273470989</data>
+</node>
+<node id="NS9">
+  <data key="d0">Woodlands</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">22785.98995150449</data>
+  <data key="d3">46510.8711777485</data>
+</node>
+<node id="NS8">
+  <data key="d0">Marsiling</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">21412.790028764153</data>
+  <data key="d3">46021.90709197027</data>
+</node>
+<node id="NS7">
+  <data key="d0">Kranji</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">20068.430841316218</data>
+  <data key="d3">45210.36870930338</data>
+</node>
+<node id="NS5">
+  <data key="d0">Yew Tee</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">18447.946881429474</data>
+  <data key="d3">42148.29055674946</data>
+</node>
+<node id="NS4">
+  <data key="d0">Choa Chu Kang</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">18102.90745257327</data>
+  <data key="d3">40807.182663435415</data>
+</node>
+<node id="NS3">
+  <data key="d0">Bukit Gombak</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">18939.376853381596</data>
+  <data key="d3">37884.68785965525</data>
+</node>
+<node id="NS2">
+  <data key="d0">Bukit Batok</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">18689.69679856405</data>
+  <data key="d3">36793.01138815816</data>
+</node>
+<node id="NS1">
+  <data key="d0">Jurong East</data>
+  <data key="d1">North-South Line</data>
+  <data key="d2">17863.28830155405</data>
+  <data key="d3">35029.84489047965</data>
+</node>
+<node id="STC">
+  <data key="d0">Sengkang</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">34920.989909644246</data>
+  <data key="d3">41517.49883049239</data>
+</node>
+<node id="SW8">
+  <data key="d0">Renjong</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">34365.51474049801</data>
+  <data key="d3">40957.40036921021</data>
+</node>
+<node id="SW7">
+  <data key="d0">Tongkang</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">33840.78919353362</data>
+  <data key="d3">41254.4478858612</data>
+</node>
+<node id="SW6">
+  <data key="d0">Layar</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">33196.086411482276</data>
+  <data key="d3">41553.82714118709</data>
+</node>
+<node id="SW5">
+  <data key="d0">Fernvale</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">32779.37300441298</data>
+  <data key="d3">41534.42437640672</data>
+</node>
+<node id="SW4">
+  <data key="d0">Thanggam</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">32703.731599755483</data>
+  <data key="d3">42137.87481806007</data>
+</node>
+<node id="SW3">
+  <data key="d0">Kupang</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">33333.81222038796</data>
+  <data key="d3">42240.42308283651</data>
+</node>
+<node id="SW2">
+  <data key="d0">Farmway</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">34221.88209473883</data>
+  <data key="d3">42125.90914022912</data>
+</node>
+<node id="SW1">
+  <data key="d0">Cheng Lim</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">34731.18807408186</data>
+  <data key="d3">42027.532118469564</data>
+</node>
+<node id="PTC">
+  <data key="d0">Punggol</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">35677.49684766621</data>
+  <data key="d3">43014.05320903579</data>
+</node>
+<node id="PE7">
+  <data key="d0">Damai</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">36383.4972943502</data>
+  <data key="d3">43013.57742306329</data>
+</node>
+<node id="PE6">
+  <data key="d0">Oasis</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">36841.19573584624</data>
+  <data key="d3">42685.96976805922</data>
+</node>
+<node id="PE5">
+  <data key="d0">Kadaloor</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">37261.11260601866</data>
+  <data key="d3">42384.667322870584</data>
+</node>
+<node id="PE4">
+  <data key="d0">Riviera</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">37222.31564393302</data>
+  <data key="d3">41822.756706771324</data>
+</node>
+<node id="PE3">
+  <data key="d0">Coral Edge</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">36826.682285079965</data>
+  <data key="d3">41747.45253757978</data>
+</node>
+<node id="PE2">
+  <data key="d0">Meridian</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">36406.32966801295</data>
+  <data key="d3">42088.82807353482</data>
+</node>
+<node id="PE1">
+  <data key="d0">Cove</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">36059.8855167407</data>
+  <data key="d3">42367.245085426024</data>
+</node>
+<node id="BP1">
+  <data key="d0">Choa Chu Kang</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">18124.205324511626</data>
+  <data key="d3">40739.919057125095</data>
+</node>
+<node id="BP2">
+  <data key="d0">South View</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">18203.53506682811</data>
+  <data key="d3">40250.99744245521</data>
+</node>
+<node id="BP3">
+  <data key="d0">Keat Hong</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">18621.24625825187</data>
+  <data key="d3">40065.69171626676</data>
+</node>
+<node id="BP4">
+  <data key="d0">Teck Whye</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">19131.993544806548</data>
+  <data key="d3">39851.97683704875</data>
+</node>
+<node id="BP5">
+  <data key="d0">Phoenix</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">19616.936373514807</data>
+  <data key="d3">40066.432370242794</data>
+</node>
+<node id="BP6">
+  <data key="d0">Bukit Panjang</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">20183.399035931376</data>
+  <data key="d3">39991.22405299399</data>
+</node>
+<node id="BP13">
+  <data key="d0">Senja</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">20103.832898375076</data>
+  <data key="d3">40514.92069452724</data>
+</node>
+<node id="BP12">
+  <data key="d0">Jelapang</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">20341.15504088161</data>
+  <data key="d3">40960.53097637553</data>
+</node>
+<node id="BP11">
+  <data key="d0">Segar</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">20907.354104383405</data>
+  <data key="d3">41081.83800800286</data>
+</node>
+<node id="BP10">
+  <data key="d0">Fajar</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">21052.563293022897</data>
+  <data key="d3">40726.09227177113</data>
+</node>
+<node id="BP9">
+  <data key="d0">Bangkit</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">21250.218893361358</data>
+  <data key="d3">40223.026249308525</data>
+</node>
+<node id="BP8">
+  <data key="d0">Pending</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">21096.797884948548</data>
+  <data key="d3">39792.41804860086</data>
+</node>
+<node id="BP7">
+  <data key="d0">Petir</data>
+  <data key="d1">Bukit Panjang LRT</data>
+  <data key="d2">20577.334285736088</data>
+  <data key="d3">39970.524149070545</data>
+</node>
+<node id="CC34">
+  <data key="d0">Bayfront</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">30878.810012708145</data>
+  <data key="d3">29378.699759605566</data>
+</node>
+<node id="CC33">
+  <data key="d0">Marina Bay</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">30408.407779933368</data>
+  <data key="d3">28660.677697029394</data>
+</node>
+<node id="CC32">
+  <data key="d0">Prince Edward Road</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">29547.68715751876</data>
+  <data key="d3">28411.45821074786</data>
+</node>
+<node id="CC31">
+  <data key="d0">Cantonment</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">28376.9267120984</data>
+  <data key="d3">28391.57293817106</data>
+</node>
+<node id="CC30">
+  <data key="d0">Keppel</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">27680.237208011375</data>
+  <data key="d3">28084.993119014936</data>
+</node>
+<node id="CC29">
+  <data key="d0">HarbourFront</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">26689.04307681082</data>
+  <data key="d3">27538.55728032473</data>
+</node>
+<node id="CC28">
+  <data key="d0">Telok Blangah</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">25388.873363754086</data>
+  <data key="d3">28124.115123605534</data>
+</node>
+<node id="CC27">
+  <data key="d0">Labrador Park</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">24602.684624395406</data>
+  <data key="d3">28329.350241674874</data>
+</node>
+<node id="CC26">
+  <data key="d0">Pasir Panjang</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">23331.823140233257</data>
+  <data key="d3">28754.174575021403</data>
+</node>
+<node id="CC25">
+  <data key="d0">Haw Par Villa</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">22267.083466940854</data>
+  <data key="d3">29454.16605107481</data>
+</node>
+<node id="CC24">
+  <data key="d0">Kent Ridge</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">22564.14450695139</data>
+  <data key="d3">30661.925381789362</data>
+</node>
+<node id="CC23">
+  <data key="d0">one-north</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">22880.068007709455</data>
+  <data key="d3">31315.450191116674</data>
+</node>
+<node id="CC22">
+  <data key="d0">Buona Vista</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">23245.927929342364</data>
+  <data key="d3">32066.335665692313</data>
+</node>
+<node id="CC21">
+  <data key="d0">Holland Village</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">23893.81680093615</data>
+  <data key="d3">32717.545090264433</data>
+</node>
+<node id="CC20">
+  <data key="d0">Farrer Road</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">25130.20472330368</data>
+  <data key="d3">33296.25635910568</data>
+</node>
+<node id="CC19">
+  <data key="d0">Botanic Gardens</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">25990.237522387273</data>
+  <data key="d3">33824.58657669903</data>
+</node>
+<node id="CC17">
+  <data key="d0">Caldecott</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">28707.379769885345</data>
+  <data key="d3">35529.52309160959</data>
+</node>
+<node id="CC16">
+  <data key="d0">Marymount</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">28688.57990777191</data>
+  <data key="d3">36752.81301324612</data>
+</node>
+<node id="CC15">
+  <data key="d0">Bishan</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">29764.930512685165</data>
+  <data key="d3">37041.650567367324</data>
+</node>
+<node id="CC14">
+  <data key="d0">Lorong Chuan</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">31415.453648973104</data>
+  <data key="d3">37067.2865747805</data>
+</node>
+<node id="CC13">
+  <data key="d0">Serangoon</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">32324.48392438359</data>
+  <data key="d3">36973.58733827571</data>
+</node>
+<node id="CC12">
+  <data key="d0">Bartley</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">33154.26976236089</data>
+  <data key="d3">36102.43732046334</data>
+</node>
+<node id="CC11">
+  <data key="d0">Tai Seng</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">34108.53689422293</data>
+  <data key="d3">35291.86540055827</data>
+</node>
+<node id="CC10">
+  <data key="d0">MacPherson</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">34339.6533884117</data>
+  <data key="d3">34259.74214804247</data>
+</node>
+<node id="CC9">
+  <data key="d0">Paya Lebar</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">34546.06357932572</data>
+  <data key="d3">33287.738093424065</data>
+</node>
+<node id="CC8">
+  <data key="d0">Dakota</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">34147.84406339188</data>
+  <data key="d3">32301.832024611267</data>
+</node>
+<node id="CC7">
+  <data key="d0">Mountbatten</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">33464.367935224385</data>
+  <data key="d3">32065.342348509923</data>
+</node>
+<node id="CC6">
+  <data key="d0">Stadium</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">32678.11577857913</data>
+  <data key="d3">31697.036341012572</data>
+</node>
+<node id="CC5">
+  <data key="d0">Nicoll Highway</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">31375.092359569735</data>
+  <data key="d3">31355.29707868908</data>
+</node>
+<node id="CC4">
+  <data key="d0">Promenade</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">31098.07514067021</data>
+  <data key="d3">30584.67559545774</data>
+</node>
+<node id="NE1">
+  <data key="d0">HarbourFront</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">26684.29099372365</data>
+  <data key="d3">27562.22031338505</data>
+</node>
+<node id="NE3">
+  <data key="d0">Outram Park</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">28706.127145465394</data>
+  <data key="d3">29159.548907191285</data>
+</node>
+<node id="NE4">
+  <data key="d0">Chinatown</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">29135.823180442367</data>
+  <data key="d3">29660.520632141324</data>
+</node>
+<node id="NE5">
+  <data key="d0">Clarke Quay</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">29488.99382315248</data>
+  <data key="d3">30129.857162327222</data>
+</node>
+<node id="NE6">
+  <data key="d0">Dhoby Ghaut</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">29340.558388159585</data>
+  <data key="d3">31380.258883437367</data>
+</node>
+<node id="NE7">
+  <data key="d0">Little India</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">29786.396738167685</data>
+  <data key="d3">32110.154919173154</data>
+</node>
+<node id="NE8">
+  <data key="d0">Farrer Park</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">30320.575821113664</data>
+  <data key="d3">32754.42327901903</data>
+</node>
+<node id="NE9">
+  <data key="d0">Boon Keng</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">31158.806924324672</data>
+  <data key="d3">33534.669957494116</data>
+</node>
+<node id="NE10">
+  <data key="d0">Potong Pasir</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">31980.554868848765</data>
+  <data key="d3">34835.947985633225</data>
+</node>
+<node id="NE11">
+  <data key="d0">Woodleigh</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">32158.360091422204</data>
+  <data key="d3">35718.30517010927</data>
+</node>
+<node id="NE12">
+  <data key="d0">Serangoon</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">32490.53948671739</data>
+  <data key="d3">36880.1431779732</data>
+</node>
+<node id="NE13">
+  <data key="d0">Kovan</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">33735.837708325045</data>
+  <data key="d3">38005.95228945786</data>
+</node>
+<node id="NE14">
+  <data key="d0">Hougang</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">34565.19392375118</data>
+  <data key="d3">39297.0335125229</data>
+</node>
+<node id="NE15">
+  <data key="d0">Buangkok</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">34640.15926629864</data>
+  <data key="d3">40557.74492100943</data>
+</node>
+<node id="NE16">
+  <data key="d0">Sengkang</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">34900.191189385565</data>
+  <data key="d3">41486.73631928386</data>
+</node>
+<node id="NE17">
+  <data key="d0">Punggol</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">35682.53824415105</data>
+  <data key="d3">43009.774104477874</data>
+</node>
+<node id="NE18">
+  <data key="d0">Punggol Coast</data>
+  <data key="d1">North East Line</data>
+  <data key="d2">36549.456689737635</data>
+  <data key="d3">44083.56228073801</data>
+</node>
+<node id="PW7">
+  <data key="d0">Soo Teck</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">35109.99213827392</data>
+  <data key="d3">43020.48359727044</data>
+</node>
+<node id="PW6">
+  <data key="d0">Sumang</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">35258.0821537045</data>
+  <data key="d3">43371.0436656893</data>
+</node>
+<node id="PW5">
+  <data key="d0">Nibong</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">35457.48499456026</data>
+  <data key="d3">43747.07074845109</data>
+</node>
+<node id="PW4">
+  <data key="d0">Samudera</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">35659.455814019086</data>
+  <data key="d3">44194.750721648095</data>
+</node>
+<node id="PW3">
+  <data key="d0">Punggol Point</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">36163.955658344115</data>
+  <data key="d3">44297.755784415196</data>
+</node>
+<node id="PW2">
+  <data key="d0">Teck Lee</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">36155.7795033628</data>
+  <data key="d3">43839.233991839</data>
+</node>
+<node id="PW1">
+  <data key="d0">Sam Kee</data>
+  <data key="d1">Punggol LRT</data>
+  <data key="d2">35969.274556146156</data>
+  <data key="d3">43503.33439130595</data>
+</node>
+<node id="SE1">
+  <data key="d0">Compassvale</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">35471.08351673603</data>
+  <data key="d3">41829.2580270871</data>
+</node>
+<node id="SE2">
+  <data key="d0">Rumbia</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">36091.86297027392</data>
+  <data key="d3">41491.149102157</data>
+</node>
+<node id="SE3">
+  <data key="d0">Bakau</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">36020.42828468552</data>
+  <data key="d3">41112.471707568824</data>
+</node>
+<node id="SE4">
+  <data key="d0">Kangkar</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">35671.23377039573</data>
+  <data key="d3">40653.15484145442</data>
+</node>
+<node id="SE5">
+  <data key="d0">Ranggung</data>
+  <data key="d1">Sengkang LRT</data>
+  <data key="d2">35123.68878020617</data>
+  <data key="d3">40663.75470216063</data>
+</node>
+<node id="TE1">
+  <data key="d0">Woodlands North</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">22712.43515712787</data>
+  <data key="d3">47788.71077702685</data>
+</node>
+<node id="TE2">
+  <data key="d0">Woodlands</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">22970.376249267294</data>
+  <data key="d3">46439.33648955245</data>
+</node>
+<node id="TE3">
+  <data key="d0">Woodlands South</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">23597.74950761741</data>
+  <data key="d3">45456.70015629425</data>
+</node>
+<node id="TE4">
+  <data key="d0">Springleaf</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">26302.381418752735</data>
+  <data key="d3">42233.22000409054</data>
+</node>
+<node id="TE5">
+  <data key="d0">Lentor</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">28368.93053057681</data>
+  <data key="d3">40765.19984008377</data>
+</node>
+<node id="TE6">
+  <data key="d0">Mayflower</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">28402.986498956594</data>
+  <data key="d3">39386.242191824895</data>
+</node>
+<node id="TE7">
+  <data key="d0">Bright Hill</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">28017.496854991892</data>
+  <data key="d3">38417.03069952923</data>
+</node>
+<node id="TE8">
+  <data key="d0">Upper Thomson</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">27929.022487280858</data>
+  <data key="d3">37415.00096016696</data>
+</node>
+<node id="TE9">
+  <data key="d0">Caldecott</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">28768.711337974524</data>
+  <data key="d3">35529.080957425605</data>
+</node>
+<node id="TE11">
+  <data key="d0">Stevens</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">27142.74528002439</data>
+  <data key="d3">33531.13700980295</data>
+</node>
+<node id="TE12">
+  <data key="d0">Napier</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">26392.162845504525</data>
+  <data key="d3">32125.015116138016</data>
+</node>
+<node id="TE13">
+  <data key="d0">Orchard Boulevard</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">26959.643683004917</data>
+  <data key="d3">31656.495715958234</data>
+</node>
+<node id="TE14">
+  <data key="d0">Orchard</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">27785.98991359219</data>
+  <data key="d3">31700.967068099813</data>
+</node>
+<node id="TE15">
+  <data key="d0">Great World</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">28033.378558791694</data>
+  <data key="d3">30780.82946108355</data>
+</node>
+<node id="TE16">
+  <data key="d0">Havelock</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">28037.529814815694</data>
+  <data key="d3">30056.44262873842</data>
+</node>
+<node id="TE17">
+  <data key="d0">Outram Park</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">28684.358027882892</data>
+  <data key="d3">29335.83830767803</data>
+</node>
+<node id="TE18">
+  <data key="d0">Maxwell</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">29157.23753913337</data>
+  <data key="d3">29208.236475423866</data>
+</node>
+<node id="TE19">
+  <data key="d0">Shenton Way</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">29908.248287224153</data>
+  <data key="d3">28910.65045407732</data>
+</node>
+<node id="TE20">
+  <data key="d0">Marina Bay</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">30476.60848867197</data>
+  <data key="d3">28555.46632363805</data>
+</node>
+<node id="TE22">
+  <data key="d0">Gardens by the Bay</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">31862.53342130056</data>
+  <data key="d3">29098.249335911132</data>
+</node>
+<node id="TE23">
+  <data key="d0">Tanjong Rhu</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">32476.72267283053</data>
+  <data key="d3">31063.30633237097</data>
+</node>
+<node id="TE24">
+  <data key="d0">Katong Park</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">33908.71591352475</data>
+  <data key="d3">31140.878896189723</data>
+</node>
+<node id="TE25">
+  <data key="d0">Tanjong Katong</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">35133.449550618716</data>
+  <data key="d3">31280.784527417465</data>
+</node>
+<node id="TE26">
+  <data key="d0">Marine Parade</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">36052.29017692745</data>
+  <data key="d3">31715.468348757026</data>
+</node>
+<node id="TE27">
+  <data key="d0">Marine Terrace</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">37192.77485315158</data>
+  <data key="d3">32151.942810427634</data>
+</node>
+<node id="TE28">
+  <data key="d0">Siglap</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">38695.44580333436</data>
+  <data key="d3">32454.60688878456</data>
+</node>
+<node id="TE29">
+  <data key="d0">Bayshore</data>
+  <data key="d1">Thomson-East Coast Line</data>
+  <data key="d2">40077.30549657684</data>
+  <data key="d3">32815.69084542983</data>
+</node>
+<node id="DT35">
+  <data key="d0">Expo</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">42334.10753251475</data>
+  <data key="d3">35294.72693517906</data>
+</node>
+<node id="DT34">
+  <data key="d0">Upper Changi</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">42252.45186082384</data>
+  <data key="d3">35980.02327982784</data>
+</node>
+<node id="DT33">
+  <data key="d0">Tampines East</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">41542.28953078753</data>
+  <data key="d3">37581.15933164073</data>
+</node>
+<node id="DT32">
+  <data key="d0">Tampines</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">40214.430176938506</data>
+  <data key="d3">37479.79801726622</data>
+</node>
+<node id="DT31">
+  <data key="d0">Tampines West</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">39698.16403145829</data>
+  <data key="d3">36394.45860273772</data>
+</node>
+<node id="DT30">
+  <data key="d0">Bedok Reservoir</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">38997.671105146685</data>
+  <data key="d3">35425.58180978245</data>
+</node>
+<node id="DT29">
+  <data key="d0">Bedok North</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">37418.09079287398</data>
+  <data key="d3">35197.0748813213</data>
+</node>
+<node id="DT28">
+  <data key="d0">Kaki Bukit</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">36386.869066315296</data>
+  <data key="d3">35233.5974412717</data>
+</node>
+<node id="DT27">
+  <data key="d0">Ubi</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">35352.52518864174</data>
+  <data key="d3">34683.84434295479</data>
+</node>
+<node id="DT26">
+  <data key="d0">MacPherson</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">34276.50708162838</data>
+  <data key="d3">34277.32211569237</data>
+</node>
+<node id="DT25">
+  <data key="d0">Mattar</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">33559.88792339681</data>
+  <data key="d3">34333.19128646727</data>
+</node>
+<node id="DT24">
+  <data key="d0">Geylang Bahru</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">32312.604535215127</data>
+  <data key="d3">33752.99352427757</data>
+</node>
+<node id="DT23">
+  <data key="d0">Bendemeer</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">31265.797967424864</data>
+  <data key="d3">32872.22817006942</data>
+</node>
+<node id="DT22">
+  <data key="d0">Jalan Besar</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">30463.99165472082</data>
+  <data key="d3">31971.023717474873</data>
+</node>
+<node id="DT21">
+  <data key="d0">Bencoolen</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">29904.43751010171</data>
+  <data key="d3">31253.6539300966</data>
+</node>
+<node id="DT20">
+  <data key="d0">Fort Canning</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">29233.58911206482</data>
+  <data key="d3">30542.565474763585</data>
+</node>
+<node id="DT19">
+  <data key="d0">Chinatown</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">29317.26216152105</data>
+  <data key="d3">29636.13966210148</data>
+</node>
+<node id="DT18">
+  <data key="d0">Telok Ayer</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">29675.95659767611</data>
+  <data key="d3">29426.37002439273</data>
+</node>
+<node id="DT17">
+  <data key="d0">Downtown</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">30176.838914708096</data>
+  <data key="d3">29106.513576543883</data>
+</node>
+<node id="DT16">
+  <data key="d0">Bayfront</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">30865.95574763696</data>
+  <data key="d3">29384.593269257955</data>
+</node>
+<node id="DT15">
+  <data key="d0">Promenade</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">31071.37633204648</data>
+  <data key="d3">30585.847397644546</data>
+</node>
+<node id="DT14">
+  <data key="d0">Bugis</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">30607.328994044434</data>
+  <data key="d3">31334.12488566404</data>
+</node>
+<node id="DT13">
+  <data key="d0">Rochor</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">30139.891882209857</data>
+  <data key="d3">31801.410279688313</data>
+</node>
+<node id="DT12">
+  <data key="d0">Little India</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">29756.559837945795</data>
+  <data key="d3">32086.635458171986</data>
+</node>
+<node id="DT11">
+  <data key="d0">Newton</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">28516.86846992407</data>
+  <data key="d3">32877.80458287045</data>
+</node>
+<node id="DT10">
+  <data key="d0">Stevens</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">27170.189630831963</data>
+  <data key="d3">33596.033314790046</data>
+</node>
+<node id="DT9">
+  <data key="d0">Botanic Gardens</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">26091.80102275827</data>
+  <data key="d3">33852.81562097</data>
+</node>
+<node id="DT8">
+  <data key="d0">Tan Kah Kee</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">25063.841315962618</data>
+  <data key="d3">34247.842342499236</data>
+</node>
+<node id="DT7">
+  <data key="d0">Sixth Avenue</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">23983.980885494293</data>
+  <data key="d3">34774.844862033046</data>
+</node>
+<node id="DT6">
+  <data key="d0">King Albert Park</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">22486.27702393222</data>
+  <data key="d3">35303.71752566838</data>
+</node>
+<node id="DT5">
+  <data key="d0">Beauty World</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">21599.447746277212</data>
+  <data key="d3">35922.01660558756</data>
+</node>
+<node id="DT4">
+  <data key="d0">Hume</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">20857.943852358174</data>
+  <data key="d3">37391.60943051144</data>
+</node>
+<node id="DT3">
+  <data key="d0">Hillview</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">20650.280795378632</data>
+  <data key="d3">38264.52702525525</data>
+</node>
+<node id="DT2">
+  <data key="d0">Cashew</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">20355.43323281078</data>
+  <data key="d3">39032.55595412747</data>
+</node>
+<node id="DT1">
+  <data key="d0">Bukit Panjang</data>
+  <data key="d1">Downtown Line</data>
+  <data key="d2">20048.498671257952</data>
+  <data key="d3">40073.3852934879</data>
+</node>
+<node id="CC3">
+  <data key="d0">Esplanade</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">30463.825307181476</data>
+  <data key="d3">30632.769417545427</data>
+</node>
+<node id="CC2">
+  <data key="d0">Bras Basah</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">29926.040639581894</data>
+  <data key="d3">31029.77317711955</data>
+</node>
+<node id="CC1">
+  <data key="d0">Dhoby Ghaut</data>
+  <data key="d1">Circle Line</data>
+  <data key="d2">29429.079935045593</data>
+  <data key="d3">31249.880513862918</data>
+</node>
+<node id="CG1">
+  <data key="d0">Expo</data>
+  <data key="d1">Changi Airport Branch Line</data>
+  <data key="d2">42314.009544535176</data>
+  <data key="d3">35276.7795347135</data>
+</node>
+<node id="CG2">
+  <data key="d0">Changi Airport</data>
+  <data key="d1">Changi Airport Branch Line</data>
+  <data key="d2">45277.23448392286</data>
+  <data key="d3">37720.33292083306</data>
+</node>
+<node id="CG">
+  <data key="d0">Tanah Merah</data>
+  <data key="d1">Changi Airport Branch Line</data>
+  <data key="d2">40587.244681515105</data>
+  <data key="d3">34410.935921746815</data>
+</node>
+<edge source="EW33" target="EW32">
+  <data key="d4">1358.5</data>
+  <data key="d5">2</data>
+  <data key="d6">10.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW32" target="EW31">
+  <data key="d4">1431.8</data>
+  <data key="d5">2</data>
+  <data key="d6">0.5</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW31" target="EW30">
+  <data key="d4">1670.8</data>
+  <data key="d5">2</data>
+  <data key="d6">7.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW30" target="EW29">
+  <data key="d4">2352.2</data>
+  <data key="d5">2</data>
+  <data key="d6">7.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">240.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW29" target="EW28">
+  <data key="d4">2648.4</data>
+  <data key="d5">2</data>
+  <data key="d6">0.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW28" target="EW27">
+  <data key="d4">951.5</data>
+  <data key="d5">2</data>
+  <data key="d6">3.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW27" target="EW26">
+  <data key="d4">1775.0</data>
+  <data key="d5">2</data>
+  <data key="d6">1.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW26" target="EW25">
+  <data key="d4">1383.5</data>
+  <data key="d5">2</data>
+  <data key="d6">10.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW25" target="EW24">
+  <data key="d4">1519.0</data>
+  <data key="d5">2</data>
+  <data key="d6">3.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW24" target="EW23">
+  <data key="d4">3494.0</data>
+  <data key="d5">2</data>
+  <data key="d6">6.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">240.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW24" target="NS1">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">10</data>
+  <data key="d11">190</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="EW23" target="EW22">
+  <data key="d4">1693.2</data>
+  <data key="d5">2</data>
+  <data key="d6">6.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW22" target="EW21">
+  <data key="d4">1360.8</data>
+  <data key="d5">2</data>
+  <data key="d6">5.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW21" target="EW20">
+  <data key="d4">1120.8</data>
+  <data key="d5">2</data>
+  <data key="d6">4.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW21" target="CC22">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">190</data>
+  <data key="d11">370</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="EW20" target="EW19">
+  <data key="d4">1228.1</data>
+  <data key="d5">2</data>
+  <data key="d6">5.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW19" target="EW18">
+  <data key="d4">1376.3</data>
+  <data key="d5">2</data>
+  <data key="d6">9.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW18" target="EW17">
+  <data key="d4">1248.4</data>
+  <data key="d5">2</data>
+  <data key="d6">9.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW17" target="EW16">
+  <data key="d4">1528.8</data>
+  <data key="d5">2</data>
+  <data key="d6">11.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW16" target="EW15">
+  <data key="d4">982.5</data>
+  <data key="d5">2</data>
+  <data key="d6">9.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW16" target="NE3">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">170</data>
+  <data key="d11">350</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="EW16" target="TE17">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">120</data>
+  <data key="d11">300</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="EW15" target="EW14">
+  <data key="d4">1146.0</data>
+  <data key="d5">2</data>
+  <data key="d6">15.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW14" target="EW13">
+  <data key="d4">1028.0</data>
+  <data key="d5">2</data>
+  <data key="d6">2.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW14" target="NS26">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">30</data>
+  <data key="d11">210</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="EW13" target="EW12">
+  <data key="d4">1060.1</data>
+  <data key="d5">2</data>
+  <data key="d6">2.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW13" target="NS25">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">30</data>
+  <data key="d11">210</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="EW12" target="EW11">
+  <data key="d4">1046.5</data>
+  <data key="d5">2</data>
+  <data key="d6">2.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW12" target="DT14">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">240</data>
+  <data key="d11">420</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="EW11" target="EW10">
+  <data key="d4">1072.8</data>
+  <data key="d5">2</data>
+  <data key="d6">2.5</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW10" target="EW9">
+  <data key="d4">1425.1</data>
+  <data key="d5">2</data>
+  <data key="d6">2.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW9" target="EW8">
+  <data key="d4">1140.7</data>
+  <data key="d5">2</data>
+  <data key="d6">0.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW8" target="EW7">
+  <data key="d4">1114.8</data>
+  <data key="d5">2</data>
+  <data key="d6">1.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW8" target="CC9">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">160</data>
+  <data key="d11">340</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="EW7" target="EW6">
+  <data key="d4">1133.5</data>
+  <data key="d5">2</data>
+  <data key="d6">0.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW6" target="EW5">
+  <data key="d4">1968.2</data>
+  <data key="d5">2</data>
+  <data key="d6">1.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW5" target="EW4">
+  <data key="d4">1858.5</data>
+  <data key="d5">2</data>
+  <data key="d6">0.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW4" target="EW3">
+  <data key="d4">2496.9</data>
+  <data key="d5">2</data>
+  <data key="d6">36.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW4" target="CG">
+  <data key="d4">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">10</data>
+  <data key="d11">190</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="EW3" target="EW2">
+  <data key="d4">1437.2</data>
+  <data key="d5">2</data>
+  <data key="d6">114.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW2" target="EW1">
+  <data key="d4">2367.8</data>
+  <data key="d5">2</data>
+  <data key="d6">110.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="EW2" target="DT32">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">380</data>
+  <data key="d11">560</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NS28" target="NS27">
+  <data key="d4">1239.0</data>
+  <data key="d5">2</data>
+  <data key="d6">21.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS27" target="NS26">
+  <data key="d4">1045.4</data>
+  <data key="d5">2</data>
+  <data key="d6">3.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS27" target="CC33">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">200</data>
+  <data key="d11">380</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NS27" target="TE20">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">310</data>
+  <data key="d11">490</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NS26" target="NS25">
+  <data key="d4">1007.1</data>
+  <data key="d5">2</data>
+  <data key="d6">3.5</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS25" target="NS24">
+  <data key="d4">1005.0</data>
+  <data key="d5">2</data>
+  <data key="d6">6.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS24" target="NS23">
+  <data key="d4">801.9</data>
+  <data key="d5">2</data>
+  <data key="d6">2.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS24" target="NE6">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">200</data>
+  <data key="d11">380</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NS24" target="CC1">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">110</data>
+  <data key="d11">290</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NS23" target="NS22">
+  <data key="d4">998.5</data>
+  <data key="d5">2</data>
+  <data key="d6">26.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS22" target="NS21">
+  <data key="d4">1292.8</data>
+  <data key="d5">2</data>
+  <data key="d6">13.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS22" target="TE14">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">190</data>
+  <data key="d11">370</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NS21" target="NS20">
+  <data key="d4">1062.9</data>
+  <data key="d5">2</data>
+  <data key="d6">3.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS21" target="DT11">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">220</data>
+  <data key="d11">400</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NS20" target="NS19">
+  <data key="d4">1431.3</data>
+  <data key="d5">2</data>
+  <data key="d6">13.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS19" target="NS18">
+  <data key="d4">957.0</data>
+  <data key="d5">2</data>
+  <data key="d6">1.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS18" target="NS17">
+  <data key="d4">1217.2</data>
+  <data key="d5">2</data>
+  <data key="d6">1.5</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS17" target="NS16">
+  <data key="d4">2297.1</data>
+  <data key="d5">2</data>
+  <data key="d6">9.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS17" target="CC15">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">150</data>
+  <data key="d11">330</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NS16" target="NS15">
+  <data key="d4">1439.6</data>
+  <data key="d5">2</data>
+  <data key="d6">0.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS15" target="NS14">
+  <data key="d4">4891.1</data>
+  <data key="d5">2</data>
+  <data key="d6">7.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">360.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS14" target="NS13">
+  <data key="d4">1372.3</data>
+  <data key="d5">2</data>
+  <data key="d6">1.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS13" target="NS12">
+  <data key="d4">1684.8</data>
+  <data key="d5">2</data>
+  <data key="d6">4.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS12" target="NS11">
+  <data key="d4">1380.5</data>
+  <data key="d5">2</data>
+  <data key="d6">8.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS11" target="NS10">
+  <data key="d4">2371.2</data>
+  <data key="d5">2</data>
+  <data key="d6">1.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS10" target="NS9">
+  <data key="d4">1683.6</data>
+  <data key="d5">2</data>
+  <data key="d6">1.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS9" target="NS8">
+  <data key="d4">1518.4</data>
+  <data key="d5">2</data>
+  <data key="d6">3.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS9" target="TE2">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">260</data>
+  <data key="d11">440</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NS8" target="NS7">
+  <data key="d4">1667.6</data>
+  <data key="d5">2</data>
+  <data key="d6">4.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS7" target="NS5">
+  <data key="d4">4140.1</data>
+  <data key="d5">2</data>
+  <data key="d6">3.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">300.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS5" target="NS4">
+  <data key="d4">1430.8</data>
+  <data key="d5">2</data>
+  <data key="d6">1.5</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS4" target="NS3">
+  <data key="d4">3255.1</data>
+  <data key="d5">2</data>
+  <data key="d6">2.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS4" target="BP1">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">110</data>
+  <data key="d11">290</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NS3" target="NS2">
+  <data key="d4">1167.6</data>
+  <data key="d5">2</data>
+  <data key="d6">0.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NS2" target="NS1">
+  <data key="d4">2124.9</data>
+  <data key="d5">2</data>
+  <data key="d6">3.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="STC" target="SW8">
+  <data key="d4">947.2</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="STC" target="SE1">
+  <data key="d4">848.4</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="STC" target="SE5">
+  <data key="d4">1022.9</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="STC" target="SW1">
+  <data key="d4">749.6</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="STC" target="NE16">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">110</data>
+  <data key="d11">290</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="SW8" target="SW7">
+  <data key="d4">604.5</data>
+  <data key="d5">2</data>
+  <data key="d6">3.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="SW7" target="SW6">
+  <data key="d4">726.9</data>
+  <data key="d5">2</data>
+  <data key="d6">1.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="SW6" target="SW5">
+  <data key="d4">465.0</data>
+  <data key="d5">2</data>
+  <data key="d6">1.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="SW5" target="SW4">
+  <data key="d4">622.5</data>
+  <data key="d5">2</data>
+  <data key="d6">1.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="SW4" target="SW3">
+  <data key="d4">732.0</data>
+  <data key="d5">2</data>
+  <data key="d6">14.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="SW3" target="SW2">
+  <data key="d4">895.2</data>
+  <data key="d5">2</data>
+  <data key="d6">1.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="SW2" target="SW1">
+  <data key="d4">519.7</data>
+  <data key="d5">2</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PTC" target="PE7">
+  <data key="d4">938.8</data>
+  <data key="d5">2</data>
+  <data key="d6">68.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PTC" target="PE1">
+  <data key="d4">985.5</data>
+  <data key="d5">2</data>
+  <data key="d6">17.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PTC" target="PW7">
+  <data key="d4">1021.4</data>
+  <data key="d5">2</data>
+  <data key="d6">44.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PTC" target="PW1">
+  <data key="d4">574.4</data>
+  <data key="d5">2</data>
+  <data key="d6">7.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PTC" target="NE17">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">100</data>
+  <data key="d11">280</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="PE7" target="PE6">
+  <data key="d4">563.0</data>
+  <data key="d5">2</data>
+  <data key="d6">0.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PE6" target="PE5">
+  <data key="d4">517.0</data>
+  <data key="d5">2</data>
+  <data key="d6">0.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PE5" target="PE4">
+  <data key="d4">716.4</data>
+  <data key="d5">2</data>
+  <data key="d6">6.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PE4" target="PE3">
+  <data key="d4">520.2</data>
+  <data key="d5">2</data>
+  <data key="d6">7.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PE3" target="PE2">
+  <data key="d4">541.5</data>
+  <data key="d5">2</data>
+  <data key="d6">0.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PE2" target="PE1">
+  <data key="d4">445.0</data>
+  <data key="d5">2</data>
+  <data key="d6">0.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP1" target="BP2">
+  <data key="d4">569.2</data>
+  <data key="d5">4</data>
+  <data key="d6">2.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP2" target="BP3">
+  <data key="d4">457.9</data>
+  <data key="d5">4</data>
+  <data key="d6">0.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP3" target="BP4">
+  <data key="d4">556.2</data>
+  <data key="d5">4</data>
+  <data key="d6">1.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP4" target="BP5">
+  <data key="d4">539.0</data>
+  <data key="d5">4</data>
+  <data key="d6">1.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP5" target="BP6">
+  <data key="d4">692.4</data>
+  <data key="d5">4</data>
+  <data key="d6">0.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP6" target="BP13">
+  <data key="d4">667.8</data>
+  <data key="d5">2</data>
+  <data key="d6">5.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP6" target="BP7">
+  <data key="d4">415.1</data>
+  <data key="d5">2</data>
+  <data key="d6">5.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP6" target="DT1">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">270</data>
+  <data key="d11">450</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="BP13" target="BP12">
+  <data key="d4">552.6</data>
+  <data key="d5">2</data>
+  <data key="d6">4.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP12" target="BP11">
+  <data key="d4">693.0</data>
+  <data key="d5">2</data>
+  <data key="d6">5.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP11" target="BP10">
+  <data key="d4">490.6</data>
+  <data key="d5">2</data>
+  <data key="d6">6.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP10" target="BP9">
+  <data key="d4">906.1</data>
+  <data key="d5">2</data>
+  <data key="d6">2.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP9" target="BP8">
+  <data key="d4">467.6</data>
+  <data key="d5">2</data>
+  <data key="d6">2.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="BP8" target="BP7">
+  <data key="d4">626.8</data>
+  <data key="d5">2</data>
+  <data key="d6">6.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC34" target="CC33">
+  <data key="d4">858.1</data>
+  <data key="d5">2</data>
+  <data key="d6">1.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC34" target="CC4">
+  <data key="d4">1271.7</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC34" target="DT16">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">30</data>
+  <data key="d11">210</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="CC33" target="CC32">
+  <data key="d4">959.3</data>
+  <data key="d5">2</data>
+  <data key="d6">11.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC33" target="TE20">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">220</data>
+  <data key="d11">400</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="CC32" target="CC31">
+  <data key="d4">1181.7</data>
+  <data key="d5">4</data>
+  <data key="d6">2.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC31" target="CC30">
+  <data key="d4">791.7</data>
+  <data key="d5">4</data>
+  <data key="d6">12.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC30" target="CC29">
+  <data key="d4">1202.5</data>
+  <data key="d5">4</data>
+  <data key="d6">34.1</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC29" target="CC28">
+  <data key="d4">1470.0</data>
+  <data key="d5">4</data>
+  <data key="d6">7.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC29" target="NE1">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">120</data>
+  <data key="d11">300</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="CC28" target="CC27">
+  <data key="d4">825.4</data>
+  <data key="d5">4</data>
+  <data key="d6">0.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC27" target="CC26">
+  <data key="d4">1347.2</data>
+  <data key="d5">4</data>
+  <data key="d6">4.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC26" target="CC25">
+  <data key="d4">1335.6</data>
+  <data key="d5">4</data>
+  <data key="d6">27.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC25" target="CC24">
+  <data key="d4">1362.7</data>
+  <data key="d5">4</data>
+  <data key="d6">5.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC24" target="CC23">
+  <data key="d4">752.9</data>
+  <data key="d5">4</data>
+  <data key="d6">17.5</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC23" target="CC22">
+  <data key="d4">833.7</data>
+  <data key="d5">4</data>
+  <data key="d6">13.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC22" target="CC21">
+  <data key="d4">942.4</data>
+  <data key="d5">4</data>
+  <data key="d6">9.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC21" target="CC20">
+  <data key="d4">1416.9</data>
+  <data key="d5">4</data>
+  <data key="d6">6.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC20" target="CC19">
+  <data key="d4">1062.9</data>
+  <data key="d5">4</data>
+  <data key="d6">4.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC19" target="CC17">
+  <data key="d4">3825.1</data>
+  <data key="d5">4</data>
+  <data key="d6">19.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">300.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC19" target="DT9">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">190</data>
+  <data key="d11">370</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="CC17" target="CC16">
+  <data key="d4">1232.4</data>
+  <data key="d5">4</data>
+  <data key="d6">7.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC17" target="TE9">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">210</data>
+  <data key="d11">390</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="CC16" target="CC15">
+  <data key="d4">1488.6</data>
+  <data key="d5">4</data>
+  <data key="d6">98.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC15" target="CC14">
+  <data key="d4">1722.8</data>
+  <data key="d5">4</data>
+  <data key="d6">3.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC14" target="CC13">
+  <data key="d4">941.9</data>
+  <data key="d5">4</data>
+  <data key="d6">4.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC13" target="CC12">
+  <data key="d4">1305.2</data>
+  <data key="d5">4</data>
+  <data key="d6">5.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC13" target="NE12">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">190</data>
+  <data key="d11">370</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="CC12" target="CC11">
+  <data key="d4">1316.4</data>
+  <data key="d5">4</data>
+  <data key="d6">30.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC11" target="CC10">
+  <data key="d4">1061.7</data>
+  <data key="d5">4</data>
+  <data key="d6">2.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC10" target="CC9">
+  <data key="d4">996.2</data>
+  <data key="d5">4</data>
+  <data key="d6">2.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC10" target="DT26">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">70</data>
+  <data key="d11">250</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="CC9" target="CC8">
+  <data key="d4">1243.8</data>
+  <data key="d5">4</data>
+  <data key="d6">32.5</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC8" target="CC7">
+  <data key="d4">728.1</data>
+  <data key="d5">4</data>
+  <data key="d6">1.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC7" target="CC6">
+  <data key="d4">866.9</data>
+  <data key="d5">4</data>
+  <data key="d6">2.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC6" target="CC5">
+  <data key="d4">1355.3</data>
+  <data key="d5">4</data>
+  <data key="d6">0.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC5" target="CC4">
+  <data key="d4">936.3</data>
+  <data key="d5">3</data>
+  <data key="d6">19.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC4" target="CC3">
+  <data key="d4">797.8</data>
+  <data key="d5">2</data>
+  <data key="d6">13.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC4" target="DT15">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">90</data>
+  <data key="d11">270</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NE1" target="NE3">
+  <data key="d4">2657.1</data>
+  <data key="d5">2</data>
+  <data key="d6">13.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">240.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE3" target="NE4">
+  <data key="d4">663.5</data>
+  <data key="d5">2</data>
+  <data key="d6">4.5</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE3" target="TE17">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">210</data>
+  <data key="d11">390</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NE4" target="NE5">
+  <data key="d4">598.3</data>
+  <data key="d5">2</data>
+  <data key="d6">3.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE4" target="DT19">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">100</data>
+  <data key="d11">280</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NE5" target="NE6">
+  <data key="d4">1346.2</data>
+  <data key="d5">2</data>
+  <data key="d6">13.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE6" target="NE7">
+  <data key="d4">857.4</data>
+  <data key="d5">2</data>
+  <data key="d6">0.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE6" target="CC1">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">120</data>
+  <data key="d11">300</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NE7" target="NE8">
+  <data key="d4">837.5</data>
+  <data key="d5">2</data>
+  <data key="d6">1.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE7" target="DT12">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">190</data>
+  <data key="d11">370</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="NE8" target="NE9">
+  <data key="d4">1150.6</data>
+  <data key="d5">2</data>
+  <data key="d6">3.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE9" target="NE10">
+  <data key="d4">1572.8</data>
+  <data key="d5">2</data>
+  <data key="d6">6.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE10" target="NE11">
+  <data key="d4">904.1</data>
+  <data key="d5">2</data>
+  <data key="d6">0.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE11" target="NE12">
+  <data key="d4">1250.5</data>
+  <data key="d5">2</data>
+  <data key="d6">11.5</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE12" target="NE13">
+  <data key="d4">1678.9</data>
+  <data key="d5">2</data>
+  <data key="d6">2.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE13" target="NE14">
+  <data key="d4">1617.3</data>
+  <data key="d5">2</data>
+  <data key="d6">12.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE14" target="NE15">
+  <data key="d4">1264.3</data>
+  <data key="d5">2</data>
+  <data key="d6">0.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE15" target="NE16">
+  <data key="d4">965.5</data>
+  <data key="d5">2</data>
+  <data key="d6">5.5</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE16" target="NE17">
+  <data key="d4">1714.2</data>
+  <data key="d5">2</data>
+  <data key="d6">0.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="NE17" target="NE18">
+  <data key="d4">1520.4</data>
+  <data key="d5">2</data>
+  <data key="d6">16.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PW7" target="PW6">
+  <data key="d4">380.6</data>
+  <data key="d5">2</data>
+  <data key="d6">1.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PW6" target="PW5">
+  <data key="d4">425.6</data>
+  <data key="d5">2</data>
+  <data key="d6">0.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PW5" target="PW4">
+  <data key="d4">496.0</data>
+  <data key="d5">2</data>
+  <data key="d6">1.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PW4" target="PW3">
+  <data key="d4">566.8</data>
+  <data key="d5">2</data>
+  <data key="d6">7.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PW3" target="PW2">
+  <data key="d4">541.9</data>
+  <data key="d5">2</data>
+  <data key="d6">8.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="PW2" target="PW1">
+  <data key="d4">384.5</data>
+  <data key="d5">2</data>
+  <data key="d6">0.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="SE1" target="SE2">
+  <data key="d4">712.5</data>
+  <data key="d5">2</data>
+  <data key="d6">5.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="SE2" target="SE3">
+  <data key="d4">469.5</data>
+  <data key="d5">2</data>
+  <data key="d6">3.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="SE3" target="SE4">
+  <data key="d4">583.8</data>
+  <data key="d5">2</data>
+  <data key="d6">1.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="SE4" target="SE5">
+  <data key="d4">838.0</data>
+  <data key="d5">2</data>
+  <data key="d6">7.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE1" target="TE2">
+  <data key="d4">1472.3</data>
+  <data key="d5">2</data>
+  <data key="d6">0.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE2" target="TE3">
+  <data key="d4">1378.8</data>
+  <data key="d5">2</data>
+  <data key="d6">19.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE3" target="TE4">
+  <data key="d4">4408.8</data>
+  <data key="d5">2</data>
+  <data key="d6">18.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">420.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE4" target="TE5">
+  <data key="d4">2601.8</data>
+  <data key="d5">2</data>
+  <data key="d6">2.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">240.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE5" target="TE6">
+  <data key="d4">1585.2</data>
+  <data key="d5">2</data>
+  <data key="d6">13.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE6" target="TE7">
+  <data key="d4">1081.3</data>
+  <data key="d5">2</data>
+  <data key="d6">2.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE7" target="TE8">
+  <data key="d4">1444.2</data>
+  <data key="d5">2</data>
+  <data key="d6">18.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE8" target="TE9">
+  <data key="d4">2145.6</data>
+  <data key="d5">2</data>
+  <data key="d6">13.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE9" target="TE11">
+  <data key="d4">3003.4</data>
+  <data key="d5">2</data>
+  <data key="d6">0.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">300.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE11" target="TE12">
+  <data key="d4">1676.2</data>
+  <data key="d5">2</data>
+  <data key="d6">6.5</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE11" target="DT10">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">110</data>
+  <data key="d11">290</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="TE12" target="TE13">
+  <data key="d4">905.0</data>
+  <data key="d5">2</data>
+  <data key="d6">16.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE13" target="TE14">
+  <data key="d4">957.0</data>
+  <data key="d5">2</data>
+  <data key="d6">24.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE14" target="TE15">
+  <data key="d4">1030.5</data>
+  <data key="d5">2</data>
+  <data key="d6">1.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE15" target="TE16">
+  <data key="d4">728.4</data>
+  <data key="d5">2</data>
+  <data key="d6">0.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE16" target="TE17">
+  <data key="d4">1063.4</data>
+  <data key="d5">2</data>
+  <data key="d6">22.7</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE17" target="TE18">
+  <data key="d4">521.7</data>
+  <data key="d5">2</data>
+  <data key="d6">5.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE18" target="TE19">
+  <data key="d4">852.9</data>
+  <data key="d5">2</data>
+  <data key="d6">1.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE19" target="TE20">
+  <data key="d4">670.1</data>
+  <data key="d5">2</data>
+  <data key="d6">0.2</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE20" target="TE22">
+  <data key="d4">1778.6</data>
+  <data key="d5">2</data>
+  <data key="d6">22.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE22" target="TE23">
+  <data key="d4">2665.9</data>
+  <data key="d5">2</data>
+  <data key="d6">13.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">240.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE23" target="TE24">
+  <data key="d4">1449.0</data>
+  <data key="d5">2</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE24" target="TE25">
+  <data key="d4">1275.3</data>
+  <data key="d5">2</data>
+  <data key="d6">1.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE25" target="TE26">
+  <data key="d4">1034.2</data>
+  <data key="d5">2</data>
+  <data key="d6">2.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE26" target="TE27">
+  <data key="d4">1231.9</data>
+  <data key="d5">2</data>
+  <data key="d6">5.8</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE27" target="TE28">
+  <data key="d4">1535.3</data>
+  <data key="d5">2</data>
+  <data key="d6">1.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="TE28" target="TE29">
+  <data key="d4">1440.8</data>
+  <data key="d5">2</data>
+  <data key="d6">2.9</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT35" target="DT34">
+  <data key="d4">771.1</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT35" target="CG1">
+  <data key="d4">0.0</data>
+  <data key="d5">0</data>
+  <data key="d6">0.0</data>
+  <data key="d7">interchange</data>
+  <data key="d10">180</data>
+  <data key="d11">360</data>
+  <data key="d9">interchange_transfer</data>
+</edge>
+<edge source="DT34" target="DT33">
+  <data key="d4">2589.0</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT33" target="DT32">
+  <data key="d4">1385.2</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT32" target="DT31">
+  <data key="d4">1312.4</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT31" target="DT30">
+  <data key="d4">1705.9</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT30" target="DT29">
+  <data key="d4">1658.8</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT29" target="DT28">
+  <data key="d4">1101.2</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT28" target="DT27">
+  <data key="d4">1196.1</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT27" target="DT26">
+  <data key="d4">1151.2</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT26" target="DT25">
+  <data key="d4">765.6</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT25" target="DT24">
+  <data key="d4">1498.7</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT24" target="DT23">
+  <data key="d4">1399.5</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT23" target="DT22">
+  <data key="d4">1239.2</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT22" target="DT21">
+  <data key="d4">910.9</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT21" target="DT20">
+  <data key="d4">987.3</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT20" target="DT19">
+  <data key="d4">1088.0</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT19" target="DT18">
+  <data key="d4">415.6</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT18" target="DT17">
+  <data key="d4">595.8</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT17" target="DT16">
+  <data key="d4">915.2</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT16" target="DT15">
+  <data key="d4">1265.7</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT15" target="DT14">
+  <data key="d4">934.2</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT14" target="DT13">
+  <data key="d4">669.8</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT13" target="DT12">
+  <data key="d4">481.0</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT12" target="DT11">
+  <data key="d4">1497.8</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT11" target="DT10">
+  <data key="d4">1589.6</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT10" target="DT9">
+  <data key="d4">1119.3</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT9" target="DT8">
+  <data key="d4">1121.1</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT8" target="DT7">
+  <data key="d4">1233.8</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT7" target="DT6">
+  <data key="d4">1588.4</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT6" target="DT5">
+  <data key="d4">1133.0</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT5" target="DT4">
+  <data key="d4">1724.7</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT4" target="DT3">
+  <data key="d4">932.3</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT3" target="DT2">
+  <data key="d4">867.5</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="DT2" target="DT1">
+  <data key="d4">1112.5</data>
+  <data key="d5">1</data>
+  <data key="d6">0.0</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC3" target="CC2">
+  <data key="d4">668.5</data>
+  <data key="d5">2</data>
+  <data key="d6">1.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">60.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CC2" target="CC1">
+  <data key="d4">552.1</data>
+  <data key="d5">2</data>
+  <data key="d6">5.4</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">120.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CG1" target="CG2">
+  <data key="d4">4458.4</data>
+  <data key="d5">2</data>
+  <data key="d6">17.6</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">300.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+<edge source="CG1" target="CG">
+  <data key="d4">1992.3</data>
+  <data key="d7">osm_way_geometry</data>
+  <data key="d8">180.0</data>
+  <data key="d9">gtfs_schedule</data>
+</edge>
+</graph></graphml>
