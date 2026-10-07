@@ -1324,7 +1324,8 @@ def rank_change(name, col, layer, prev, divider=False):
     cls = 'num divider' if divider else 'num'
     if prev is None:
         return f'<td class="{cls} flat"></td>'
-    delta = int(cent.loc[name, f'r_{prev}_{col}']) - int(cent.loc[name, f'r_{layer}_{col}'])
+    delta = int(cent.loc[name, f'r_{prev}_{col}']) - \
+        int(cent.loc[name, f'r_{layer}_{col}'])
     if delta > 0:
         return f'<td class="{cls} up">▲ {delta}</td>'
     if delta < 0:
@@ -1344,7 +1345,8 @@ def centrality_table(layer, prev, caption, label, n=10, show_cls=True):
     closeness has no meaningful form.
     """
     top_b = cent.nsmallest(n, f'r_{layer}_btw').index
-    top_c = cent.nsmallest(n, f'r_{layer}_cls').index if show_cls else [None] * n
+    top_c = cent.nsmallest(
+        n, f'r_{layer}_cls').index if show_cls else [None] * n
 
     def cls_cells(c):
         if not show_cls:
@@ -1438,7 +1440,7 @@ print(centrality_table('flow', 'time',
 The three layers broadly separate stations into three groups.
 
 - **Important on every measure.** Outram Park, Buona Vista, Bishan and Serangoon rank highly whether the network is judged by its shape, its speed or its usage. These are the stations where structural position and actual demand coincide, and where any disruption would be felt most widely.
-- **Important by position, lightly used.** Botanic Gardens, Caldecott, MacPherson, Paya Lebar and Marina Bay, which are all Circle Line interchanges, matter in the structure of the network but drop out once demand is counted. They represent orbital connections the network has but does not yet fully rely on during the AM peak, routes that could absorb passengers diverted from a disrupted radial line.
+- **Important by position, less intensely used.** Botanic Gardens, Caldecott, MacPherson, Paya Lebar and Marina Bay, which are all Circle Line interchanges, matter in the structure of the network but drop out once demand is counted. They represent orbital connections the network has but does not yet fully rely on during the AM peak, routes that could absorb passengers diverted from a disrupted radial line.
 - **Important by use, not position.** Dover and Clementi rank lower on structure but high on demand. Their importance comes from the volume funnelled through them rather than from any unique place in the network. A corridor that carries heavy demand with few nearby alternatives is where a disruption would cause the most difficulty.
 
 The contrast between the first and last groups is notable. While topology alone places emphasis on interchanges, actual demand shows that some of the stations the network relies on most are ordinary stops on busy single-line corridors.
