@@ -1,6 +1,6 @@
 ---
 pagetitle: "Benjamin Tee"
-description-meta: "MSc Urban Spatial Science student at CASA, UCL."
+description-meta: "MSc Urban Spatial Science Graduate from CASA, UCL."
 format:
   html:
     toc: false
@@ -22,7 +22,7 @@ page-layout: full
 :::
 
 ::: {.profile-role}
-MSc Student at Centre for Advanced Spatial Analysis (CASA)
+MSc Graduate from Centre for Advanced Spatial Analysis (CASA)
 :::
 
 ::: {.profile-meta}
@@ -41,7 +41,7 @@ MSc Student at Centre for Advanced Spatial Analysis (CASA)
 ::: {.g-col-12 .g-col-lg-9 .profile-body}
 ## **Welcome!**
 
-I am currently an MSc Urban Spatial Science student at [The Bartlett Centre for Advanced Spatial Analysis (CASA)](https://www.ucl.ac.uk/bartlett/casa), University College London.
+I am a MSc Urban Spatial Science graduate from [The Bartlett Centre for Advanced Spatial Analysis (CASA)](https://www.ucl.ac.uk/bartlett/casa), University College London.
 
 As a leader in the Singapore Public Service, I am committed to advancing data-driven and evidence-based policymaking. I strongly believe in the role of public service–led innovation, and the use of econometric and data science methods to develop and uncover insights that inform effective and forward-looking policy decisions.
 
