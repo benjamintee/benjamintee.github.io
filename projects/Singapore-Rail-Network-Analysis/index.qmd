@@ -772,6 +772,8 @@ Circle line (CCL) interchange stations also features prominently, reflecting the
 - AM Peak: Bishan, Serangoon, Paya Lebar and Buona Vista
 - PM Peak: Serangoon, Dhoby Ghaut and Paya Lebar
 
+![Bishan interchange features prominently with transfers accounting for close to 70% of morning peak volume](images/bishanCCL.jpeg){fig-alt="Bishan interchange crowding"}
+
 Thomson-East Coast (TEL) line interchange stations (e.g. Orchard, Woodlands) see relatively less transfers, but could grow in importance with emerging residential areas or as passengers become more familiar with transferring via these stations. 
 
 ```{python}
@@ -1434,6 +1436,8 @@ print(centrality_table('flow', 'time',
 ```
 
 :::
+
+![Outram Park Interchange (EW16|NE3|TE17) connecting three major train lines](images/Outram-Park-MRT-Station-EW16-NE3-TE17-Exit-8-1.jpg){fig-alt="Outram Park Interchange (EW16|NE3|TE17) connecting three major train lines"}
 
 ### 4.3 Three kinds of importance
 
